@@ -1,30 +1,19 @@
-import React, { useState, useEffect, useRef } from "react";
-import {
-  Button,
-  Form,
-  FormGroup,
-  FormControl,
-  ControlLabel,
-  HelpBlock,
-  Message,
-} from "rsuite";
+import React, { useState, useEffect } from "react";
+import { Card, Input, Form, Button, Alert, Typography } from "antd";
 import Container from "@mui/material/Container";
-import Card from "@mui/material/Card";
-import CardHeader from "@mui/material/CardHeader";
-import CardContent from "@mui/material/CardContent";
-import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { resetRequest, clearState } from "../../store/authSlice";
 import { open } from "../../functions/Notifications";
 import { setActiveKey } from "../../store/navbarSlice";
 
+const { Title } = Typography;
+
 export default function ResetPasswordRequest() {
   const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const history = useHistory();
-  const formRef = useRef();
+  const [form] = Form.useForm();
   const [username, setUsername] = useState();
 
   useEffect(() => {
@@ -39,7 +28,7 @@ export default function ResetPasswordRequest() {
     }
     if (auth.success) {
       open("success", "Success", "An email with a reset link has been sent!");
-      formRef.current._reactInternals.child.stateNode.reset();
+      form.setFieldsValue({ username: "" });
       dispatch(clearState());
       setUsername(null);
     }
@@ -55,49 +44,41 @@ export default function ResetPasswordRequest() {
   };
   return (
     <Container maxWidth="sm" style={{ marginTop: "3%" }}>
-      <Card>
-        <CardHeader
-          style={{ backgroundColor: "#383d42", color: "#fff" }}
-          title={
-            <Typography variant="h5" align="center">
-              Reset Password Request
-            </Typography>
-          }
-        />
-        <CardContent>
-          <Form fluid onSubmit={handelSubmit} ref={formRef}>
-            <Grid container spacing={2}>
-              {auth.message ? (
-                <Grid item xs={12}>
-                  <Message
-                    closable
-                    showIcon
-                    type="error"
-                    description={auth.message}
-                  />
-                </Grid>
-              ) : null}
-              <Grid item xs={12}>
-                <FormGroup>
-                  <ControlLabel>Username</ControlLabel>
-                  <FormControl required onChange={(e) => setUsername(e)} />
-                  <HelpBlock>Required</HelpBlock>
-                </FormGroup>
-              </Grid>
-              <Grid item xs={12}>
-                {auth.loading ? (
-                  <Button disabled block color="primary">
-                    Loading...
-                  </Button>
-                ) : (
-                  <Button type="submit" color="primary" block>
-                    Submit
-                  </Button>
-                )}
-              </Grid>
-            </Grid>
-          </Form>
-        </CardContent>
+      <Card
+        headStyle={{ backgroundColor: "#1F2937", border: "none" }}
+        title={
+          <Title level={3} style={{ color: "white" }} align="center">
+            Reset Password Request
+          </Title>
+        }
+        bordered={false}
+        style={{ width: "100%" }}
+      >
+        {auth.message && <Alert type="error" message={auth.message} />}
+        <Form layout="vertical" onFinish={handelSubmit} form={form}>
+          <Form.Item
+            label="Username"
+            name="username"
+            rules={[
+              {
+                required: true,
+                message: "Please enter username!",
+              },
+            ]}
+          >
+            <Input onChange={(e) => setUsername(e.target.value)} />
+          </Form.Item>
+          <Form.Item style={{ marginBottom: 2 }}>
+            <Button
+              type="primary"
+              htmlType="submit"
+              appearance="primary"
+              loading={auth.loading}
+            >
+              Submit
+            </Button>
+          </Form.Item>
+        </Form>
       </Card>
     </Container>
   );

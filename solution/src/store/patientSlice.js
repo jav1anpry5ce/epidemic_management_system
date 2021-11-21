@@ -297,7 +297,11 @@ export const patientSlice = createSlice({
     [codeVerify.rejected]: (state, { payload }) => {
       state.loading = false;
       state.success = false;
-      state.message = payload.Message;
+      try {
+        state.message = payload.Message;
+      } catch (err) {
+        state.message = "Could not verify";
+      }
     },
     [UpdatePatientInfo.pending]: (state) => {
       state.loading = true;
@@ -310,7 +314,11 @@ export const patientSlice = createSlice({
     [UpdatePatientInfo.rejected]: (state, { payload }) => {
       state.loading = false;
       state.success = false;
-      state.message = payload.Message;
+      try {
+        state.message = payload.Message;
+      } catch (err) {
+        state.message = "Something went wrong!";
+      }
     },
     [getPreviousVaccine.pending]: (state) => {
       state.loading = true;

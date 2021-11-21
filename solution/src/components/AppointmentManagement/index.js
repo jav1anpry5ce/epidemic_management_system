@@ -85,28 +85,29 @@ export default function AppointmentManagement({ match }) {
   };
 
   useEffect(() => {
-    if (location.data.Vaccine && appointment.appointments) {
-      if (appointment.secondDose) {
-        if (appointment.appointments.patient_choice) {
-          const result = location.data.Vaccine.filter(
-            (vaccine) =>
-              vaccine.value !== appointment.appointments.patient_choice
-          );
-          if (result) {
-            var array = [];
-            result.map((result) => {
-              array.push(result.value);
-              return array;
-            });
-            setDisabledList(array);
+    if (location.data)
+      if (location.data.Vaccine && appointment.appointments) {
+        if (appointment.secondDose) {
+          if (appointment.appointments.patient_choice) {
+            const result = location.data.Vaccine.filter(
+              (vaccine) =>
+                vaccine.value !== appointment.appointments.patient_choice
+            );
+            if (result) {
+              var array = [];
+              result.map((result) => {
+                array.push(result.value);
+                return array;
+              });
+              setDisabledList(array);
+            }
           }
         }
       }
-    }
     if (!appointment.secondDose) {
       setDisabledList([]);
     }
-  }, [location.data.Vaccine, appointment.appointments, appointment.secondDose]);
+  }, [location.data, appointment.appointments, appointment.secondDose]);
 
   return (
     <Container maxWidth="lg">

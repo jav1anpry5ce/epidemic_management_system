@@ -29,7 +29,7 @@ export default function Home() {
     { Vargument: 3, Vvalue: 35 },
   ];
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth="lg" style={{ marginTop: "2%" }}>
       <Paper>
         <Chart data={data}>
           <ArgumentAxis />

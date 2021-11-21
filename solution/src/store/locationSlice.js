@@ -69,18 +69,14 @@ export const getAppointments = createAsyncThunk(
 
 export const getAppointment = createAsyncThunk(
   "get/appointment",
-  async (data) => {
+  async (id) => {
     const config = {
       headers: {
         "Content-Type": "application/json",
         Authorization: "Token " + sessionStorage.getItem("token"),
       },
     };
-    const response = await axios.post(
-      "api/location/appointments",
-      data,
-      config
-    );
+    const response = await axios.get(`api/get-appointment/${id}`, config);
     if (response.status === 200) {
       const appointment = response.data;
       return { appointment };
@@ -90,7 +86,7 @@ export const getAppointment = createAsyncThunk(
 
 export const checkIn = createAsyncThunk(
   "check/in",
-  async (data, { rejectWithValue }) => {
+  async (id, { rejectWithValue }) => {
     const config = {
       headers: {
         "Content-Type": "application/json",
@@ -98,7 +94,7 @@ export const checkIn = createAsyncThunk(
       },
     };
     try {
-      await axios.patch("api/location/appointments", data, config);
+      await axios.patch(`api/check-in-patient/${id}`, {}, config);
     } catch (err) {
       return rejectWithValue(err.response.data);
     }
@@ -142,12 +138,13 @@ export const locationSlice = createSlice({
   name: "location",
   initialState: {
     locations: [],
-    data: [],
+    data: null,
     loading: false,
     aLoading: false,
     appointments: null,
     appointment: null,
     success: false,
+    aSuccess: false,
     message: null,
     error: false,
     locationData: null,
@@ -157,10 +154,14 @@ export const locationSlice = createSlice({
       state.appointment = null;
       state.appointments = null;
       state.success = false;
+      state.aSuccess = false;
       state.message = null;
       state.error = false;
       state.loading = false;
       state.locationData = null;
+    },
+    updateSuccess: (state) => {
+      state.aSuccess = false;
     },
   },
   extraReducers: {
@@ -213,6 +214,7 @@ export const locationSlice = createSlice({
     [getAppointment.fulfilled]: (state, { payload }) => {
       state.aLoading = false;
       state.appointment = payload.appointment;
+      state.aSuccess = true;
     },
     [getAppointment.rejected]: (state) => {
       state.aLoading = false;
@@ -271,5 +273,5 @@ export const locationSlice = createSlice({
   },
 });
 
-export const { clearState } = locationSlice.actions;
+export const { clearState, updateSuccess } = locationSlice.actions;
 export default locationSlice.reducer;

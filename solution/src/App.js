@@ -71,6 +71,7 @@ function App() {
         backgroundColor: "#f5f5f5",
         backgroundImage: `url(${background})`,
         backgroundSize: "cover",
+        backgroundAttachment: "fixed",
       }}
     >
       <Router>
@@ -78,7 +79,7 @@ function App() {
           <NavBar />
         </Header>
         <Switch>
-          <Content>
+          <Content style={{ backgroundColor: "rgba(28, 37, 59, 0.7)" }}>
             <Route exact path="/" component={Home} />
             <Route exact path="/patient-info/:uuid" component={PatientInfo} />
             <Route exact path="/appointments" component={Appointments} />

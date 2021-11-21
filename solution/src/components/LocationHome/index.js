@@ -2,10 +2,13 @@ import React, { useEffect } from "react";
 import { locationBreakdown, clearState } from "../../store/locationSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { Container, CardContent, Grid, Typography } from "@mui/material";
+import { Container, CardContent, Grid } from "@mui/material";
 import { setActiveKey } from "../../store/navbarSlice";
 import { Card } from "../Moh/MohElements";
 import Loading from "../Loading";
+import { Typography } from "antd";
+
+const { Title } = Typography;
 
 export default function LocationHome() {
   const data = useSelector((state) => state.location);
@@ -61,14 +64,14 @@ export default function LocationHome() {
                 <CardContent>
                   <Grid container spacing={3}>
                     <Grid item xs={12}>
-                      <Typography variant="h5" align="center">
+                      <Title level={3} align="center" style={{ color: "#fff" }}>
                         {data.name}
-                      </Typography>
+                      </Title>
                     </Grid>
                     <Grid item xs={12}>
-                      <Typography variant="h5" align="center">
+                      <Title level={4} style={{ color: "#fff" }}>
                         {data.data}
-                      </Typography>
+                      </Title>
                     </Grid>
                   </Grid>
                 </CardContent>

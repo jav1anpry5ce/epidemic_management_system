@@ -1,31 +1,19 @@
-import React, { useState, useEffect, useRef } from "react";
-import {
-  Button,
-  Form,
-  FormGroup,
-  FormControl,
-  ControlLabel,
-  HelpBlock,
-  Checkbox,
-  Message,
-} from "rsuite";
+import React, { useState, useEffect } from "react";
+import { Card, Input, Form, Button, Alert, Typography, Checkbox } from "antd";
 import Container from "@mui/material/Container";
-import Card from "@mui/material/Card";
-import CardHeader from "@mui/material/CardHeader";
-import CardContent from "@mui/material/CardContent";
-import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { register, clearState } from "../../store/authSlice";
 import { open } from "../../functions/Notifications";
 import { setActiveKey } from "../../store/navbarSlice";
 
+const { Title } = Typography;
+
 export default function AddStaff() {
   const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const history = useHistory();
-  const formRef = useRef();
+  const [form] = Form.useForm();
   const [isAdmin, setIsAdmin] = useState(false);
   const [canCheckIn, setCanCheckIn] = useState(false);
   const [canUpdateTest, setCanUpdateTest] = useState(false);
@@ -42,7 +30,7 @@ export default function AddStaff() {
       history.push("/account/login");
     }
     if (auth.success) {
-      formRef.current._reactInternals.child.stateNode.reset();
+      form.resetFields();
       setIsAdmin(false);
       setCanCheckIn(false);
       setCanUpdateVaccine(false);
@@ -96,107 +84,101 @@ export default function AddStaff() {
     dispatch(register(data));
   };
   return (
-    <Container maxWidth="sm" style={{ marginBottom: "1%" }}>
-      <Card>
-        <CardHeader
-          style={{ backgroundColor: "#383d42", color: "#fff" }}
-          title={
-            <Typography align="center" variant="h5">
-              Add A New Staff
-            </Typography>
-          }
-        />
-        <CardContent>
-          <Form fluid ref={formRef} onSubmit={handelSubmit}>
-            <Grid container spacing={2}>
-              {auth.message ? (
-                <Grid item xs={12}>
-                  <Message
-                    closable
-                    showIcon
-                    type="error"
-                    description={auth.message}
-                  />
-                </Grid>
-              ) : null}
-              <Grid item xs={12}>
-                <FormGroup>
-                  <ControlLabel>Email</ControlLabel>
-                  <FormControl
-                    type="email"
-                    onChange={(e) => setEmail(e)}
-                    required
-                  />
-                  <HelpBlock>Required</HelpBlock>
-                </FormGroup>
-              </Grid>
-              <Grid item xs={12}>
-                <FormGroup>
-                  <ControlLabel>Username</ControlLabel>
-                  <FormControl onChange={(e) => setUsername(e)} required />
-                  <HelpBlock>Required</HelpBlock>
-                </FormGroup>
-              </Grid>
-              <Grid item xs={12}>
-                <FormGroup>
-                  <ControlLabel>First Name</ControlLabel>
-                  <FormControl onChange={(e) => setFirstName(e)} required />
-                  <HelpBlock>Required</HelpBlock>
-                </FormGroup>
-              </Grid>
-              <Grid item xs={12}>
-                <FormGroup>
-                  <ControlLabel>Last Name </ControlLabel>
-                  <FormControl onChange={(e) => setLastName(e)} required />
-                  <HelpBlock>Required</HelpBlock>
-                </FormGroup>
-              </Grid>
-              <Grid item xs={12}>
-                <FormGroup>
-                  <ControlLabel>Permissions</ControlLabel>
-                  <Checkbox checked={isAdmin} onChange={() => handelClick(1)}>
-                    Is Admin
-                  </Checkbox>
-                  <Checkbox
-                    checked={canUpdateTest}
-                    onChange={() => handelClick(2)}
-                  >
-                    Can Update Test
-                  </Checkbox>
-                  <Checkbox
-                    checked={canUpdateVaccine}
-                    onChange={() => handelClick(3)}
-                  >
-                    Can Update Vaccine
-                  </Checkbox>
-                  <Checkbox
-                    checked={canCheckIn}
-                    onChange={() => handelClick(4)}
-                  >
-                    Can Check In
-                  </Checkbox>
-                  <Checkbox
-                    checked={canReceiveLocationBatch}
-                    onChange={() => handelClick(5)}
-                  >
-                    Can Receive Location Batch
-                  </Checkbox>
-                </FormGroup>
-              </Grid>
-              <Grid item xs={12}>
-                {auth.loading ? (
-                  <Button disabled block color="primary">
-                    Loading...
-                  </Button>
-                ) : (
-                  <Button type="submit" block color="primary">
-                    Submit
-                  </Button>
-                )}
-              </Grid>
-            </Grid>
-          </Form>
-        </CardContent>
+    <Container maxWidth="sm" style={{ marginBottom: "1%", marginTop: "1%" }}>
+      <Card
+        headStyle={{ backgroundColor: "#1F2937", border: "none" }}
+        title={
+          <Title level={3} style={{ color: "white" }} align="center">
+            Add A New Staff
+          </Title>
+        }
+        bordered={false}
+        style={{ width: "100%" }}
+      >
+        {auth.message && <Alert type="error" message={auth.message} />}
+        <Form layout="vertical" onFinish={handelSubmit} form={form}>
+          <Form.Item
+            label="Email"
+            name="email"
+            rules={[
+              {
+                required: true,
+                message: "Please enter staff email!",
+              },
+            ]}
+            style={{ marginBottom: 2 }}
+          >
+            <Input onChange={(e) => setEmail(e.target.value)} />
+          </Form.Item>
+          <Form.Item
+            label="Username"
+            name="username"
+            rules={[
+              {
+                required: true,
+                message: "Please enter staff username!",
+              },
+            ]}
+            style={{ marginBottom: 2 }}
+          >
+            <Input onChange={(e) => setUsername(e.target.value)} />
+          </Form.Item>
+          <Form.Item
+            label="First Name"
+            name="first_name"
+            rules={[
+              {
+                required: true,
+                message: "Please enter staff First Name!",
+              },
+            ]}
+            style={{ marginBottom: 2 }}
+          >
+            <Input onChange={(e) => setFirstName(e.target.value)} />
+          </Form.Item>
+          <Form.Item
+            label="Last Name"
+            name="last_name"
+            rules={[
+              {
+                required: true,
+                message: "Please enter staff Last Name!",
+              },
+            ]}
+            style={{ marginBottom: 2 }}
+          >
+            <Input onChange={(e) => setLastName(e.target.value)} />
+          </Form.Item>
+          <Form.Item name="is_admin" style={{ marginBottom: 2 }}>
+            <Checkbox onChange={() => handelClick(1)}>Is Admin</Checkbox>
+          </Form.Item>
+          <Form.Item name="can_update_test" style={{ marginBottom: 2 }}>
+            <Checkbox onChange={() => handelClick(2)}>Can Update Test</Checkbox>
+          </Form.Item>
+          <Form.Item name="can_update_vaccine" style={{ marginBottom: 2 }}>
+            <Checkbox onChange={() => handelClick(3)}>
+              Can Update Vaccine
+            </Checkbox>
+          </Form.Item>
+          <Form.Item name="can_check_in" style={{ marginBottom: 2 }}>
+            <Checkbox onChange={() => handelClick(4)}>Can Check In</Checkbox>
+          </Form.Item>
+          <Form.Item name="can_receive_location_batch">
+            <Checkbox onChange={() => handelClick(5)}>
+              Can Receive Batch
+            </Checkbox>
+          </Form.Item>
+          <Form.Item style={{ marginBottom: 2 }}>
+            <Button
+              type="primary"
+              htmlType="submit"
+              appearance="primary"
+              loading={auth.loading}
+            >
+              Submit
+            </Button>
+          </Form.Item>
+        </Form>
       </Card>
     </Container>
   );

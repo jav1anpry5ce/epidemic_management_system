@@ -1,14 +1,18 @@
 from rest_framework import status, permissions
 from rest_framework.views import APIView
+from rest_framework.generics import ListAPIView
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, FormParser
 from django.core.mail import EmailMultiAlternatives
 from django.contrib.sites.models import Site
-from django.db.models import Case, When, Q
+from django.db.models import Case, When
 import pyqrcode
 from functions import removeFile
 from functions import convertTime
+from rest_framework.pagination import PageNumberPagination
+from rest_framework import filters
+from django_filters import rest_framework as filterss
 
 from .models import Location, Offer, Test, Appointment
 from .serializers import LocationSerializer, OfferSerializer, TestSerializer, AppointmentSerializer, CreateAppointmentSerializer
@@ -388,46 +392,48 @@ class AppointmentManagementView(APIView):
         except:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
-class LocationAppointmentView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
-    def post(self, request):
-        try:
-            user = request.user
-            if request.data.get('q') == 'Pending':
-                appointments = Appointment.objects.filter(location=user.location, status='Pending')
-                serializer = AppointmentSerializer(appointments, many=True)
-                return Response(serializer.data, status=status.HTTP_200_OK)
-            elif request.data.get('q') == 'Completed':
-                appointments = Appointment.objects.filter(location=user.location, status='Completed')
-                serializer = AppointmentSerializer(appointments, many=True)
-                return Response(serializer.data, status=status.HTTP_200_OK)
-            elif request.data.get('q') == 'All':
-                appointments = Appointment.objects.filter(location=user.location)
-                serializer = AppointmentSerializer(appointments, many=True)
-                return Response(serializer.data, status=status.HTTP_200_OK)
-            elif request.data.get('q') == 'Checked In':
-                appointments = Appointment.objects.filter(location=user.location, status='Checked In')
-                serializer = AppointmentSerializer(appointments, many=True)
-                return Response(serializer.data, status=status.HTTP_200_OK)
-            else:
-                appointments = Appointment.objects.get(id=request.data.get('id'))
-                serializer = AppointmentSerializer(appointments)
-                return Response(serializer.data, status=status.HTTP_200_OK)
-        except:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-            
-    def patch(self, request):
-        try:
-            appointment = Appointment.objects.get(id=request.data.get('id'))
-            if request.user.location == appointment.location and request.user.can_check_in:
-                if appointment.status == 'Pending':
-                    appointment.status = 'Checked In'
-                    appointment.save()
-                    return Response(status=status.HTTP_200_OK)
-                return Response({'Message': 'This appointment can not be updated!'}, status=status.HTTP_403_FORBIDDEN)
-            return Response({'Message': 'You are not authorized to check this patient in!'}, status=status.HTTP_401_UNAUTHORIZED)
-        except:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+class CustomPageNumberPagination(PageNumberPagination):
+    page_size_query_param = 'pageSize'
+
+class UserFiltering(filters.BaseFilterBackend):
+    def filter_queryset(self, request, queryset, view):
+        if request.user.is_authenticated:
+                return queryset.filter(location=request.user.location)
+
+class LocationAppointments(ListAPIView):
+    queryset = Appointment.objects.all()
+    serializer_class = AppointmentSerializer
+    filter_backends = [UserFiltering, filterss.DjangoFilterBackend, filters.OrderingFilter]
+    filter_fields = {
+        'status': ["in", "exact"],
+    }
+    pagination_class = CustomPageNumberPagination
+
+@api_view(['PATCH'])
+@permission_classes([permissions.IsAuthenticated])
+def check_in_patient(request, patient_id):
+    try:
+        appointment = Appointment.objects.get(id=patient_id)
+        if request.user.location == appointment.location and request.user.can_check_in:
+            if appointment.status == 'Pending':
+                appointment.status = 'Checked In'
+                appointment.save()
+                return Response(status=status.HTTP_200_OK)
+            return Response({'Message': 'This appointment can not be updated!'}, status=status.HTTP_403_FORBIDDEN)
+        return Response({'Message': 'You are not authorized to check this patient in!'}, status=status.HTTP_401_UNAUTHORIZED)
+    except:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def get_appointment(request, appointment_id):
+    try:
+        appointment = Appointment.objects.get(id=appointment_id)
+        seraializer = AppointmentSerializer(appointment)
+        return Response(seraializer.data, status=status.HTTP_200_OK)
+    except:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 def patient_vaccine(request):

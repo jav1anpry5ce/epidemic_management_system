@@ -1,24 +1,20 @@
 import React, { useState, useEffect } from "react";
 import Container from "@mui/material/Container";
-import Card from "@mui/material/Card";
-import CardHeader from "@mui/material/CardHeader";
-import CardContent from "@mui/material/CardContent";
-import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
 import formatDate from "../../functions/formatDate";
 import { useDispatch, useSelector } from "react-redux";
-import formatTrn from "../../functions/formatTrn";
+import TRNMask from "../../functions/TRNMask";
+import PhoneMask from "../../functions/PhoneMask";
+import { Uploader, Icon } from "rsuite";
 import {
+  Card,
+  Input,
   Form,
-  FormGroup,
-  FormControl,
-  ControlLabel,
-  DatePicker,
   Button,
-  Message,
-  Uploader,
-  Icon,
-} from "rsuite";
+  Alert,
+  Typography,
+  DatePicker,
+  Select,
+} from "antd";
 import {
   updateInfoVerify,
   codeVerify,
@@ -27,6 +23,26 @@ import {
   updateSuccess,
 } from "../../store/patientSlice";
 import { setActiveKey } from "../../store/navbarSlice";
+
+const { Title } = Typography;
+const { Option } = Select;
+
+const parishData = [
+  { label: "Kingston", value: "Kingston" },
+  { label: "St. Andrew", value: "St. Andrew" },
+  { label: "Portland ", value: "Portland " },
+  { label: "St. Thomas", value: "St. Thomas" },
+  { label: "St. Catherine", value: "St. Catherine" },
+  { label: "St. Mary", value: "St. Mary" },
+  { label: "St. Ann", value: "St. Ann" },
+  { label: "Manchester", value: "Manchester" },
+  { label: "Clarendon", value: "Clarendon" },
+  { label: "Hanover", value: "Hanover" },
+  { label: "Westmoreland", value: "Westmoreland" },
+  { label: "St. James", value: "St. James" },
+  { label: "Trelawny", value: "Trelawny" },
+  { label: "St. Elizabeth", value: "St. Elizabeth" },
+];
 
 export default function UpdateInfo() {
   const dispatch = useDispatch();
@@ -101,203 +117,213 @@ export default function UpdateInfo() {
 
   return (
     <Container maxWidth="sm" style={{ marginTop: "4%", marginBottom: "3%" }}>
-      {page === 1 ? (
-        <Card>
-          <CardHeader
-            style={{ backgroundColor: "#383d42", color: "#fff" }}
-            title={
-              <Typography variant="h5" align="center">
-                Verify Identity
-              </Typography>
-            }
-          />
-          <CardContent>
-            <Form fluid onSubmit={() => handelSubmit("verify-info")}>
-              <Grid container spacing={2}>
-                {patient.message ? (
-                  <Grid item xs={12}>
-                    <Message
-                      closable
-                      showIcon
-                      type="error"
-                      description={patient.message}
-                    />
-                  </Grid>
-                ) : null}
-                <Grid item xs={12}>
-                  <FormGroup>
-                    <ControlLabel>Tax Number</ControlLabel>
-                    <FormControl
-                      type="tel"
-                      pattern="[0-9]{3}-[0-9]{3}-[0-9]{3}"
-                      placeholder="123-456-789"
-                      onChange={(e) => setTaxNumber(formatTrn(e))}
-                      value={taxNumber}
-                      required
-                    />
-                  </FormGroup>
-                </Grid>
-                <Grid item xs={12}>
-                  <FormGroup>
-                    <ControlLabel>Date of Birth</ControlLabel>
-                    <DatePicker
-                      block
-                      onChange={(e) => setDOB(formatDate(e))}
-                      required
-                      oneTap
-                    />
-                  </FormGroup>
-                </Grid>
-                <Grid item xs={12}>
-                  <FormGroup>
-                    <ControlLabel>Last Name</ControlLabel>
-                    <FormControl onChange={(e) => setLastName(e)} required />
-                  </FormGroup>
-                </Grid>
-                <Grid item xs={12} className="d-flex justify-content-between">
-                  <Button type="submit" color="blue" disabled={patient.loading}>
-                    Submit
-                  </Button>
-                  <Button onClick={() => setPage(2)} disabled={patient.loading}>
-                    Already have a code?
-                  </Button>
-                </Grid>
-              </Grid>
-            </Form>
-          </CardContent>
+      {page === 1 && (
+        <Card
+          headStyle={{ backgroundColor: "#1F2937", border: "none" }}
+          title={
+            <Title level={3} style={{ color: "white" }} align="center">
+              Verify Identity
+            </Title>
+          }
+          bordered={false}
+          style={{ width: "100%" }}
+        >
+          <Form layout="vertical" onFinish={() => handelSubmit("verify-info")}>
+            <Form.Item
+              label="Tax Number"
+              name="tax_number"
+              style={{ marginBottom: 2 }}
+              rules={[
+                {
+                  required: true,
+                  message: "Please enter your tax number!",
+                },
+              ]}
+            >
+              <TRNMask
+                value={taxNumber}
+                onChange={(e) => setTaxNumber(e.target.value)}
+              />
+            </Form.Item>
+            <Form.Item
+              label="Date of Birth"
+              name="dob"
+              style={{ marginBottom: 2 }}
+              rules={[
+                {
+                  required: true,
+                  message: "Please enter your date of birth!",
+                },
+              ]}
+            >
+              <DatePicker
+                style={{ width: "100%" }}
+                onChange={(e) => setDOB(formatDate(e))}
+                format="DD/MM/YYYY"
+              />
+            </Form.Item>
+            <Form.Item
+              label="Last Name"
+              name="last_name"
+              style={{ marginBottom: 12 }}
+              rules={[
+                {
+                  required: true,
+                  message: "Please enter your last name!",
+                },
+              ]}
+            >
+              <Input onChange={(e) => setLastName(e.target.value)} />
+            </Form.Item>
+            <Form.Item style={{ marginBottom: 2 }}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  appearance="primary"
+                  loading={patient.loading}
+                >
+                  Submit
+                </Button>
+                <Button
+                  appearance="primary"
+                  disabled={patient.loading}
+                  onClick={() => setPage(2)}
+                >
+                  Already have a code?
+                </Button>
+              </div>
+            </Form.Item>
+          </Form>
         </Card>
-      ) : null}
+      )}
       {page === 2 ? (
-        <Card>
-          <CardHeader
-            style={{ backgroundColor: "#383d42", color: "#fff" }}
-            title={
-              <Typography variant="h5" align="center">
-                Code
-              </Typography>
-            }
-          />
-          <CardContent>
-            <Form fluid onSubmit={() => handelSubmit("code-verify")}>
-              <Grid container spacing={2}>
-                {patient.message ? (
-                  <Grid item xs={12}>
-                    <Message
-                      closable
-                      showIcon
-                      type="error"
-                      description={patient.message}
-                    />
-                  </Grid>
-                ) : null}
-
-                <Grid item xs={12}>
-                  <FormGroup>
-                    <ControlLabel>Code</ControlLabel>
-                    <FormControl onChange={(e) => setCode(e)} required />
-                  </FormGroup>
-                </Grid>
-                <Grid item xs={12} className="d-flex justify-content-between">
-                  <Button color="blue" type="submit" disabled={patient.loading}>
-                    Submit
-                  </Button>
-                  <Button disabled={patient.loading} onClick={() => setPage(1)}>
-                    Go Back
-                  </Button>
-                </Grid>
-              </Grid>
-            </Form>
-          </CardContent>
+        <Card
+          headStyle={{ backgroundColor: "#1F2937", border: "none" }}
+          title={
+            <Title level={3} style={{ color: "white" }} align="center">
+              Code
+            </Title>
+          }
+          bordered={false}
+          style={{ width: "100%" }}
+        >
+          {patient.message && <Alert type="error" message={patient.message} />}
+          <Form layout="vertical" onFinish={() => handelSubmit("code-verify")}>
+            <Form.Item
+              label="Enter your code"
+              name="code"
+              rules={[
+                {
+                  required: true,
+                  message: "Please enter the code you received in your email!",
+                },
+              ]}
+            >
+              <Input onChange={(e) => setCode(e.target.value)} />
+            </Form.Item>
+            <Form.Item style={{ marginBottom: 0 }}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  appearance="primary"
+                  loading={patient.loading}
+                >
+                  Submit
+                </Button>
+                <Button
+                  appearance="primary"
+                  disabled={patient.loading}
+                  onClick={() => setPage(1)}
+                >
+                  Back
+                </Button>
+              </div>
+            </Form.Item>
+          </Form>
         </Card>
       ) : null}
-      {page === 3 ? (
-        <Card>
-          <CardHeader
-            style={{ backgroundColor: "#383d42", color: "#fff" }}
-            title={
-              <Typography variant="h5" align="center">
-                Update Information
-              </Typography>
-            }
-          />
-          <CardContent>
-            <Form fluid onSubmit={() => handelSubmit("update-patient")}>
-              <Grid container spacing={2}>
-                {patient.message ? (
-                  <Grid item xs={12}>
-                    <Message
-                      closable
-                      showIcon
-                      type="error"
-                      description={patient.message}
-                    />
-                  </Grid>
-                ) : null}
-                <Grid item xs={12}>
-                  <FormGroup>
-                    <ControlLabel>Phone Number</ControlLabel>
-                    <FormControl
-                      name="phone"
-                      type="tel"
-                      pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-                      placeholder="123-456-7890"
-                      onChange={(e) => setPhone(e)}
-                    />
-                  </FormGroup>
-                </Grid>
-                <Grid item xs={12}>
-                  <FormGroup>
-                    <ControlLabel>Street Address</ControlLabel>
-                    <FormControl
-                      name="street_address"
-                      onChange={(e) => setStreetAddress(e)}
-                    />
-                  </FormGroup>
-                </Grid>
-                <Grid item xs={12}>
-                  <FormGroup>
-                    <ControlLabel>City</ControlLabel>
-                    <FormControl name="city" onChange={(e) => setCity(e)} />
-                  </FormGroup>
-                </Grid>
-                <Grid item xs={12}>
-                  <FormGroup>
-                    <ControlLabel>Parish</ControlLabel>
-                    <FormControl name="parish" onChange={(e) => setParish(e)} />
-                  </FormGroup>
-                </Grid>
-                <Grid item xs={12}>
-                  <FormGroup>
-                    <ControlLabel>Country</ControlLabel>
-                    <FormControl
-                      name="country"
-                      onChange={(e) => setCountry(e)}
-                    />
-                  </FormGroup>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Uploader
-                    autoUpload={false}
-                    listType="picture"
-                    onChange={(e) =>
-                      setImage(e.length !== 0 ? e[0].blobFile : null)
-                    }
-                  >
-                    <Button>
-                      <Icon icon="camera-retro" size="lg" />
-                    </Button>
-                  </Uploader>
-                </Grid>
-                <Grid item xs={12}>
-                  <Button color="blue" type="submit" disabled={patient.loading}>
-                    Submit
-                  </Button>
-                </Grid>
-              </Grid>
-            </Form>
-          </CardContent>
+      {page === 3 && (
+        <Card
+          headStyle={{ backgroundColor: "#1F2937", border: "none" }}
+          title={
+            <Title level={3} style={{ color: "white" }} align="center">
+              Update Information
+            </Title>
+          }
+          bordered={false}
+          style={{ width: "100%" }}
+        >
+          {patient.message && <Alert type="error" message={patient.message} />}
+          <Form
+            layout="vertical"
+            onFinish={() => handelSubmit("update-patient")}
+          >
+            <Form.Item
+              label="Mobile Number"
+              name="mobile_number"
+              style={{ marginBottom: 2 }}
+            >
+              <PhoneMask onChange={(e) => setPhone(e.target.value)} />
+            </Form.Item>
+            <Form.Item
+              label="Street Address"
+              name="street_address"
+              style={{ marginBottom: 2 }}
+            >
+              <Input onChange={(e) => setStreetAddress(e.target.value)} />
+            </Form.Item>
+            <Form.Item label="City" name="city" style={{ marginBottom: 2 }}>
+              <Input onChange={(e) => setCity(e.target.value)} />
+            </Form.Item>
+            <Form.Item label="Parish" name="parish" style={{ marginBottom: 2 }}>
+              <Select onChange={(e) => setParish(e)}>
+                {parishData.map((item, index) => (
+                  <Option key={index} value={item.value}>
+                    {item.label}
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
+            <Form.Item label="Picture" name="picture">
+              <Uploader
+                autoUpload={false}
+                listType="picture"
+                onChange={(e) =>
+                  setImage(e.length !== 0 ? e[0].blobFile : null)
+                }
+              >
+                <Button style={{ marginTop: -6 }}>
+                  <Icon icon="camera-retro" size="lg" />
+                </Button>
+              </Uploader>
+            </Form.Item>
+            <Form.Item style={{ marginBottom: 0 }}>
+              <Button
+                type="primary"
+                htmlType="submit"
+                appearance="primary"
+                loading={patient.loading}
+              >
+                Submit
+              </Button>
+            </Form.Item>
+          </Form>
         </Card>
-      ) : null}
+      )}
     </Container>
   );
 }

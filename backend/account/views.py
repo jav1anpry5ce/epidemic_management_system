@@ -70,7 +70,7 @@ def create(request):
             return Response({"Message": "Email is not valid"}, status=status.HTTP_400_BAD_REQUEST)
         return Response({"Message": "ummm... I don't think you are authorized to send this request."}, status=status.HTTP_401_UNAUTHORIZED)
     except:
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response({'Message': "Something went wrong."}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 def activate(request):

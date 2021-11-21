@@ -1,23 +1,12 @@
 import React, { useState, useEffect } from "react";
-import {
-  Button,
-  Form,
-  FormControl,
-  ControlLabel,
-  Message,
-  InputGroup,
-  Icon,
-} from "rsuite";
+import { Card, Input, Form, Button, Alert, Typography } from "antd";
 import Container from "@mui/material/Container";
-import Card from "@mui/material/Card";
-import CardHeader from "@mui/material/CardHeader";
-import CardContent from "@mui/material/CardContent";
-import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { changePassword, clearState } from "../../store/authSlice";
 import { setActiveKey } from "../../store/navbarSlice";
+
+const { Title } = Typography;
 
 export default function ChangePassword() {
   const auth = useSelector((state) => state.auth);
@@ -26,22 +15,6 @@ export default function ChangePassword() {
   const [oldPassword, setOldPassword] = useState();
   const [newPassword, setNewPassword] = useState();
   const [conPassword, setConPassword] = useState();
-  const [error, setError] = useState();
-  const [view, setView] = useState(false);
-  const [icon, setIcon] = useState("eye");
-  const [type, setType] = useState("password");
-
-  const setVisibility = () => {
-    if (!view) {
-      setView(true);
-      setIcon("eye-slash");
-      setType("text");
-    } else {
-      setView(false);
-      setIcon("eye");
-      setType("password");
-    }
-  };
 
   const handelSubmit = () => {
     if (newPassword === conPassword) {
@@ -68,98 +41,73 @@ export default function ChangePassword() {
       history.push("/");
       dispatch(clearState());
     }
-    if (conPassword !== newPassword) {
-      setError(true);
-    } else {
-      setError(false);
-    }
     return () => dispatch(clearState());
     // eslint-disable-next-line
-  }, [auth.success, conPassword, auth.is_auth]);
+  }, [auth.success, auth.is_auth]);
 
   return (
     <Container maxWidth="sm" style={{ marginTop: "3%" }}>
-      <Card>
-        <CardHeader
-          style={{ backgroundColor: "#383d42", color: "#fff" }}
-          title={
-            <Typography variant="h5" align="center">
+      <Card
+        headStyle={{ backgroundColor: "#1F2937", border: "none" }}
+        title={
+          <Title level={3} style={{ color: "white" }} align="center">
+            Change Password
+          </Title>
+        }
+        bordered={false}
+        style={{ width: "100%" }}
+      >
+        {auth.message && <Alert type="error" message={auth.message} />}
+        <Form layout="vertical" onFinish={handelSubmit}>
+          <Form.Item
+            label="Old Password"
+            name="old_password"
+            rules={[
+              {
+                required: true,
+                message: "Please enter your old password!",
+              },
+            ]}
+            style={{ marginBottom: 2 }}
+          >
+            <Input.Password onChange={(e) => setOldPassword(e.target.value)} />
+          </Form.Item>
+          <Form.Item
+            label="New Password"
+            name="new_password"
+            rules={[
+              {
+                required: true,
+                message: "Please enter your new password!",
+              },
+            ]}
+            style={{ marginBottom: 2 }}
+          >
+            <Input.Password onChange={(e) => setNewPassword(e.target.value)} />
+          </Form.Item>
+          <Form.Item
+            label="Confirm Password"
+            name="con_password"
+            rules={[
+              {
+                required: true,
+                message: "Please confirm your password!",
+              },
+            ]}
+          >
+            <Input.Password onChange={(e) => setConPassword(e.target.value)} />
+          </Form.Item>
+          <Form.Item style={{ marginBottom: 2 }}>
+            <Button
+              type="primary"
+              htmlType="submit"
+              appearance="primary"
+              loading={auth.loading}
+            >
               Change Password
-            </Typography>
-          }
-        />
-        <CardContent>
-          <Form fluid onSubmit={handelSubmit}>
-            <Grid container spacing={2}>
-              {auth.message ? (
-                <Grid item xs={12}>
-                  <Message
-                    closable
-                    showIcon
-                    type="error"
-                    description={auth.message}
-                  />
-                </Grid>
-              ) : null}
-              <Grid item xs={12}>
-                <ControlLabel>Old Password</ControlLabel>
-                <InputGroup>
-                  <FormControl
-                    required
-                    type={type}
-                    onChange={(e) => setOldPassword(e)}
-                  />
-                  <InputGroup.Button onClick={setVisibility}>
-                    <Icon icon={icon} />
-                  </InputGroup.Button>
-                </InputGroup>
-              </Grid>
-              <Grid item xs={12}>
-                <ControlLabel>New Password</ControlLabel>
-                <InputGroup>
-                  <FormControl
-                    required
-                    type={type}
-                    onChange={(e) => setNewPassword(e)}
-                  />
-                  <InputGroup.Button onClick={setVisibility}>
-                    <Icon icon={icon} />
-                  </InputGroup.Button>
-                </InputGroup>
-              </Grid>
-              <Grid item xs={12}>
-                <ControlLabel>Confirm Password</ControlLabel>
-                <InputGroup>
-                  <FormControl
-                    required
-                    type={type}
-                    onChange={(e) => setConPassword(e)}
-                    errorMessage={
-                      error
-                        ? "Confirm password does not match new password"
-                        : null
-                    }
-                    errorPlacement="bottomEnd"
-                  />
-                  <InputGroup.Button onClick={setVisibility}>
-                    <Icon icon={icon} />
-                  </InputGroup.Button>
-                </InputGroup>
-              </Grid>
-              <Grid item xs={12}>
-                {auth.loading ? (
-                  <Button disabled color="primary">
-                    Loading...
-                  </Button>
-                ) : (
-                  <Button type="submit" color="primary">
-                    Change Password
-                  </Button>
-                )}
-              </Grid>
-            </Grid>
-          </Form>
-        </CardContent>
+            </Button>
+          </Form.Item>
+        </Form>
       </Card>
     </Container>
   );

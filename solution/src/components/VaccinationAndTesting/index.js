@@ -1,24 +1,18 @@
 import React, { useState, useEffect } from "react";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
-import Card from "@mui/material/Card";
-import CardHeader from "@mui/material/CardHeader";
-import CardContent from "@mui/material/CardContent";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { setActiveKey } from "../../store/navbarSlice";
 import {
-  Form,
-  FormGroup,
-  FormControl,
-  ControlLabel,
-  DatePicker,
-  SelectPicker,
+  Card,
   Input,
+  Form,
   Button,
-  InputGroup,
-  Icon,
-} from "rsuite";
+  Typography,
+  DatePicker,
+  Select,
+} from "antd";
 import {
   getTest,
   getVac,
@@ -27,9 +21,12 @@ import {
   updateTest,
 } from "../../store/TestVacSlice";
 import formatDate from "../../functions/formatDate";
-import Typography from "@mui/material/Typography";
 import { open } from "../../functions/Notifications";
 import Loading from "../Loading";
+import moment from "moment";
+
+const { Title } = Typography;
+const { Option } = Select;
 
 export default function VaccinationAndTesting() {
   const dispatch = useDispatch();
@@ -44,16 +41,17 @@ export default function VaccinationAndTesting() {
   const [arm, setArm] = useState("");
   const [dose_number, setDoseNumber] = useState("");
   const [result, setResult] = useState("");
-  const dateFns = require("date-fns");
+  const [testForm] = Form.useForm();
+  const [vacForm] = Form.useForm();
 
   const armData = [
-    { label: "Left", value: "Left", role: "Master" },
-    { label: "Right", value: "Right", role: "Master" },
+    { label: "Left", value: "Left" },
+    { label: "Right", value: "Right" },
   ];
 
   const resultData = [
-    { label: "Positive", value: "Positive", role: "Master" },
-    { label: "Negative", value: "Negative", role: "Master" },
+    { label: "Positive", value: "Positive" },
+    { label: "Negative", value: "Negative" },
   ];
 
   useEffect(() => {
@@ -72,7 +70,7 @@ export default function VaccinationAndTesting() {
     dispatch(getVac(uuid));
   };
 
-  const handelClick = (type) => {
+  const handelSubmit = (type) => {
     if (type === "Vaccination") {
       const data = {
         id: uuid,
@@ -112,214 +110,208 @@ export default function VaccinationAndTesting() {
     // eslint-disable-next-line
   }, [testVac.success, testVac.message, testVac.Vaccination, testVac.dose]);
 
+  useEffect(() => {
+    testForm.setFieldsValue({ date: moment(new Date()) });
+    vacForm.setFieldsValue({ date: moment(new Date()) });
+    if (testVac.returnType === "Testing") {
+      testForm.setFieldsValue({ test_type: testVac.Testing.type });
+    }
+    if (testVac.returnType === "Vaccination") {
+      vacForm.setFieldsValue({
+        manufacturer: testVac.Vaccination.manufacture,
+        dose: testVac.dose,
+      });
+    }
+    // eslint-disable-next-line
+  }, [testVac.returnType]);
+
   return (
-    <Container maxWidth="md" className="d-flex justify-content-center">
+    <Container maxWidth="md" style={{ marginTop: "2%" }}>
       <Card
-        style={{
-          marginBottom: "1%",
-          marginTop: "5%",
-          width: "85%",
-        }}
+        headStyle={{ backgroundColor: "#1F2937", border: "none" }}
+        title={
+          <Title level={3} style={{ color: "white" }} align="center">
+            Update Vaccination/Testing Record
+          </Title>
+        }
+        bordered={false}
+        style={{ width: "100%" }}
       >
-        <CardHeader
-          style={{ backgroundColor: "#383d42", color: "#fff" }}
-          title={
-            <Typography variant="h5" align="center">
-              Update Vaccination and Testing Record
-            </Typography>
-          }
-        />
-        <CardContent>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <Typography variant="subtitle">
-                Scan or enter testing / vaccination ID provided by the patient
-              </Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <InputGroup size="lg">
-                <Input onChange={(e) => setUUID(e)} />
-                <InputGroup.Button onClick={fetchTestVac}>
-                  <Icon icon="search" />
-                </InputGroup.Button>
-              </InputGroup>
-            </Grid>
-            {testVac.loading && testVac.returnType === null ? (
-              <Loading />
-            ) : null}
-            {testVac.returnType !== null ? (
-              <Grid item xs={12}>
-                {testVac.returnType === "Testing" ? (
-                  testVac.Testing ? (
-                    <Form fluid onSubmit={handelClick}>
-                      <Grid container spacing={2}>
-                        <Grid item xs={6}>
-                          <FormGroup>
-                            <ControlLabel>ID</ControlLabel>
-                            <FormControl value={testVac.Testing.testing_id} />
-                          </FormGroup>
-                        </Grid>
-                        <Grid item xs={6}>
-                          <FormGroup>
-                            <ControlLabel>Date</ControlLabel>
-                            <DatePicker
-                              defaultValue={new Date()}
-                              block
-                              onChange={(e) => setDate(formatDate(e))}
-                              disabledDate={(date) =>
-                                dateFns.isBefore(date, new Date())
-                              }
-                            />
-                          </FormGroup>
-                        </Grid>
-                        <Grid item xs={6}>
-                          <FormGroup>
-                            <ControlLabel>Test Type</ControlLabel>
-                            <FormControl value={testVac.Testing.type} />
-                          </FormGroup>
-                        </Grid>
-                        <Grid item xs={6}>
-                          <FormGroup>
-                            <ControlLabel>Result</ControlLabel>
-                            <SelectPicker
-                              data={resultData}
-                              block
-                              onChange={(e) => setResult(e)}
-                              searchable={false}
-                            />
-                          </FormGroup>
-                        </Grid>
-                        <Grid item xs={12}>
-                          {testVac.loading ? (
-                            <Button block disabled>
-                              Updating...
-                            </Button>
-                          ) : (
-                            <Button
-                              block
-                              size="lg"
-                              appearance="primary"
-                              type="submit"
-                            >
-                              Update
-                            </Button>
-                          )}
-                        </Grid>
-                      </Grid>
-                    </Form>
-                  ) : null
-                ) : testVac.Vaccination ? (
-                  <Form fluid onSubmit={() => handelClick("Vaccination")}>
-                    <Grid container spacing={2}>
-                      <Grid item xs={6}>
-                        <FormGroup>
-                          <ControlLabel>ID</ControlLabel>
-                          <FormControl
-                            value={testVac.Vaccination.vaccination_id}
-                          />
-                        </FormGroup>
-                      </Grid>
-                      <Grid item xs={6}>
-                        <FormGroup>
-                          <ControlLabel>Date</ControlLabel>
-                          <DatePicker
-                            block
-                            defaultValue={new Date()}
-                            onChange={(e) => setDate(formatDate(e))}
-                            required
-                            disabledDate={(date) =>
-                              dateFns.isBefore(date, new Date())
-                            }
-                          />
-                        </FormGroup>
-                      </Grid>
-                      <Grid item xs={6}>
-                        <FormGroup>
-                          <ControlLabel>Manufacturer</ControlLabel>
-                          <FormControl
-                            value={testVac.Vaccination.manufacture}
-                          />
-                          {/* <SelectPicker
-                            searchable={false}
-                            defaultValue={testVac.Vaccination.manufacture}
-                            data={manufactureData}
-                            block
-                            onChange={(e) => setManufacture(e)}
-                          /> */}
-                        </FormGroup>
-                      </Grid>
-                      <Grid item xs={6}>
-                        <FormGroup>
-                          <ControlLabel>Vial Number</ControlLabel>
-                          <FormControl
-                            onChange={(e) => setVileNumber(e)}
-                            required
-                          />
-                        </FormGroup>
-                      </Grid>
-                      <Grid item xs={6}>
-                        <FormGroup>
-                          <ControlLabel>Administering Person</ControlLabel>
-                          <FormControl
-                            onChange={(e) => setAdministerPerson(e)}
-                            required
-                          />
-                        </FormGroup>
-                      </Grid>
-                      <Grid item xs={6}>
-                        <FormGroup>
-                          <ControlLabel>Arm</ControlLabel>
-                          <SelectPicker
-                            searchable={false}
-                            data={armData}
-                            block
-                            onChange={(e) => setArm(e)}
-                            required
-                          />
-                        </FormGroup>
-                      </Grid>
-                      <Grid item xs={6}>
-                        <FormGroup>
-                          <ControlLabel>Dose</ControlLabel>
-                          <FormControl value={testVac.dose} />
-                          {/* <SelectPicker
-                            searchable={false}
-                            data={doseData}
-                            block
-                            onChange={(e) => setDoseNumber(e)}
-                          /> */}
-                        </FormGroup>
-                      </Grid>
-                      <Grid item xs={12}>
-                        {testVac.loading ? (
-                          <Button block size="lg" appearance="primary" disabled>
-                            Updating...
-                          </Button>
-                        ) : (
-                          <Button
-                            block
-                            size="lg"
-                            appearance="primary"
-                            type="submit"
-                          >
-                            Update
-                          </Button>
-                        )}
-                      </Grid>
-                    </Grid>
-                  </Form>
-                ) : null}
+        <Typography.Text>
+          Scan or enter testing / vaccination ID provided by the patient
+        </Typography.Text>
+        <Form layout="vertical">
+          <Form.Item>
+            <Input.Search
+              onChange={(e) => setUUID(e.target.value)}
+              onSearch={fetchTestVac}
+              size="large"
+            />
+          </Form.Item>
+        </Form>
+        {testVac.Loading && testVac.returnType === null && <Loading />}
+        {testVac.returnType === "Testing" && (
+          <Form layout="vertical" onFinish={handelSubmit} form={testForm}>
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <Form.Item label="Date" name="date" style={{ marginBottom: 2 }}>
+                  <DatePicker
+                    format="DD/MM/yyyy"
+                    onChange={(e) => setDate(formatDate(e))}
+                    style={{ width: "100%" }}
+                  />
+                </Form.Item>
               </Grid>
-            ) : testVac.unauthorized ? (
-              <Grid item xs={12}>
-                <Typography variant="h6" align="center">
-                  Record does not exist or you are not unauthorized to make
-                  changes to this record.
-                </Typography>
+              <Grid item xs={6}>
+                <Form.Item
+                  label="Test Type"
+                  name="test_type"
+                  style={{ marginBottom: 2 }}
+                >
+                  <Input />
+                </Form.Item>
               </Grid>
-            ) : null}
-          </Grid>
-        </CardContent>
+              <Grid item xs={6}>
+                <Form.Item
+                  label="Result"
+                  name="result"
+                  style={{ marginBottom: 14 }}
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please select test result!",
+                    },
+                  ]}
+                >
+                  <Select onChange={(e) => setResult(e)}>
+                    {resultData.map((item) => (
+                      <Option value={item.value}>{item.label}</Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              </Grid>
+              <Grid item xs={12}>
+                <Form.Item style={{ marginBottom: 2 }}>
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    appearance="primary"
+                    loading={testVac.loading}
+                  >
+                    Submit
+                  </Button>
+                </Form.Item>
+              </Grid>
+            </Grid>
+          </Form>
+        )}
+        {testVac.returnType === "Vaccination" && (
+          <Form
+            layout="vertical"
+            onFinish={() => handelSubmit("Vaccination")}
+            form={vacForm}
+          >
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <Form.Item label="Date" name="date" style={{ marginBottom: 2 }}>
+                  <DatePicker
+                    format="DD/MM/YYYY"
+                    onChange={(e) => setDate(formatDate(e))}
+                    style={{ width: "100%" }}
+                  />
+                </Form.Item>
+              </Grid>
+              <Grid item xs={6}>
+                <Form.Item
+                  label="Manufacturer"
+                  name="manufacturer"
+                  style={{ marginBottom: 2 }}
+                >
+                  <Input readOnly />
+                </Form.Item>
+              </Grid>
+              <Grid item xs={6}>
+                <Form.Item
+                  label="Vial Number"
+                  name="vial_number"
+                  style={{ marginBottom: 2 }}
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please enter vial number!",
+                    },
+                  ]}
+                >
+                  <Input
+                    type="number"
+                    onChange={(e) => setVileNumber(e.target.value)}
+                  />
+                </Form.Item>
+              </Grid>
+              <Grid item xs={6}>
+                <Form.Item
+                  label="Administering Person"
+                  name="administering_person"
+                  style={{ marginBottom: 2 }}
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please enter your name!",
+                    },
+                  ]}
+                >
+                  <Input
+                    onChange={(e) => setAdministerPerson(e.target.value)}
+                  />
+                </Form.Item>
+              </Grid>
+              <Grid item xs={6}>
+                <Form.Item
+                  label="Arm"
+                  name="arm"
+                  style={{ marginBottom: 2 }}
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please select an arm!",
+                    },
+                  ]}
+                >
+                  <Select onChange={(e) => setArm(e)}>
+                    {armData.map((item, index) => (
+                      <Option key={index} value={item.value}>
+                        {item.label}
+                      </Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              </Grid>
+              <Grid item xs={6}>
+                <Form.Item label="Dose" name="dose" style={{ marginBottom: 2 }}>
+                  <Input readOnly />
+                </Form.Item>
+              </Grid>
+              <Grid item xs={6}>
+                <Form.Item style={{ marginBottom: 2 }}>
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    appearance="primary"
+                    loading={testVac.loading}
+                  >
+                    Submit
+                  </Button>
+                </Form.Item>
+              </Grid>
+            </Grid>
+          </Form>
+        )}
+        {testVac.unauthorized && testVac.returnType === null && (
+          <Title level={4} align="center">
+            Record does not exist or you are not unauthorized to make changes to
+            this record.
+          </Title>
+        )}
       </Card>
     </Container>
   );

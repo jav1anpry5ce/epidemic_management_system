@@ -10,54 +10,31 @@ export const makeAppointment = createAsyncThunk(
       },
     };
     let formData = new FormData();
+    formData.append("tax_number", data.tax_number);
+    formData.append("title", data.title);
+    formData.append("first_name", data.first_name);
+    formData.append("last_name", data.last_name);
+    formData.append("email", data.email);
+    formData.append("phone", data.phone);
+    formData.append("date_of_birth", data.date_of_birth);
+    formData.append("gender", data.gender);
+    formData.append("street_address", data.street_address);
+    formData.append("city", data.city);
+    formData.append("parish", data.parish);
+    formData.append("country", data.country);
+    formData.append("location", data.location);
+    formData.append("date", data.date);
+    formData.append("time", data.time);
+    formData.append("type", data.type);
+    formData.append("patient_choice", data.patient_choice);
     if (data.image) {
-      formData.append("tax_number", data.tax_number);
-      formData.append("title", data.title);
-      formData.append("first_name", data.first_name);
-      formData.append("last_name", data.last_name);
-      formData.append("email", data.email);
-      formData.append("phone", data.phone);
-      formData.append("date_of_birth", data.date_of_birth);
-      formData.append("gender", data.gender);
-      formData.append("street_address", data.street_address);
-      formData.append("city", data.city);
-      formData.append("parish", data.parish);
-      formData.append("country", data.country);
-      formData.append("location", data.location);
-      formData.append("date", data.date);
-      formData.append("time", data.time);
-      formData.append("type", data.type);
-      formData.append("patient_choice", data.patient_choice);
       formData.append("image", data.image);
-      formData.append("identification", data.identification);
-      formData.append("kin_first_name", data.kin_first_name);
-      formData.append("kin_last_name", data.kin_last_name);
-      formData.append("kin_email", data.kin_email);
-      formData.append("kin_phone", data.kin_phone);
-    } else {
-      formData.append("tax_number", data.tax_number);
-      formData.append("title", data.title);
-      formData.append("first_name", data.first_name);
-      formData.append("last_name", data.last_name);
-      formData.append("email", data.email);
-      formData.append("phone", data.phone);
-      formData.append("date_of_birth", data.date_of_birth);
-      formData.append("gender", data.gender);
-      formData.append("street_address", data.street_address);
-      formData.append("city", data.city);
-      formData.append("parish", data.parish);
-      formData.append("country", data.country);
-      formData.append("location", data.location);
-      formData.append("date", data.date);
-      formData.append("time", data.time);
-      formData.append("type", data.type);
-      formData.append("patient_choice", data.patient_choice);
-      formData.append("kin_first_name", data.kin_first_name);
-      formData.append("kin_last_name", data.kin_last_name);
-      formData.append("kin_email", data.kin_email);
-      formData.append("kin_phone", data.kin_phone);
-      formData.append("identification", data.identification);
     }
+    formData.append("identification", data.identification);
+    formData.append("kin_first_name", data.kin_first_name);
+    formData.append("kin_last_name", data.kin_last_name);
+    formData.append("kin_email", data.kin_email);
+    formData.append("kin_phone", data.kin_phone);
     try {
       const response = await axios.post("/api/appointments/", formData, config);
       if (response.status === 201) {

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Container from "@mui/material/Container";
-import { Input, InputGroup, Icon } from "rsuite";
+// import { Input, InputGroup, Icon } from "rsuite";
+import { Input } from "antd";
 import Grid from "@mui/material/Grid";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -18,6 +19,8 @@ import { useHistory } from "react-router-dom";
 import CustomPagination from "../CustomPagination";
 import { open } from "../../functions/Notifications";
 import { setActiveKey } from "../../store/navbarSlice";
+
+const { Search } = Input;
 
 export default function Appointments() {
   const dispatch = useDispatch();
@@ -82,7 +85,7 @@ export default function Appointments() {
         <CardHeader
           style={{ backgroundColor: "#383d42", color: "#fff" }}
           title={
-            <Typography variant="h5" align="center">
+            <Typography variant="h5" align="center" style={{ color: "#fff" }}>
               Appointment Finder
             </Typography>
           }
@@ -93,16 +96,11 @@ export default function Appointments() {
               <Typography variant="caption">
                 Enter appointment ID to find your appointment
               </Typography>
-              <InputGroup size="lg">
-                <Input
-                  onChange={(e) => {
-                    setQ(e);
-                  }}
-                />
-                <InputGroup.Button onClick={handelSearch}>
-                  <Icon icon="search" />
-                </InputGroup.Button>
-              </InputGroup>
+              <Search
+                onChange={(e) => setQ(e.target.value)}
+                onSearch={handelSearch}
+                style={{ marginBottom: -18 }}
+              />
             </Grid>
             {appointments.searchMessage ? (
               <Grid item xs={12}>

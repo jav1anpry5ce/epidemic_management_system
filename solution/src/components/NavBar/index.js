@@ -88,7 +88,6 @@ export default function NavBar() {
         style={{
           backgroundColor: "#12142b",
           color: "#fffff",
-          marginBottom: "1%",
         }}
       >
         <Navbar.Body>
@@ -286,7 +285,7 @@ export default function NavBar() {
       </Navbar>
     );
   } else if (hide) {
-    return <Container style={{ marginTop: "2%" }}></Container>;
+    return <Container></Container>;
   } else {
     return (
       <Navbar
@@ -294,7 +293,6 @@ export default function NavBar() {
         style={{
           backgroundColor: "#000829",
           color: "#fffff",
-          marginBottom: "1%",
         }}
       >
         <Navbar.Body>

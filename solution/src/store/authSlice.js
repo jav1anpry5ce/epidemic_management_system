@@ -181,7 +181,6 @@ export const authSlice = createSlice({
     },
     [login.pending]: (state) => {
       state.loading = true;
-      state.message = null;
     },
     [login.fulfilled]: (state, { payload }) => {
       state.loading = false;

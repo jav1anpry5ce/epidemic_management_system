@@ -70,6 +70,7 @@ export default function PositiveCases() {
     dispatch(setActiveKey("3"));
     dispatch(getPositiveCases());
     return () => dispatch(clearState());
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
@@ -84,6 +85,7 @@ export default function PositiveCases() {
       setStatus(data.caseData.case.status);
       setLocation(data.caseData.case.recovering_location);
     }
+    // eslint-disable-next-line
   }, [data.success, data.message, data.caseData]);
 
   const ActionCell = ({ rowData, dataKey, ...props }) => {
