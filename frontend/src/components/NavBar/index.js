@@ -11,6 +11,7 @@ import { BiTestTube, BiCurrentLocation } from "react-icons/bi";
 import { GiHypodermicTest, GiCardboardBox } from "react-icons/gi";
 import { BsPersonFill, BsPersonPlusFill } from "react-icons/bs";
 import { RiVirusLine } from "react-icons/ri";
+import { AiFillHome } from "react-icons/ai";
 
 export default function NavBar() {
   const auth = useSelector((state) => state.auth);
@@ -103,80 +104,60 @@ export default function NavBar() {
                 </Nav.Item>
                 <Nav.Item
                   eventKey="2"
-                  icon={
-                    <BsPersonFill
-                      style={{ fontSize: 18, marginRight: 3, marginBottom: 3 }}
-                    />
-                  }
                   onClick={() => nagivate("/moh/patients")}
                 >
-                  Patients
+                  <div className="flex">
+                    {<BsPersonFill className="flex text-lg mr-1" />}
+                    Patients
+                  </div>
                 </Nav.Item>
                 <Nav.Item
                   eventKey="3"
-                  icon={
-                    <RiVirusLine
-                      style={{ fontSize: 18, marginRight: 3, marginBottom: 3 }}
-                    />
-                  }
                   onClick={() => nagivate("/moh/positive-cases")}
                 >
-                  Positive Cases
+                  <div className="flex">
+                    {<RiVirusLine className="flex text-lg mr-1" />}
+                    Positive Cases
+                  </div>
                 </Nav.Item>
                 <Nav.Item
                   eventKey="4"
-                  icon={
-                    <GiCardboardBox
-                      style={{ fontSize: 18, marginRight: 3, marginBottom: 3 }}
-                    />
-                  }
                   onClick={() => nagivate("/moh/batch-management")}
                 >
-                  Batch
+                  <div className="flex">
+                    {<GiCardboardBox className="flex text-lg mr-1" />}
+                    Batch
+                  </div>
                 </Nav.Item>
                 <Nav.Item
                   eventKey="5"
-                  icon={
-                    <BiCurrentLocation
-                      style={{ fontSize: 18, marginRight: 3, marginBottom: 3 }}
-                    />
-                  }
                   onClick={() => nagivate("/moh/locations")}
                 >
-                  Locations
+                  <div className="flex">
+                    {<BiCurrentLocation className="flex text-lg mr-1" />}
+                    Locations
+                  </div>
                 </Nav.Item>
                 {auth.is_moh_admin ? (
                   <Nav.Item
                     eventKey="6"
-                    icon={
-                      <BsPersonPlusFill
-                        style={{
-                          fontSize: 18,
-                          marginRight: 3,
-                          marginBottom: 3,
-                        }}
-                      />
-                    }
                     onClick={() => nagivate("/moh/add-location-admin")}
                   >
-                    Add Location Admin
+                    <div className="flex">
+                      {<BsPersonPlusFill className="flex text-lg mr-1" />}
+                      Add Location Admin
+                    </div>
                   </Nav.Item>
                 ) : null}
                 {auth.is_moh_admin ? (
                   <Nav.Item
                     eventKey="7"
-                    icon={
-                      <BsPersonPlusFill
-                        style={{
-                          fontSize: 18,
-                          marginRight: 3,
-                          marginBottom: 3,
-                        }}
-                      />
-                    }
                     onClick={() => nagivate("/moh/add-moh-staff")}
                   >
-                    Add MOH Staff
+                    <div className="flex">
+                      {<BsPersonPlusFill className="flex text-lg mr-1" />}
+                      Add MOH Staff
+                    </div>
                   </Nav.Item>
                 ) : null}
               </Nav>
@@ -215,7 +196,6 @@ export default function NavBar() {
             </Container>
           ) : (
             <Container maxWidth="xsl">
-              {" "}
               <Nav onSelect={handelSelect} activeKey={nav.activeKey}>
                 <Nav.Item
                   eventKey="1"
@@ -277,10 +257,6 @@ export default function NavBar() {
               </Nav>
             </Container>
           )}
-
-          {/* <Nav pullRight>
-          <Nav.Item icon={<Icon icon="cog" />}>Settings</Nav.Item>
-        </Nav> */}
         </Navbar.Body>
       </Navbar>
     );
@@ -299,12 +275,11 @@ export default function NavBar() {
           {show ? (
             <Container maxWidth="xsl">
               <Nav onSelect={handelSelect} activeKey={nav.activeKey}>
-                <Nav.Item
-                  icon={<Icon icon="home" />}
-                  onClick={() => nagivate("/")}
-                  eventKey="1"
-                >
-                  Home
+                <Nav.Item onClick={() => nagivate("/")} eventKey="1">
+                  <div className="flex">
+                    {<AiFillHome className="flex text-lg mr-1" />}
+                    Home
+                  </div>
                 </Nav.Item>
                 <Nav.Item
                   eventKey="2"
@@ -314,9 +289,11 @@ export default function NavBar() {
                       "_self"
                     )
                   }
-                  icon={<BiTestTube style={{ fontSize: 18, marginRight: 3 }} />}
                 >
-                  Testing Information
+                  <div className="flex">
+                    {<BiTestTube className="flex text-lg mr-1" />}
+                    Testing Information
+                  </div>
                 </Nav.Item>
                 <Nav.Item
                   eventKey="3"
@@ -326,13 +303,11 @@ export default function NavBar() {
                       "_self"
                     )
                   }
-                  icon={
-                    <GiHypodermicTest
-                      style={{ fontSize: 18, marginRight: 5 }}
-                    />
-                  }
                 >
-                  Vaccine Information
+                  <div className="flex">
+                    {<GiHypodermicTest className="flex text-lg mr-1" />}
+                    Vaccine Information
+                  </div>
                 </Nav.Item>
                 <Nav.Item
                   onClick={() => {
