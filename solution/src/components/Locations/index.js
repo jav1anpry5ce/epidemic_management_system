@@ -4,25 +4,24 @@ import { useHistory } from "react-router-dom";
 import { locationDetails, clearState } from "../../store/mohSlice";
 import { setActiveKey } from "../../store/navbarSlice";
 import Container from "@mui/material/Container";
-import Typography from "@mui/material/Typography";
-import Card from "@mui/material/Card";
-import CardHeader from "@mui/material/CardHeader";
-import CardContent from "@mui/material/CardContent";
-import { IconButton, Table, Input } from "rsuite";
-import PlusIcon from "@rsuite/icons/Plus";
-const { Column, HeaderCell, Cell, Pagination } = Table;
+import { Table, Tooltip, Typography, Card, Button } from "antd";
+import axios from "axios";
+
+const { Title } = Typography;
 
 export default function Locations() {
-  const data = useSelector((state) => state.moh);
   const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const history = useHistory();
-  const [search, setSearch] = useState();
-  const [sortColumn, setSortColumn] = useState();
-  const [sortType, setSortType] = useState("asc");
+  const [data, setData] = useState();
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 20,
+  });
+  const [pageSize, setPageSize] = useState(20);
   const [page, setPage] = useState(1);
-  const [displayLength, setDisplayLength] = useState(15);
   const [loading, setLoading] = useState(false);
+  const scroll = { y: 560 };
 
   useEffect(() => {
     if (!auth.is_moh_staff) {
@@ -34,163 +33,143 @@ export default function Locations() {
     // eslint-disable-next-line
   }, [auth.is_moh_staff]);
 
-  const getData = () => {
-    var locations = data.locationDetails;
-    if (sortColumn && sortType) {
-      locations = data.locationDetails.slice().sort((a, b) => {
-        let x = a[sortColumn];
-        let y = b[sortColumn];
-        if (typeof x === "string") {
-          x = x.charCodeAt();
-        }
-        if (typeof y === "string") {
-          y = y.charCodeAt();
-        }
-        if (sortType === "asc") {
-          return x - y;
-        } else {
-          return y - x;
-        }
-      });
-    }
-    return locations.filter((v, i) => {
-      const start = displayLength * (page - 1);
-      const end = start + displayLength;
-      return i >= start && i < end;
-    });
-  };
-
-  const filteredData = () => {
-    var locations = data.locationDetails;
-    locations = locations.filter((location) => {
-      return (
-        location.name.toLowerCase().includes(search.toLowerCase()) ||
-        location.parish.includes(search)
-      );
-    });
-    return locations;
-  };
-
-  const filtered = () => {
-    var f = filteredData();
-    return f.filter((v, i) => {
-      const start = displayLength * (page - 1);
-      const end = start + displayLength;
-      return i >= start && i < end;
-    });
-  };
-
-  const handleSortColumn = (sortColumn, sortType) => {
+  const fetch = () => {
     setLoading(true);
-    setTimeout(() => {
-      setSortColumn(sortColumn);
-      setSortType(sortType);
-      setLoading(false);
-    }, 500);
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Token " + sessionStorage.getItem("token"),
+      },
+    };
+    axios
+      .get(`/api/location-details/?page=${page}&pageSize=${pageSize}`, config)
+      .then((data) => {
+        setLoading(false);
+        setData(data.data.results);
+        setPagination({
+          current: page,
+          pageSize: pageSize,
+          total: data.data.count,
+        });
+      })
+      .catch(() => {
+        setLoading(false);
+      });
   };
 
-  const handlePagechange = (dataKey) => {
-    setPage(dataKey);
+  useEffect(() => {
+    fetch();
+    // eslint-disable-next-line
+  }, [page, pageSize]);
+
+  const handleTableChange = (pagination) => {
+    setPage(pagination.current);
+    setPageSize(pagination.pageSize);
   };
 
-  const handleLengthChange = (dataKey) => {
-    setPage(1);
-    setDisplayLength(dataKey);
-  };
+  const columns = [
+    {
+      title: "Location",
+      dataIndex: "name",
+      render: (name) => (
+        <Tooltip placement="topLeft" title={name}>
+          {name}
+        </Tooltip>
+      ),
+      ellipsis: {
+        showTitle: false,
+      },
+    },
+    {
+      title: "Pending Appointments",
+      dataIndex: "pending_appointments",
+      render: (pending_appointments) => (
+        <Tooltip placement="topLeft" title={pending_appointments}>
+          {pending_appointments}
+        </Tooltip>
+      ),
+      ellipsis: {
+        showTitle: false,
+      },
+    },
+    {
+      title: "Vaccines In Stock",
+      dataIndex: "number_of_vaccine",
+      render: (number_of_vaccine) => (
+        <Tooltip placement="topLeft" title={number_of_vaccine}>
+          {number_of_vaccine}
+        </Tooltip>
+      ),
+      ellipsis: {
+        showTitle: false,
+      },
+    },
+
+    {
+      title: "Test Administer",
+      dataIndex: "tests_administer",
+      render: (tests_administer) => (
+        <Tooltip placement="topLeft" title={tests_administer}>
+          {tests_administer}
+        </Tooltip>
+      ),
+      ellipsis: {
+        showTitle: false,
+      },
+    },
+    {
+      title: "City",
+      dataIndex: "city",
+      render: (city) => (
+        <Tooltip placement="topLeft" title={city}>
+          {city}
+        </Tooltip>
+      ),
+      ellipsis: {
+        showTitle: false,
+      },
+    },
+    {
+      title: "Parish",
+      dataIndex: "parish",
+      render: (parish) => (
+        <Tooltip placement="topLeft" title={parish}>
+          {parish}
+        </Tooltip>
+      ),
+      ellipsis: {
+        showTitle: false,
+      },
+    },
+  ];
 
   return (
-    <Container maxWidth="lg">
-      <Card>
-        <CardHeader
-          style={{ backgroundColor: "#383d42" }}
-          title={
-            <Typography variant="h5" align="center" style={{ color: "#ffff" }}>
-              Locations
-            </Typography>
-          }
+    <Container maxWidth="lg" style={{ marginTop: "2%" }}>
+      <Card
+        headStyle={{ backgroundColor: "#1F2937", border: "none" }}
+        title={
+          <Title level={3} style={{ color: "white" }} align="center">
+            Locations
+          </Title>
+        }
+        bordered={false}
+        style={{ width: "100%" }}
+      >
+        <Button
+          type="primary"
+          onClick={() => history.push("/moh/add-location")}
+          style={{ marginBottom: 2, marginTop: -8 }}
+        >
+          Add Location Batch
+        </Button>
+        <Table
+          columns={columns}
+          dataSource={data}
+          pagination={pagination}
+          loading={loading}
+          onChange={handleTableChange}
+          scroll={scroll}
         />
-        <CardContent>
-          <div className="d-flex justify-content-between">
-            <Input
-              size="sm"
-              placeholder="Search by location or parish"
-              onChange={(e) => setSearch(e)}
-              style={{ width: "35%" }}
-            />
-            {auth.is_moh_admin ? (
-              <IconButton
-                icon={<PlusIcon />}
-                onClick={() => history.push("/moh/add-location")}
-              >
-                Add A New Location
-              </IconButton>
-            ) : null}
-          </div>
-          <Table
-            virtualized
-            fluid
-            hover
-            height={600}
-            loading={data.loading ? data.loading : loading}
-            data={data.locationDetails ? (search ? filtered() : getData()) : []}
-            sortColumn={sortColumn}
-            sortType={sortType}
-            onSortColumn={handleSortColumn}
-          >
-            <Column flexGrow sortable>
-              <HeaderCell>Location</HeaderCell>
-              <Cell dataKey={"name"} />
-            </Column>
-            <Column align="center" flexGrow sortable>
-              <HeaderCell>Pending Appointments</HeaderCell>
-              <Cell dataKey={"pending_appointments"} />
-            </Column>
-            <Column align="center" flexGrow>
-              <HeaderCell>Vaccines In Stock</HeaderCell>
-              <Cell dataKey={"number_of_vaccine"} />
-            </Column>
-            <Column align="center" flexGrow>
-              <HeaderCell>Test Administer</HeaderCell>
-              <Cell dataKey={"tests_administer"} />
-            </Column>
-            <Column align="center" flexGrow>
-              <HeaderCell>Vaccine Administer</HeaderCell>
-              <Cell dataKey={"vaccines_administer"} />
-            </Column>
-            <Column flexGrow>
-              <HeaderCell>City</HeaderCell>
-              <Cell dataKey={"city"} />
-            </Column>
-            <Column flexGrow sortable>
-              <HeaderCell>Parish</HeaderCell>
-              <Cell dataKey={"parish"} />
-            </Column>
-          </Table>
-          <Pagination
-            style={{ height: 10 }}
-            lengthMenu={[
-              {
-                value: 15,
-                label: 15,
-              },
-              {
-                value: 30,
-                label: 30,
-              },
-            ]}
-            activePage={page}
-            displayLength={displayLength}
-            total={
-              data.locationDetails
-                ? search
-                  ? filteredData().length
-                  : data.locationDetails.length
-                : null
-            }
-            onChangePage={handlePagechange}
-            onChangeLength={handleLengthChange}
-          />
-        </CardContent>
       </Card>
     </Container>
   );

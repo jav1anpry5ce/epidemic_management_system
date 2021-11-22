@@ -110,7 +110,7 @@ export default function AppointmentManagement({ match }) {
   }, [location.data, appointment.appointments, appointment.secondDose]);
 
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth="lg" style={{ marginTop: "2%" }}>
       {appointment.loading ? <Loading /> : null}
       {appointment.appointments ? (
         <Grid
@@ -142,14 +142,18 @@ export default function AppointmentManagement({ match }) {
           >
             <Card
               style={{
-                backgroundColor: "rgba(255,255,255, 0.5)",
+                backgroundColor: "rgba(255,255,255, 0.9)",
                 color: "black",
               }}
             >
               <CardHeader
-                style={{ backgroundColor: "#383d42", color: "#fff" }}
+                style={{ backgroundColor: "#1F2937", color: "#fff" }}
                 title={
-                  <Typography align="center" variant="h6">
+                  <Typography
+                    align="center"
+                    variant="h5"
+                    style={{ color: "white" }}
+                  >
                     Appointment Information
                   </Typography>
                 }

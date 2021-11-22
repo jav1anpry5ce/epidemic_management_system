@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Container from "@mui/material/Container";
-import Card from "@mui/material/Card";
-import CardHeader from "@mui/material/CardHeader";
-import CardContent from "@mui/material/CardContent";
 import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
 import { useSelector, useDispatch } from "react-redux";
 import {
   clearState,
@@ -15,21 +11,25 @@ import {
 } from "../../store/mohSlice";
 import { useHistory } from "react-router-dom";
 import { setActiveKey } from "../../store/navbarSlice";
+import { EyeOutlined } from "@ant-design/icons";
+import { LoadingOutlined } from "@ant-design/icons";
 import {
-  FormGroup,
-  ControlLabel,
-  Loader,
-  Icon,
-  IconButton,
   Table,
-  Input,
+  Tooltip,
+  Typography,
+  Card,
   Modal,
-  SelectPicker,
+  Form,
+  Input,
+  Spin,
+  Select,
   Button,
-} from "rsuite";
+} from "antd";
 import toLocaldate from "../../functions/toLocalDate";
 import { open } from "../../functions/Notifications";
-const { Column, HeaderCell, Cell, Pagination } = Table;
+import axios from "axios";
+const { Title } = Typography;
+const { Option } = Select;
 
 const recoveringLocationData = [
   { label: "Home", value: "Home" },
@@ -51,14 +51,25 @@ function calculate_age(dob) {
 }
 
 export default function PositiveCases() {
-  const data = useSelector((state) => state.moh);
+  const moh = useSelector((state) => state.moh);
   const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const history = useHistory();
   const [show, setShow] = useState(false);
   const [status, setStatus] = useState("");
   const [location, setLocation] = useState("");
+  const [loading, setLoading] = useState(false);
   const [caseId, setCaseId] = useState("");
+  const [data, setData] = useState();
+  const [order, setOrder] = useState("");
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 20,
+  });
+  const [pageSize, setPageSize] = useState(20);
+  const [page, setPage] = useState(1);
+  const [form] = Form.useForm();
+  const scroll = { y: 560 };
 
   useEffect(() => {
     if (!auth.is_auth && !auth.is_moh_staff) {
@@ -73,44 +84,82 @@ export default function PositiveCases() {
     // eslint-disable-next-line
   }, []);
 
+  const fetch = (searchField, q) => {
+    setLoading(true);
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Token " + sessionStorage.getItem("token"),
+      },
+    };
+    axios
+      .get(
+        `/api/get-positive-cases/?page=${page}&pageSize=${pageSize}&ordering=${order}status${
+          searchField === "trn"
+            ? `&tax_number=${q}`
+            : searchField === "last_name"
+            ? `&last_name=${q}`
+            : ""
+        }`,
+        config
+      )
+      .then((data) => {
+        setLoading(false);
+        setData(data.data.results);
+        setPagination({
+          current: page,
+          pageSize: pageSize,
+          total: data.data.count,
+        });
+      })
+      .catch(() => {
+        setLoading(false);
+      });
+  };
+
   useEffect(() => {
-    if (data.success) {
+    fetch();
+    // eslint-disable-next-line
+  }, [page, order, pageSize]);
+
+  useEffect(() => {
+    if (moh.success) {
       dispatch(updateSuccess());
       onHide();
     }
-    if (data.message) {
-      open("error", "Error", data.message);
+    if (moh.message) {
+      open("error", "Error", moh.message);
     }
-    if (data.caseData) {
-      setStatus(data.caseData.case.status);
-      setLocation(data.caseData.case.recovering_location);
+    if (moh.caseData) {
+      form.setFieldsValue({
+        first_name: moh.caseData.case.patient.first_name,
+        last_name: moh.caseData.case.patient.last_name,
+        gender: moh.caseData.case.patient.gender,
+        dob: moh.caseData.case.patient.date_of_birth,
+        email: moh.caseData.case.patient.email,
+        phone: moh.caseData.case.patient.phone,
+        street_address: moh.caseData.case.patient.street_address,
+        city: moh.caseData.case.patient.city,
+        parish: moh.caseData.case.patient.parish,
+        kin_first_name: moh.caseData.next_of_kin.kin_first_name,
+        kin_last_name: moh.caseData.next_of_kin.kin_last_name,
+        kin_email: moh.caseData.next_of_kin.kin_email,
+        kin_phone: moh.caseData.next_of_kin.kin_phone,
+        tested: toLocaldate(moh.caseData.case.date_tested),
+        location: moh.caseData.case.recovering_location,
+        status: moh.caseData.case.status,
+      });
+      setStatus(moh.caseData.case.status);
+      setLocation(moh.caseData.case.recovering_location);
     }
     // eslint-disable-next-line
-  }, [data.success, data.message, data.caseData]);
-
-  const ActionCell = ({ rowData, dataKey, ...props }) => {
-    function handleAction() {
-      const case_id = rowData[dataKey];
-      setCaseId(case_id);
-      dispatch(getCase(case_id));
-      setShow(true);
-      //   dispatch(getAppointment(data));
-    }
-    return (
-      <Cell {...props}>
-        <IconButton
-          appearance="subtle"
-          onClick={handleAction}
-          icon={<Icon icon="eye" />}
-        />
-      </Cell>
-    );
-  };
+  }, [moh.success, moh.message, moh.caseData]);
 
   const onHide = () => {
     setShow(false);
     dispatch(clearState());
-    dispatch(getPositiveCases());
+    fetch();
+    // dispatch(getPositiveCases());
   };
 
   const onSubmit = () => {
@@ -124,211 +173,305 @@ export default function PositiveCases() {
     }
   };
 
+  const handleTableChange = (pagination, a, sorter) => {
+    if (sorter.order === "ascend") setOrder("");
+    else if (sorter.order === "descend") setOrder("-");
+    else setOrder("");
+    setPage(pagination.current);
+    setPageSize(pagination.pageSize);
+  };
+
+  const columns = [
+    {
+      title: "Name",
+      dataIndex: "patient",
+      render: (patient) => (
+        <Tooltip
+          placement="topLeft"
+          title={`${patient.first_name} ${patient.last_name}`}
+        >
+          {patient.first_name} {patient.last_name}
+        </Tooltip>
+      ),
+      ellipsis: {
+        showTitle: false,
+      },
+    },
+    {
+      title: "Gender",
+      dataIndex: "patient",
+      render: (patient) => (
+        <Tooltip placement="topLeft" title={patient.gender}>
+          {patient.gender}
+        </Tooltip>
+      ),
+      ellipsis: {
+        showTitle: false,
+      },
+    },
+    {
+      title: "Age",
+      dataIndex: "patient",
+      render: (patient) => (
+        <Tooltip
+          placement="topLeft"
+          title={calculate_age(new Date(patient.date_of_birth))}
+        >
+          {calculate_age(new Date(patient.date_of_birth))}
+        </Tooltip>
+      ),
+      ellipsis: {
+        showTitle: false,
+      },
+    },
+
+    {
+      title: "Recovering Location",
+      dataIndex: "recovering_location",
+      render: (recovering_location) => (
+        <Tooltip placement="topLeft" title={recovering_location}>
+          {recovering_location}
+        </Tooltip>
+      ),
+      ellipsis: {
+        showTitle: false,
+      },
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      sorter: true,
+      render: (status) => (
+        <Tooltip placement="topLeft" title={status}>
+          {status}
+        </Tooltip>
+      ),
+      ellipsis: {
+        showTitle: false,
+      },
+    },
+    {
+      title: "Action",
+      dataIndex: "case_id",
+      render: (dataIndex) => (
+        <EyeOutlined
+          className="hover:text-blue-400 cursor-pointer"
+          onClick={() => {
+            setShow(true);
+            setCaseId(dataIndex);
+            dispatch(getCase(dataIndex));
+          }}
+        />
+      ),
+    },
+  ];
+
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth="lg" style={{ marginTop: "2%" }}>
       <Modal
-        show={show}
-        onHide={onHide}
-        overflow={true}
-        style={{ height: "150vh" }}
-        size="lg"
+        style={{ marginTop: -100 }}
+        width={720}
+        visible={show}
+        onCancel={() => setShow(false)}
+        onOk={() => setShow(false)}
+        footer={[
+          <Button type="primary" onClick={onSubmit} disabled={moh.updating}>
+            Submit
+          </Button>,
+          <Button onClick={onHide} disabled={moh.updating}>
+            Cancel
+          </Button>,
+        ]}
       >
-        <Modal.Header>
-          <Modal.Title align="center">Case Information</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {data.caseData ? (
-            <Grid container spacing={1}>
+        {moh.caseData && (
+          <Form layout="vertical" form={form}>
+            <Grid container spacing={2}>
               <Grid item xs={12}>
-                <Typography variant="h6">Personal Information</Typography>
+                <Title level={4}>Personal Information</Title>
               </Grid>
               <Grid item xs={6}>
-                <FormGroup>
-                  <ControlLabel>First Name</ControlLabel>
-                  <Input value={data.caseData.case.patient.first_name} />
-                </FormGroup>
+                <Form.Item
+                  label="First Name"
+                  name="first_name"
+                  style={{ marginBottom: 0 }}
+                >
+                  <Input readOnly />
+                </Form.Item>
               </Grid>
               <Grid item xs={6}>
-                <FormGroup>
-                  <ControlLabel>Last Name</ControlLabel>
-                  <Input value={data.caseData.case.patient.last_name} />
-                </FormGroup>
+                <Form.Item
+                  label="Last Name"
+                  name="last_name"
+                  style={{ marginBottom: 0 }}
+                >
+                  <Input readOnly />
+                </Form.Item>
               </Grid>
               <Grid item xs={6}>
-                <FormGroup>
-                  <ControlLabel>Gender</ControlLabel>
-                  <Input value={data.caseData.case.patient.gender} />
-                </FormGroup>
+                <Form.Item
+                  label="Gender"
+                  name="gender"
+                  style={{ marginBottom: 0 }}
+                >
+                  <Input readOnly />
+                </Form.Item>
               </Grid>
               <Grid item xs={6}>
-                <FormGroup>
-                  <ControlLabel>Date of Birth</ControlLabel>
-                  <Input value={data.caseData.case.patient.date_of_birth} />
-                </FormGroup>
+                <Form.Item
+                  label="Date of Birth"
+                  name="dob"
+                  style={{ marginBottom: 0 }}
+                >
+                  <Input readOnly />
+                </Form.Item>
               </Grid>
               <Grid item xs={6}>
-                <FormGroup>
-                  <ControlLabel>Email</ControlLabel>
-                  <Input value={data.caseData.case.patient.email} />
-                </FormGroup>
+                <Form.Item
+                  label="Email"
+                  name="email"
+                  style={{ marginBottom: 0 }}
+                >
+                  <Input readOnly />
+                </Form.Item>
               </Grid>
               <Grid item xs={6}>
-                <FormGroup>
-                  <ControlLabel>Phone Number</ControlLabel>
-                  <Input value={data.caseData.case.patient.phone} />
-                </FormGroup>
+                <Form.Item
+                  label="Mobile Number"
+                  name="phone"
+                  style={{ marginBottom: 0 }}
+                >
+                  <Input readOnly />
+                </Form.Item>
               </Grid>
               <Grid item xs={6}>
-                <FormGroup>
-                  <ControlLabel>Street Address</ControlLabel>
-                  <Input value={data.caseData.case.patient.street_address} />
-                </FormGroup>
+                <Form.Item
+                  label="Street Address"
+                  name="street_address"
+                  style={{ marginBottom: 0 }}
+                >
+                  <Input readOnly />
+                </Form.Item>
               </Grid>
               <Grid item xs={6}>
-                <FormGroup>
-                  <ControlLabel>City</ControlLabel>
-                  <Input value={data.caseData.case.patient.city} />
-                </FormGroup>
+                <Form.Item label="City" name="city" style={{ marginBottom: 0 }}>
+                  <Input readOnly />
+                </Form.Item>
               </Grid>
               <Grid item xs={6}>
-                <FormGroup>
-                  <ControlLabel>Parish</ControlLabel>
-                  <Input value={data.caseData.case.patient.parish} />
-                </FormGroup>
-              </Grid>
-              <Grid item xs={6}>
-                <FormGroup>
-                  <ControlLabel>Country</ControlLabel>
-                  <Input value={data.caseData.case.patient.country} />
-                </FormGroup>
-              </Grid>
-              <Grid item xs={12}>
-                <Typography variant="h6">Next of Kin Information</Typography>
-              </Grid>
-              <Grid item xs={6}>
-                <FormGroup>
-                  <ControlLabel>First Name</ControlLabel>
-                  <Input value={data.caseData.next_of_kin.kin_first_name} />
-                </FormGroup>
-              </Grid>
-              <Grid item xs={6}>
-                <FormGroup>
-                  <ControlLabel>Last Name</ControlLabel>
-                  <Input value={data.caseData.next_of_kin.kin_last_name} />
-                </FormGroup>
-              </Grid>
-              <Grid item xs={6}>
-                <FormGroup>
-                  <ControlLabel>Email</ControlLabel>
-                  <Input value={data.caseData.next_of_kin.kin_email} />
-                </FormGroup>
-              </Grid>
-              <Grid item xs={6}>
-                <FormGroup>
-                  <ControlLabel>Phone</ControlLabel>
-                  <Input value={data.caseData.next_of_kin.kin_phone} />
-                </FormGroup>
+                <Form.Item
+                  label="Parish"
+                  name="parish"
+                  style={{ marginBottom: 0 }}
+                >
+                  <Input readOnly />
+                </Form.Item>
               </Grid>
               <Grid item xs={12}>
-                <Typography variant="h6">Case Information</Typography>
+                <Title level={4}>Next of Kin Information</Title>
+              </Grid>
+              <Grid item xs={6}>
+                <Form.Item
+                  label="First Name"
+                  name="kin_first_name"
+                  style={{ marginBottom: 0 }}
+                >
+                  <Input readOnly />
+                </Form.Item>
+              </Grid>
+              <Grid item xs={6}>
+                <Form.Item
+                  label="Last Name"
+                  name="kin_last_name"
+                  style={{ marginBottom: 0 }}
+                >
+                  <Input readOnly />
+                </Form.Item>
+              </Grid>
+              <Grid item xs={6}>
+                <Form.Item
+                  label="Email"
+                  name="kin_email"
+                  style={{ marginBottom: 0 }}
+                >
+                  <Input readOnly />
+                </Form.Item>
+              </Grid>
+              <Grid item xs={6}>
+                <Form.Item
+                  label="Mobile Number"
+                  name="kin_phone"
+                  style={{ marginBottom: 0 }}
+                >
+                  <Input readOnly />
+                </Form.Item>
               </Grid>
               <Grid item xs={12}>
-                <FormGroup>
-                  <ControlLabel>Date Tested</ControlLabel>
-                  <Input value={toLocaldate(data.caseData.case.date_tested)} />
-                </FormGroup>
+                <Title level={4}>Case Information</Title>
               </Grid>
               <Grid item xs={6}>
-                <FormGroup>
-                  <ControlLabel>Recovering Location</ControlLabel>
-                  <SelectPicker
-                    block
-                    searchable={false}
-                    data={recoveringLocationData}
-                    defaultValue={data.caseData.case.recovering_location}
-                    onChange={(e) => setLocation(e)}
-                  />
-                  {/* <Input value={data.caseData.case.recovering_location} /> */}
-                </FormGroup>
+                <Form.Item
+                  label="Date Tested"
+                  name="tested"
+                  style={{ marginBottom: 0 }}
+                >
+                  <Input readOnly />
+                </Form.Item>
               </Grid>
               <Grid item xs={6}>
-                <FormGroup>
-                  <ControlLabel>Status</ControlLabel>
-                  <SelectPicker
-                    block
-                    searchable={false}
-                    data={recoveringData}
-                    defaultValue={data.caseData.case.status}
-                    onChange={(e) => setStatus(e)}
-                  />
-                  {/* <Input value={data.caseData.case.status} /> */}
-                </FormGroup>
+                <Form.Item
+                  label="Recovering Location"
+                  name="location"
+                  style={{ marginBottom: 0 }}
+                >
+                  <Select onChange={(e) => setLocation(e)}>
+                    {recoveringLocationData.map((item, index) => (
+                      <Option key={index} value={item.value}>
+                        {item.label}
+                      </Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              </Grid>
+              <Grid item xs={6}>
+                <Form.Item
+                  label="Status"
+                  name="status"
+                  style={{ marginBottom: 0 }}
+                >
+                  <Select onChange={(e) => setStatus(e)}>
+                    {recoveringData.map((item, index) => (
+                      <Option key={index} value={item.value}>
+                        {item.label}
+                      </Option>
+                    ))}
+                  </Select>
+                </Form.Item>
               </Grid>
             </Grid>
-          ) : data.caseLoading ? (
-            <div style={{ textAlign: "center" }}>
-              <Loader size="md" />
-            </div>
-          ) : null}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button color="blue" onClick={onSubmit} disabled={data.updating}>
-            Submit
-          </Button>
-          <Button onClick={onHide} disabled={data.updating}>
-            Cancel
-          </Button>
-        </Modal.Footer>
+          </Form>
+        )}
+        {moh.loading && (
+          <Spin indicator={<LoadingOutlined style={{ fontSize: 42 }} />} />
+        )}
       </Modal>
-      <Card>
-        <CardHeader
-          style={{ backgroundColor: "#383d42" }}
-          title={
-            <Typography variant="h5" align="center" style={{ color: "#ffff" }}>
-              Positive Cases
-            </Typography>
-          }
+      <Card
+        headStyle={{ backgroundColor: "#1F2937", border: "none" }}
+        title={
+          <Title level={3} style={{ color: "white" }} align="center">
+            Positive Cases
+          </Title>
+        }
+        bordered={false}
+        style={{ width: "100%" }}
+      >
+        <Table
+          columns={columns}
+          dataSource={data}
+          pagination={pagination}
+          loading={loading}
+          onChange={handleTableChange}
+          scroll={scroll}
         />
-        <CardContent>
-          <Table
-            height={570}
-            data={data.positiveCases ? data.positiveCases : []}
-            loading={data.loading}
-          >
-            <Column flexGrow>
-              <HeaderCell>First Name</HeaderCell>
-              <Cell>{(rowData) => rowData.patient.first_name}</Cell>
-            </Column>
-            <Column flexGrow>
-              <HeaderCell>Last Name</HeaderCell>
-              <Cell>{(rowData) => rowData.patient.last_name}</Cell>
-            </Column>
-            <Column flexGrow>
-              <HeaderCell>Gender</HeaderCell>
-              <Cell>{(rowData) => rowData.patient.gender}</Cell>
-            </Column>
-            <Column flexGrow>
-              <HeaderCell>Age</HeaderCell>
-              <Cell>
-                {(rowData) =>
-                  calculate_age(new Date(rowData.patient.date_of_birth))
-                }
-              </Cell>
-            </Column>
-            <Column flexGrow>
-              <HeaderCell>Recovering Location</HeaderCell>
-              <Cell dataKey={"recovering_location"} />
-            </Column>
-            <Column flexGrow>
-              <HeaderCell>Status</HeaderCell>
-              <Cell dataKey={"status"} />
-            </Column>
-            <Column flexGrow>
-              <HeaderCell>Action</HeaderCell>
-              <ActionCell dataKey={"case_id"} />
-            </Column>
-          </Table>
-        </CardContent>
       </Card>
     </Container>
   );

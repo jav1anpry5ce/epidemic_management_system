@@ -13,6 +13,7 @@ from functions import convertTime
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import filters
 from django_filters import rest_framework as filterss
+from django.core.paginator import Paginator
 
 from .models import Location, Offer, Test, Appointment
 from .serializers import LocationSerializer, OfferSerializer, TestSerializer, AppointmentSerializer, CreateAppointmentSerializer
@@ -471,7 +472,10 @@ def breakdown(request):
                     'parish': location.parish,
                 }
                 location_list.append(location_dict)
-            return Response(location_list, status=status.HTTP_200_OK)
+                paginator = CustomPageNumberPagination()
+                result_page = paginator.paginate_queryset(location_list, request)
+            return paginator.get_paginated_response(result_page)
+            # return Response(location_list, status=status.HTTP_200_OK)
         return Response({'Message': 'You are unauthorized to make this request.'}, status=status.HTTP_401_UNAUTHORIZED)
     except:
         return Response(status=status.HTTP_400_BAD_REQUEST)

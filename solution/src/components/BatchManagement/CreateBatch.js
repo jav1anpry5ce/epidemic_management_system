@@ -8,25 +8,17 @@ import {
   updateSuccess,
 } from "../../store/mohSlice";
 import Container from "@mui/material/Container";
-import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
-import Card from "@mui/material/Card";
-import CardHeader from "@mui/material/CardHeader";
-import CardContent from "@mui/material/CardContent";
 import Paper from "@mui/material/Paper";
 import { useReactToPrint } from "react-to-print";
 import { setActiveKey } from "../../store/navbarSlice";
-import {
-  Button,
-  Form,
-  FormGroup,
-  ControlLabel,
-  InputPicker,
-  InputNumber,
-} from "rsuite";
+import { Card, Input, Form, Button, Typography, Select } from "antd";
 import Loading from "../Loading";
 import PrintView from "./PrintView";
 import { open } from "../../functions/Notifications";
+
+const { Title } = Typography;
+const { Option } = Select;
 
 export default function CreateBatch() {
   const data = useSelector((state) => state.moh);
@@ -37,6 +29,7 @@ export default function CreateBatch() {
   const [vaccine, setVaccine] = useState("");
   const [dose, setDose] = useState("");
   const componenetRef = useRef();
+  const [form] = Form.useForm();
 
   useEffect(() => {
     if (!auth.is_moh_staff && !auth.is_auth) {
@@ -57,10 +50,12 @@ export default function CreateBatch() {
       open("error", "Error", data.message);
     }
     if (data.success) {
+      form.resetFields();
       setLocation("");
       setVaccine("");
       setDose("");
     }
+    // eslint-disable-next-line
   }, [data.message, data.success]);
 
   const handelSubmit = () => {
@@ -89,7 +84,7 @@ export default function CreateBatch() {
 
   if (data.batchInfo) {
     return (
-      <Container maxWidth="sm">
+      <Container maxWidth="sm" style={{ marginTop: "2%" }}>
         {data.success ? (
           <Paper elevation={1} style={{ width: 585 }}>
             <Container>
@@ -105,7 +100,9 @@ export default function CreateBatch() {
                   xs={12}
                   className="d-flex justify-content-between mb-3"
                 >
-                  <Button onClick={handlePrint}>Print</Button>
+                  <Button type="primary" onClick={handlePrint}>
+                    Print
+                  </Button>
                   <Button onClick={() => dispatch(updateSuccess())}>
                     Create new batch
                   </Button>
@@ -114,78 +111,93 @@ export default function CreateBatch() {
             </Container>
           </Paper>
         ) : (
-          <Card>
-            <CardHeader
-              style={{ backgroundColor: "#383d42" }}
-              title={
-                <Typography
-                  variant="h5"
-                  align="center"
-                  style={{ color: "#ffff" }}
+          <Card
+            headStyle={{ backgroundColor: "#1F2937", border: "none" }}
+            title={
+              <Title level={4} style={{ color: "white" }} align="center">
+                Create a new location Batch
+              </Title>
+            }
+            bordered={false}
+            style={{ width: "100%" }}
+          >
+            <Form layout="vertical" onFinish={handelSubmit} form={form}>
+              <Form.Item
+                label="Location"
+                name="location"
+                style={{ marginBottom: 2 }}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please select location!",
+                  },
+                ]}
+              >
+                <Select onChange={(e) => setLocation(e)}>
+                  {data.batchInfo.locations.map((item, index) => (
+                    <Option key={index} value={item.value}>
+                      {item.label}
+                    </Option>
+                  ))}
+                </Select>
+              </Form.Item>
+              <Form.Item
+                label="Vaccine"
+                name="vaccine"
+                style={{ marginBottom: 2 }}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please select vaccine!",
+                  },
+                ]}
+              >
+                <Select onChange={(e) => setVaccine(e)}>
+                  {data.batchInfo.vaccines.map((item, index) => (
+                    <Option key={index} value={item.value}>
+                      {item.label}
+                    </Option>
+                  ))}
+                </Select>
+              </Form.Item>
+              <Form.Item
+                label="Number of Dose"
+                name="number_of_dose"
+                style={{ marginBottom: 12 }}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please enter number of dose!",
+                  },
+                ]}
+              >
+                <Input
+                  type="number"
+                  onChange={(e) => setDose(e.target.value)}
+                />
+              </Form.Item>
+              <Form.Item style={{ marginBottom: 2 }}>
+                <div
+                  style={{ display: "flex", justifyContent: "space-between" }}
                 >
-                  Create a new location Batch
-                </Typography>
-              }
-            />
-            <CardContent>
-              <Form onSubmit={handelSubmit}>
-                <Grid container spacing={2}>
-                  <Grid item xs={12}>
-                    <FormGroup>
-                      <ControlLabel>Location</ControlLabel>
-                      <InputPicker
-                        block
-                        data={data.batchInfo.locations}
-                        onChange={(e) => setLocation(e)}
-                      />
-                    </FormGroup>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <FormGroup>
-                      <ControlLabel>Vaccine</ControlLabel>
-                      <InputPicker
-                        block
-                        data={data.batchInfo.vaccines}
-                        onChange={(e) => setVaccine(e)}
-                      />
-                    </FormGroup>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <FormGroup>
-                      <ControlLabel>Number of Dose</ControlLabel>
-                      <InputNumber
-                        min={10}
-                        step={10}
-                        style={{ width: "100%" }}
-                        onChange={(e) => setDose(e)}
-                      />
-                    </FormGroup>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Grid container spacing={2} justifyContent="space-between">
-                      <Grid item>
-                        {data.loading ? (
-                          <Button disabled color="primary">
-                            Submiting
-                          </Button>
-                        ) : (
-                          <Button type="submit" color="primary">
-                            Submit
-                          </Button>
-                        )}
-                      </Grid>
-                      <Grid item>
-                        <Button
-                          onClick={() => history.push("/moh/batch-management")}
-                        >
-                          Cancel
-                        </Button>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Grid>
-              </Form>
-            </CardContent>
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    appearance="primary"
+                    loading={data.loading}
+                  >
+                    Submit
+                  </Button>
+                  <Button
+                    appearance="primary"
+                    loading={data.loading}
+                    onClick={() => history.push("/moh/batch-management")}
+                  >
+                    Back
+                  </Button>
+                </div>
+              </Form.Item>
+            </Form>
           </Card>
         )}
       </Container>

@@ -1,9 +1,7 @@
-import { Notification } from "rsuite";
-
-export function open(funcName, title, description) {
-  Notification[funcName]({
-    title: title,
-    placement: "topEnd",
+import { notification } from "antd";
+export function open(type, message, description) {
+  notification[type]({
+    message: message,
     description: description,
   });
 }

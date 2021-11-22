@@ -78,12 +78,20 @@ export default function MOHHOME() {
                 <CardContent>
                   <Grid container spacing={3}>
                     <Grid item xs={12}>
-                      <Typography variant="h5" align="center">
+                      <Typography
+                        variant="h5"
+                        align="center"
+                        style={{ color: "white" }}
+                      >
                         {data.name}
                       </Typography>
                     </Grid>
                     <Grid item xs={12}>
-                      <Typography variant="h5" align="center">
+                      <Typography
+                        variant="h5"
+                        align="center"
+                        style={{ color: "white" }}
+                      >
                         {data.data}
                       </Typography>
                     </Grid>

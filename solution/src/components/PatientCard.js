@@ -24,7 +24,7 @@ const useStyle = makeStyles(() => ({
     color: "white",
   },
   background: {
-    backgroundColor: "#383d42",
+    backgroundColor: "#1F2937",
   },
 }));
 

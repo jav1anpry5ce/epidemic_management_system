@@ -1,10 +1,15 @@
 from rest_framework import status, permissions
 from rest_framework.views import APIView
+from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework.decorators import parser_classes, permission_classes
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.decorators import api_view
 from django.core.mail import EmailMultiAlternatives
+from rest_framework.pagination import PageNumberPagination
+import django_filters
+from rest_framework import filters
+from django_filters import rest_framework as filterss
 
 from .models import Patient, UpdatePatientCode, PatientCode, NextOfKin, PositiveCase
 from .serializers import PatientSerializer, CreatePatientSerializer, GetDetailedPatient, UpdatePatientSerializer, NextOfKinSerializer, PositiveCaseSerializer
@@ -144,43 +149,60 @@ class CreatePatientView(APIView):
         except:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
-class MOHPatientView(APIView):
-    def get(self, request):
-        try:
-            if request.user.is_moh_staff:
-                patients = Patient.objects.all()
-                seraializer = GetDetailedPatient(patients, many=True)
-                return Response(seraializer.data, status=status.HTTP_200_OK)
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
-        except:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
 
-    def post(self, request):
-        try:
-            if request.user.is_moh_staff:
-                patient = Patient.objects.get(tax_number=request.data.get('tax_number'))
-                tests = Testing.objects.filter(patient=patient, status='Completed')
-                vaccines = Vaccination.objects.filter(patient=patient, status='Completed')
-                tests_serializer = TestingSerializer(tests, many=True)
-                vaccine_serializer = VaccinationSerializer(vaccines, many=True)
-                patient_seraializer = GetDetailedPatient(patient)
-                res = {'patient': patient_seraializer.data, 'tests': tests_serializer.data, 'vaccines': vaccine_serializer.data}
-                return Response(res, status=status.HTTP_200_OK)
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
-        except:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
+class CustomPageNumberPagination(PageNumberPagination):
+    page_size_query_param = 'pageSize'
+
+class UserFiltering(filters.BaseFilterBackend):
+    def filter_queryset(self, request, queryset, view):
+        if request.user.is_authenticated:
+                return queryset.all()
+
+class MOHPatientView(ListAPIView):
+    queryset = Patient.objects.all()
+    serializer_class = GetDetailedPatient
+    filter_backends = [UserFiltering, filterss.DjangoFilterBackend, filters.OrderingFilter]
+    filter_fields = {
+            'last_name': ['exact', 'contains', 'in'],
+            'tax_number': ['exact', 'contains', 'in']
+        }
+    pagination_class = CustomPageNumberPagination
 
 @api_view(['GET'])
 @permission_classes([permissions.IsAuthenticated])
-def get_positive_cases(request):
+def get_patient(request, trn):
     try:
         if request.user.is_moh_staff:
-            cases = PositiveCase.objects.all()
-            serializer = PositiveCaseSerializer(cases, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response({'Message': 'You are not authorized to view positive cases!'}, status=status.HTTP_401_UNAUTHORIZED)
+            patient = Patient.objects.get(tax_number=trn)
+            tests = Testing.objects.filter(patient=patient, status='Completed')
+            vaccines = Vaccination.objects.filter(patient=patient, status='Completed')
+            tests_serializer = TestingSerializer(tests, many=True)
+            vaccine_serializer = VaccinationSerializer(vaccines, many=True)
+            patient_seraializer = GetDetailedPatient(patient)
+            res = {'patient': patient_seraializer.data, 'tests': tests_serializer.data, 'vaccines': vaccine_serializer.data}
+            return Response(res, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
     except:
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+
+class GetPositiveCases(ListAPIView):
+    queryset = PositiveCase.objects.all()
+    serializer_class = PositiveCaseSerializer
+    filter_backends = [UserFiltering, filterss.DjangoFilterBackend, filters.OrderingFilter]
+    pagination_class = CustomPageNumberPagination
+
+# @api_view(['GET'])
+# @permission_classes([permissions.IsAuthenticated])
+# def get_positive_cases(request):
+#     try:
+#         if request.user.is_moh_staff:
+#             cases = PositiveCase.objects.all()
+#             serializer = PositiveCaseSerializer(cases, many=True)
+#             return Response(serializer.data, status=status.HTTP_200_OK)
+#         return Response({'Message': 'You are not authorized to view positive cases!'}, status=status.HTTP_401_UNAUTHORIZED)
+#     except:
+#         return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET'])

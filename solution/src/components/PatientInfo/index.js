@@ -56,7 +56,7 @@ function PatientInfo({ match }) {
     );
   } else {
     return (
-      <Container>
+      <Container style={{ marginTop: "2%" }}>
         {patient.info && patient.vaccineRecord && patient.testingRecord ? (
           <Grid container spacing={4}>
             <Grid item xs={12} sm={6}>

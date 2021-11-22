@@ -35,3 +35,5 @@ pnp-debug.log*
 .env.production.local
 
 static/
+media/
+qr_codes/

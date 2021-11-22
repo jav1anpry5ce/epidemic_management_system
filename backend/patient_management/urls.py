@@ -12,7 +12,8 @@ urlpatterns = [
     path('verify-code/', views.verify_code),
     path('update-info/', views.update_info),
     path('all-patients/', views.MOHPatientView.as_view()),
-    path('get-positive-cases/', views.get_positive_cases),
+    path('get-patient/<trn>', views.get_patient),
+    path('get-positive-cases/', views.GetPositiveCases.as_view()),
     path('get-case/<case_id>', views.get_case),
     path('update-case/<case_id>', views.update_case),
 ]

@@ -1,42 +1,55 @@
 import React, { useState, useEffect } from "react";
 import Container from "@mui/material/Container";
-import Card from "@mui/material/Card";
-import CardHeader from "@mui/material/CardHeader";
-import CardContent from "@mui/material/CardContent";
 import Avatar from "@mui/material/Avatar";
 import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
 import { useSelector, useDispatch } from "react-redux";
-import { getAllPatients, getPatient, clearPatient } from "../../store/mohSlice";
+import { getPatient } from "../../store/mohSlice";
 import { useHistory } from "react-router-dom";
 import CollapseCard from "../CollapseCard";
 import { setActiveKey } from "../../store/navbarSlice";
+import { EyeOutlined } from "@ant-design/icons";
+import { LoadingOutlined } from "@ant-design/icons";
 import {
-  FormGroup,
-  ControlLabel,
-  Loader,
-  Icon,
-  IconButton,
   Table,
-  Input,
+  Tooltip,
+  Typography,
+  Card,
   Modal,
-} from "rsuite";
-const { Column, HeaderCell, Cell, Pagination } = Table;
+  Form,
+  Input,
+  Spin,
+  Select,
+} from "antd";
+import axios from "axios";
+const { Title } = Typography;
+const { Option } = Select;
+
+const searchFields = [
+  { value: "trn", label: "TRN" },
+  { value: "last_name", label: "Last Name" },
+];
 
 export default function Patients() {
-  const data = useSelector((state) => state.moh);
+  const moh = useSelector((state) => state.moh);
   const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const history = useHistory();
-  const [sortColumn, setSortColumn] = useState();
-  const [sortType, setSortType] = useState("asc");
+  const [data, setData] = useState();
+  const [order, setOrder] = useState("");
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 20,
+  });
+  const [pageSize, setPageSize] = useState(20);
   const [page, setPage] = useState(1);
-  const [displayLength, setDisplayLength] = useState(10);
   const [loading, setLoading] = useState(false);
-  const [search, setSearch] = useState();
+  const [q, setQ] = useState();
+  const [searchField, setSearchField] = useState();
   const [show, setShow] = useState(false);
   const [vaccinedExpaned, setVaccinedExpanded] = useState(false);
   const [testingExpaned, setTestingExpanded] = useState(false);
+  const [form] = Form.useForm();
+  const scroll = { y: 560 };
 
   useEffect(() => {
     if (!auth.is_auth && !auth.is_moh_staff) {
@@ -46,92 +59,73 @@ export default function Patients() {
 
   useEffect(() => {
     dispatch(setActiveKey("2"));
-    dispatch(getAllPatients());
   }, [dispatch]);
 
   useEffect(() => {
-    setLoading(data.loading);
-  }, [data.loading]);
+    setLoading(moh.loading);
+  }, [moh.loading]);
 
-  const ActionCell = ({ rowData, dataKey, ...props }) => {
-    function handleAction() {
-      const data = {
-        tax_number: rowData[dataKey],
-      };
-      dispatch(getPatient(data));
-      setShow(true);
-      //   dispatch(getAppointment(data));
-    }
-    return (
-      <Cell {...props}>
-        <IconButton
-          appearance="subtle"
-          onClick={handleAction}
-          icon={<Icon icon="eye" />}
-        />
-      </Cell>
-    );
+  const fetch = (searchField, q) => {
+    setLoading(true);
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Token " + sessionStorage.getItem("token"),
+      },
+    };
+    axios
+      .get(
+        `/api/all-patients/?page=${page}&pageSize=${pageSize}&ordering=${order}tax_number${
+          searchField === "trn"
+            ? `&tax_number=${q}`
+            : searchField === "last_name"
+            ? `&last_name=${q}`
+            : ""
+        }`,
+        config
+      )
+      .then((data) => {
+        setLoading(false);
+        setData(data.data.results);
+        setPagination({
+          current: page,
+          pageSize: pageSize,
+          total: data.data.count,
+        });
+      })
+      .catch(() => {
+        setLoading(false);
+      });
   };
 
-  const getData = () => {
-    var patients = data.patients;
-    if (sortColumn && sortType) {
-      patients = data.patients.slice().sort((a, b) => {
-        let x = a[sortColumn];
-        let y = b[sortColumn];
-        if (typeof x === "string") {
-          x = x.charCodeAt();
-        }
-        if (typeof y === "string") {
-          y = y.charCodeAt();
-        }
-        if (sortType === "asc") {
-          return x - y;
-        } else {
-          return y - x;
-        }
+  const handleTableChange = (pagination, a, sorter) => {
+    if (sorter.order === "ascend") setOrder("");
+    else if (sorter.order === "descend") setOrder("-");
+    else setOrder("");
+    setPage(pagination.current);
+    setPageSize(pagination.pageSize);
+  };
+
+  useEffect(() => {
+    fetch();
+    // eslint-disable-next-line
+  }, [page, order, pageSize]);
+
+  useEffect(() => {
+    if (moh.patient) {
+      form.setFieldsValue({
+        first_name: moh.patient.first_name,
+        last_name: moh.patient.last_name,
+        gender: moh.patient.gender,
+        dob: moh.patient.date_of_birth,
+        email: moh.patient.email,
+        mobile_number: moh.patient.phone,
+        street_address: moh.patient.street_address,
+        city: moh.patient.city,
+        parish: moh.patient.parish,
       });
     }
-    return patients.filter((v, i) => {
-      const start = displayLength * (page - 1);
-      const end = start + displayLength;
-      return i >= start && i < end;
-    });
-  };
-
-  const filteredData = () => {
-    var patients = data.patients;
-    patients = patients.filter((patient) => {
-      return (
-        patient.last_name.toLowerCase().includes(search.toLowerCase()) ||
-        patient.tax_number.includes(search)
-      );
-    });
-    return patients;
-  };
-
-  const handleSortColumn = (sortColumn, sortType) => {
-    setLoading(true);
-    setTimeout(() => {
-      setSortColumn(sortColumn);
-      setSortType(sortType);
-      setLoading(false);
-    }, 500);
-  };
-
-  const handlePagechange = (dataKey) => {
-    setPage(dataKey);
-  };
-
-  const handleLengthChange = (dataKey) => {
-    setPage(1);
-    setDisplayLength(dataKey);
-  };
-
-  const handelHide = () => {
-    dispatch(clearPatient());
-    setShow(false);
-  };
+  });
 
   const expandVaccine = () => {
     if (vaccinedExpaned) {
@@ -149,100 +143,208 @@ export default function Patients() {
     }
   };
 
+  const columns = [
+    {
+      title: "TRN",
+      dataIndex: "tax_number",
+      sorter: true,
+      render: (tax_number) => (
+        <Tooltip placement="topLeft" title={tax_number}>
+          {tax_number}
+        </Tooltip>
+      ),
+      ellipsis: {
+        showTitle: false,
+      },
+    },
+    {
+      title: "Name",
+      dataIndex: ["first_name", "last_name"],
+      render: (text, row) => (
+        <Tooltip
+          placement="topLeft"
+          title={`${row["first_name"]} ${row["last_name"]}`}
+        >
+          {row["first_name"]} {row["last_name"]}
+        </Tooltip>
+      ),
+      ellipsis: {
+        showTitle: false,
+      },
+    },
+    {
+      title: "D.O.B",
+      dataIndex: "date_of_birth",
+      render: (date_of_birth) => (
+        <Tooltip placement="topLeft" title={date_of_birth}>
+          {date_of_birth}
+        </Tooltip>
+      ),
+      ellipsis: {
+        showTitle: false,
+      },
+    },
+    {
+      title: "Gender",
+      dataIndex: "gender",
+      render: (gender) => (
+        <Tooltip placement="topLeft" title={gender}>
+          {gender}
+        </Tooltip>
+      ),
+      ellipsis: {
+        showTitle: false,
+      },
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+      render: (email) => (
+        <Tooltip placement="topLeft" title={email}>
+          {email}
+        </Tooltip>
+      ),
+      ellipsis: {
+        showTitle: false,
+      },
+    },
+    {
+      title: "Phone",
+      dataIndex: "phone",
+      render: (phone) => (
+        <Tooltip placement="topLeft" title={phone}>
+          {phone}
+        </Tooltip>
+      ),
+      ellipsis: {
+        showTitle: false,
+      },
+    },
+    {
+      title: "Action",
+      dataIndex: "tax_number",
+      render: (dataIndex) => (
+        <EyeOutlined
+          className="hover:text-blue-400 cursor-pointer"
+          onClick={() => {
+            setShow(true);
+            dispatch(getPatient(dataIndex));
+          }}
+        />
+      ),
+    },
+  ];
+
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth="lg" style={{ marginTop: "2%" }}>
       <Modal
-        size="md"
-        overflow={false}
-        show={show}
-        onHide={handelHide}
-        backdrop
+        style={{ marginTop: -100 }}
+        width={720}
+        visible={show}
+        onCancel={() => setShow(false)}
+        onOk={() => setShow(false)}
+        title={<Title>Patient Information</Title>}
       >
-        <Modal.Header>
-          <Modal.Title>
-            Information for
-            {data.patient
-              ? " " + data.patient.first_name + " " + data.patient.last_name
-              : null}
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {data.patient ? (
-            <Grid container spacing={1}>
-              <Grid container item justifyContent="center">
-                <Avatar
-                  alt={data.patient.first_name + " " + data.patient.last_name}
-                  src={data.patient.image_url}
-                  sx={{ width: 165, height: 165 }}
-                  loading="lazy"
-                />
+        {moh.patient && (
+          <Form layout="vertical" form={form}>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <Grid item xs={12} align="center">
+                  <Avatar
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                    }}
+                    alt={moh.patient.first_name + " " + moh.patient.last_name}
+                    src={moh.patient.image_url}
+                    sx={{ width: 165, height: 165 }}
+                    loading="lazy"
+                  />
+                </Grid>
               </Grid>
               <Grid item xs={6}>
-                <FormGroup>
-                  <ControlLabel>First Name</ControlLabel>
-                  <Input value={data.patient.first_name} />
-                </FormGroup>
+                <Form.Item
+                  label="First Name"
+                  name="first_name"
+                  style={{ marginBottom: 2 }}
+                >
+                  <Input readOnly />
+                </Form.Item>
               </Grid>
               <Grid item xs={6}>
-                <FormGroup>
-                  <ControlLabel>Last Name</ControlLabel>
-                  <Input value={data.patient.last_name} />
-                </FormGroup>
+                <Form.Item
+                  label="Last Name"
+                  name="last_name"
+                  style={{ marginBottom: 2 }}
+                >
+                  <Input readOnly />
+                </Form.Item>
               </Grid>
               <Grid item xs={6}>
-                <FormGroup>
-                  <ControlLabel>Gender</ControlLabel>
-                  <Input value={data.patient.gender} />
-                </FormGroup>
+                <Form.Item
+                  label="Gender"
+                  name="gender"
+                  style={{ marginBottom: 2 }}
+                >
+                  <Input readOnly />
+                </Form.Item>
               </Grid>
               <Grid item xs={6}>
-                <FormGroup>
-                  <ControlLabel>Date of Birth</ControlLabel>
-                  <Input value={data.patient.date_of_birth} />
-                </FormGroup>
+                <Form.Item
+                  label="Date of Birth"
+                  name="dob"
+                  style={{ marginBottom: 2 }}
+                >
+                  <Input readOnly />
+                </Form.Item>
               </Grid>
               <Grid item xs={6}>
-                <FormGroup>
-                  <ControlLabel>Email</ControlLabel>
-                  <Input value={data.patient.email} />
-                </FormGroup>
+                <Form.Item
+                  label="Email"
+                  name="email"
+                  style={{ marginBottom: 2 }}
+                >
+                  <Input readOnly />
+                </Form.Item>
               </Grid>
               <Grid item xs={6}>
-                <FormGroup>
-                  <ControlLabel>Phone</ControlLabel>
-                  <Input value={data.patient.phone} />
-                </FormGroup>
+                <Form.Item
+                  label="Mobile Number"
+                  name="mobile_number"
+                  style={{ marginBottom: 2 }}
+                >
+                  <Input readOnly />
+                </Form.Item>
               </Grid>
               <Grid item xs={6}>
-                <FormGroup>
-                  <ControlLabel>Street Address</ControlLabel>
-                  <Input value={data.patient.street_address} />
-                </FormGroup>
+                <Form.Item
+                  label="Street Address"
+                  name="street_address"
+                  style={{ marginBottom: 2 }}
+                >
+                  <Input readOnly />
+                </Form.Item>
               </Grid>
               <Grid item xs={6}>
-                <FormGroup>
-                  <ControlLabel>City</ControlLabel>
-                  <Input value={data.patient.city} />
-                </FormGroup>
+                <Form.Item label="City" name="city" style={{ marginBottom: 2 }}>
+                  <Input readOnly />
+                </Form.Item>
               </Grid>
               <Grid item xs={6}>
-                <FormGroup>
-                  <ControlLabel>Parish</ControlLabel>
-                  <Input value={data.patient.parish} />
-                </FormGroup>
-              </Grid>
-              <Grid item xs={6}>
-                <FormGroup>
-                  <ControlLabel>Country</ControlLabel>
-                  <Input value={data.patient.country} />
-                </FormGroup>
+                <Form.Item
+                  label="Parish"
+                  name="parish"
+                  style={{ marginBottom: 2 }}
+                >
+                  <Input readOnly />
+                </Form.Item>
               </Grid>
               <Grid item xs={12}>
                 <CollapseCard
                   Title="Testing Record"
                   expand={testingExpaned}
                   setExpand={expandTesting}
-                  Data={data.test}
+                  Data={moh.test}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -250,102 +352,54 @@ export default function Patients() {
                   Title="Vaccination Record"
                   expand={vaccinedExpaned}
                   setExpand={expandVaccine}
-                  Data={data.vaccine}
+                  Data={moh.vaccine}
                 />
               </Grid>
             </Grid>
-          ) : (
-            <div style={{ textAlign: "center" }}>
-              <Loader size="md" />
-            </div>
-          )}
-        </Modal.Body>
+          </Form>
+        )}
+        {moh.loading && (
+          <Spin indicator={<LoadingOutlined style={{ fontSize: 42 }} />} />
+        )}
       </Modal>
-      <Card style={{ marginBottom: "1%" }}>
-        <CardHeader
-          style={{ backgroundColor: "#383d42" }}
-          title={
-            <Typography variant="h5" align="center" style={{ color: "#ffff" }}>
-              Patients
-            </Typography>
-          }
-        />
-        <CardContent>
-          <Grid container justifyContent="flex-end" spacing={2}>
-            <Grid item xs={4}>
-              <Input
-                size="sm"
-                placeholder="Search patient by TRN or last name"
-                onChange={(e) => setSearch(e)}
-              />
-            </Grid>
-          </Grid>
-          <Table
-            height={570}
-            loading={loading}
-            data={data.patients ? (search ? filteredData() : getData()) : []}
-            sortColumn={sortColumn}
-            sortType={sortType}
-            onSortColumn={handleSortColumn}
+      <Card
+        headStyle={{ backgroundColor: "#1F2937", border: "none" }}
+        title={
+          <Title level={3} style={{ color: "white" }} align="center">
+            Patients
+          </Title>
+        }
+        bordered={false}
+        style={{ width: "100%" }}
+      >
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <Select
+            onChange={(e) => setSearchField(e)}
+            style={{ width: "25%" }}
+            placeholder="Select Search Field"
           >
-            <Column flexGrow sortable>
-              <HeaderCell>TRN</HeaderCell>
-              <Cell dataKey={"tax_number"} />
-            </Column>
-            <Column flexGrow>
-              <HeaderCell>First Name</HeaderCell>
-              <Cell dataKey={"first_name"} />
-            </Column>
-            <Column flexGrow sortable>
-              <HeaderCell>Last Name</HeaderCell>
-              <Cell dataKey={"last_name"} />
-            </Column>
-            <Column flexGrow>
-              <HeaderCell>DOB</HeaderCell>
-              <Cell dataKey={"date_of_birth"} />
-            </Column>
-            <Column flexGrow sortable>
-              <HeaderCell>Gender</HeaderCell>
-              <Cell dataKey={"gender"} />
-            </Column>
-            <Column flexGrow>
-              <HeaderCell>Email</HeaderCell>
-              <Cell dataKey={"email"} />
-            </Column>
-            <Column flexGrow>
-              <HeaderCell>Phone</HeaderCell>
-              <Cell dataKey={"phone"} />
-            </Column>
-            <Column flexGrow>
-              <HeaderCell>Action</HeaderCell>
-              <ActionCell dataKey={"tax_number"} />
-            </Column>
-          </Table>
-          <Pagination
-            style={{ height: 10 }}
-            lengthMenu={[
-              {
-                value: 10,
-                label: 10,
-              },
-              {
-                value: 20,
-                label: 20,
-              },
-            ]}
-            activePage={page}
-            displayLength={displayLength}
-            total={
-              data.patients
-                ? search
-                  ? filteredData().length
-                  : data.patients.length
-                : null
-            }
-            onChangePage={handlePagechange}
-            onChangeLength={handleLengthChange}
+            {searchFields.map((item, index) => (
+              <Option value={item.value} key={index}>
+                {item.label}
+              </Option>
+            ))}
+          </Select>
+          <Input.Search
+            style={{ width: "40%", marginBottom: 15 }}
+            placeholder="Search Here"
+            onChange={(e) => setQ(e.target.value)}
+            onSearch={() => fetch(searchField, q)}
           />
-        </CardContent>
+        </div>
+
+        <Table
+          columns={columns}
+          dataSource={data}
+          pagination={pagination}
+          loading={loading}
+          onChange={handleTableChange}
+          scroll={scroll}
+        />
       </Card>
     </Container>
   );

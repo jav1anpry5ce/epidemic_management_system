@@ -1,24 +1,21 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { receiveBatch, clearState } from "../../store/locationSlice";
 import { useSelector, useDispatch } from "react-redux";
 import Container from "@mui/material/Container";
-import Card from "@mui/material/Card";
-import CardHeader from "@mui/material/CardHeader";
-import CardContent from "@mui/material/CardContent";
-import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
-import { Button, Form, FormControl, ControlLabel, Message } from "rsuite";
+import { Card, Input, Form, Button, Alert, Typography } from "antd";
 import { open } from "../../functions/Notifications";
+
+const { Title } = Typography;
 
 export default function ReceiveBatch({ match }) {
   const data = useSelector((state) => state.location);
   const dispatch = useDispatch();
   const [authorizationCode, setAuthorizationCode] = useState();
-  const formRef = useRef();
+  const [form] = Form.useForm();
 
   useEffect(() => {
     if (data.success) {
-      formRef.current._reactInternals.child.stateNode.reset();
+      form.resetFields();
       open("success", "Success", "Batch received!");
       dispatch(clearState());
       setAuthorizationCode("");
@@ -39,47 +36,43 @@ export default function ReceiveBatch({ match }) {
   };
 
   return (
-    <Container maxWidth="sm">
-      <Card style={{ marginTop: "30%" }}>
-        <CardHeader
-          style={{ backgroundColor: "#383d42", color: "#fff" }}
-          title={
-            <Typography variant="h5" align="center">
-              Receive Batch
-            </Typography>
-          }
-        />
-        <CardContent>
-          <Form fluid onSubmit={handelSubmit} ref={formRef}>
-            <Grid container spacing={1}>
-              {data.message ? (
-                <Grid item xs={12}>
-                  <Message
-                    closable
-                    showIcon
-                    type="error"
-                    description={data.message}
-                  />
-                </Grid>
-              ) : null}
-              <Grid item xs={12}>
-                <ControlLabel>Authorization Code</ControlLabel>
-                <FormControl onChange={(e) => setAuthorizationCode(e)} />
-              </Grid>
-              <Grid item xs={12}>
-                {data.loading ? (
-                  <Button disabled color="blue">
-                    Loading...
-                  </Button>
-                ) : (
-                  <Button color="blue" type="submit">
-                    Submit
-                  </Button>
-                )}
-              </Grid>
-            </Grid>
-          </Form>
-        </CardContent>
+    <Container maxWidth="sm" style={{ marginTop: "15%" }}>
+      <Card
+        headStyle={{ backgroundColor: "#1F2937", border: "none" }}
+        title={
+          <Title level={3} style={{ color: "white" }} align="center">
+            Receive Batch
+          </Title>
+        }
+        bordered={false}
+        style={{ width: "100%" }}
+      >
+        {data.message && <Alert type="error" message={data.message} />}
+        <Form layout="vertical" onFinish={handelSubmit} form={form}>
+          <Form.Item
+            label="Authorization Code"
+            name="authorization_code"
+            rules={[
+              {
+                required: true,
+                message: "Please enter authorization code!",
+              },
+            ]}
+            style={{ marginBottom: 12 }}
+          >
+            <Input onChange={(e) => setAuthorizationCode(e.target.value)} />
+          </Form.Item>
+          <Form.Item style={{ marginBottom: 0 }}>
+            <Button
+              type="primary"
+              htmlType="submit"
+              appearance="primary"
+              loading={data.loading}
+            >
+              Submit
+            </Button>
+          </Form.Item>
+        </Form>
       </Card>
     </Container>
   );

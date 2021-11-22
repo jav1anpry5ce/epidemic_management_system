@@ -7,15 +7,13 @@ import {
   Select,
   Modal,
   TimePicker,
+  Card,
 } from "antd";
 import { Uploader, Icon } from "rsuite";
 import PhoneMask from "../../functions/PhoneMask";
 import TRNMask from "../../functions/TRNMask";
 import FileUploadIcon from "@rsuite/icons/FileUpload";
 import Grid from "@mui/material/Grid";
-import Card from "@mui/material/Card";
-import CardHeader from "@mui/material/CardHeader";
-import CardContent from "@mui/material/CardContent";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import {
@@ -332,473 +330,494 @@ export default function MakeAppointment() {
           </Grid>
         </Form>
       </Modal>
-      <Card style={{ marginBottom: "4%", borderRadius: 9 }}>
-        <CardHeader
-          style={{ backgroundColor: "#383d42", color: "#fff" }}
-          title={
-            <Typography variant="h5" align="center" style={{ color: "#fff" }}>
-              Create Appointment
-            </Typography>
-          }
-        />
-        <CardContent>
-          <Form
-            layout="vertical"
-            className={effect}
-            onFinish={submitForm}
-            form={form}
-          >
-            <Grid container spacing={1}>
-              <Grid item xs={12}>
-                <Typography variant="h6">Personal Information</Typography>
-              </Grid>
-              <Grid item xs={12} sm={8}>
-                <Form.Item
-                  required
-                  label="Tax Number"
-                  name="tax_number"
-                  style={{ marginBottom: 2 }}
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please enter your Tax Number!",
-                    },
-                  ]}
+      <Card
+        headStyle={{ backgroundColor: "#1F2937", border: "none" }}
+        title={
+          <Typography variant="h5" style={{ color: "white" }} align="center">
+            Create Appointment
+          </Typography>
+        }
+        bordered={false}
+        style={{ width: "100%", marginBottom: "3%" }}
+      >
+        <Form
+          layout="vertical"
+          className={effect}
+          onFinish={submitForm}
+          form={form}
+        >
+          <Grid container spacing={1}>
+            <Grid item xs={12}>
+              <Typography variant="h6">Personal Information</Typography>
+            </Grid>
+            <Grid item xs={12} sm={8}>
+              <Form.Item
+                required
+                label="Tax Number"
+                name="tax_number"
+                style={{ marginBottom: 2 }}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please enter your Tax Number!",
+                  },
+                ]}
+              >
+                <TRNMask
+                  value={taxNumber}
+                  onChange={(e) => setTaxNumber(e.target.value)}
+                  onBlur={getDetailedInfo}
+                />
+              </Form.Item>
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <Form.Item
+                required
+                label="Title"
+                name="title"
+                style={{ marginBottom: 2 }}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please select your Title!",
+                  },
+                ]}
+              >
+                <Select value={title} onChange={(e) => setTitle(e)}>
+                  {titledata.map((item, index) => (
+                    <Option vlaue={item.value} key={index}>
+                      {item.label}
+                    </Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Form.Item
+                label="First Name"
+                name="first_name"
+                style={{ marginBottom: 2 }}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please enter your First Name!",
+                  },
+                ]}
+              >
+                <Input
+                  onChange={(e) => setFirstName(e.target.value)}
+                  value={firstName}
+                />
+              </Form.Item>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Form.Item
+                label="Last Name"
+                name="last_name"
+                style={{ marginBottom: 2 }}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please enter your Last Name!",
+                  },
+                ]}
+              >
+                <Input
+                  onChange={(e) => setLastName(e.target.value)}
+                  value={lastName}
+                />
+              </Form.Item>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Form.Item
+                label="Email"
+                name="email"
+                style={{ marginBottom: 2 }}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please enter your email!",
+                  },
+                ]}
+              >
+                <Input
+                  type="email"
+                  onChange={(e) => setEmail(e.target.value)}
+                  value={email}
+                />
+              </Form.Item>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Form.Item
+                label="Mobile Number"
+                name="mobile_number"
+                style={{ marginBottom: 2 }}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please enter your mobile number!",
+                  },
+                ]}
+              >
+                <PhoneMask
+                  onChange={(e) => setPhone(e.target.value)}
+                  value={phone}
+                />
+              </Form.Item>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Form.Item
+                label="Date of Birth"
+                name="date_of_birth"
+                style={{ marginBottom: 2 }}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please enter your date of birth!",
+                  },
+                ]}
+              >
+                <DatePicker
+                  onChange={(e) => setDOB(formatDate(e))}
+                  value={DOB}
+                  format="DD/MM/YYYY"
+                  style={{ width: "100%" }}
+                />
+              </Form.Item>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Form.Item
+                label="Gender"
+                name="gender"
+                style={{ marginBottom: 2 }}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please select your gender!",
+                  },
+                ]}
+              >
+                <Select
+                  data={genderData}
+                  onChange={(e) => setGender(e)}
+                  value={gender}
                 >
-                  <TRNMask
-                    value={taxNumber}
-                    onChange={(e) => setTaxNumber(e.target.value)}
-                    onBlur={getDetailedInfo}
-                  />
-                </Form.Item>
-              </Grid>
-              <Grid item xs={12} sm={4}>
-                <Form.Item
-                  required
-                  label="Title"
-                  name="title"
-                  style={{ marginBottom: 2 }}
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please select your Title!",
-                    },
-                  ]}
+                  {genderData.map((item, index) => (
+                    <Option value={item.value} key={index}>
+                      {item.value}
+                    </Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Form.Item
+                label="Street Address"
+                name="street_address"
+                style={{ marginBottom: 2 }}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please enter your street address!",
+                  },
+                ]}
+              >
+                <Input
+                  onChange={(e) => setStreetAddress(e.target.value)}
+                  value={streetAddress}
+                />
+              </Form.Item>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Form.Item
+                label="City"
+                name="city"
+                style={{ marginBottom: 2 }}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please enter your city!",
+                  },
+                ]}
+              >
+                <Input onChange={(e) => setCity(e.target.value)} value={city} />
+              </Form.Item>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Form.Item
+                label="Parish"
+                name="parish"
+                style={{ marginBottom: 2 }}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please select your parish!",
+                  },
+                ]}
+              >
+                <Select value={parish} onChange={(e) => setParish(e)}>
+                  {parishData.map((item, index) => (
+                    <Option value={item.value} key={index}>
+                      {item.label}
+                    </Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Form.Item
+                label="Country"
+                name="country"
+                style={{ marginBottom: 2 }}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please enter your country!",
+                  },
+                ]}
+              >
+                <Input
+                  readOnly
+                  onChange={(e) => setCountry(e)}
+                  value="Jamaica"
+                />
+              </Form.Item>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Form.Item
+                label="Picture"
+                name="picture"
+                style={{ marginBottom: 2 }}
+              >
+                <Uploader
+                  autoUpload={false}
+                  listType="picture"
+                  onChange={(e) =>
+                    setImage(e.length !== 0 ? e[0].blobFile : null)
+                  }
+                  // onChange={(e) => console.log(e)}
                 >
-                  <Select value={title} onChange={(e) => setTitle(e)}>
-                    {titledata.map((item, index) => (
-                      <Option vlaue={item.value} key={index}>
+                  <Button>
+                    <Icon icon="camera-retro" size="lg" />
+                  </Button>
+                </Uploader>
+              </Form.Item>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Form.Item
+                label="Identification"
+                name="id"
+                style={{ marginBottom: 2 }}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please select your ID!",
+                  },
+                ]}
+              >
+                <Uploader
+                  autoUpload={false}
+                  listType="text"
+                  onChange={(e) => setId(e.length !== 0 ? e[0].blobFile : null)}
+                >
+                  <Button size="lg" style={{ marginTop: 10 }}>
+                    <FileUploadIcon style={{ fontSize: 24 }} />
+                  </Button>
+                </Uploader>
+              </Form.Item>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="h6">Next of Kin</Typography>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Form.Item
+                label="First Name"
+                name="kin_first_name"
+                style={{ marginBottom: 2 }}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please enter your kin first name!",
+                  },
+                ]}
+              >
+                <Input
+                  onChange={(e) => setKinFirstName(e.target.value)}
+                  value={kinFirstName}
+                />
+              </Form.Item>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Form.Item
+                label="Last Name"
+                name="kin_last_name"
+                style={{ marginBottom: 2 }}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please enter your kin last name!",
+                  },
+                ]}
+              >
+                <Input
+                  onChange={(e) => setKinLastName(e.target.value)}
+                  value={kinLastName}
+                />
+              </Form.Item>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Form.Item
+                label="Email"
+                name="kin_email"
+                style={{ marginBottom: 2 }}
+              >
+                <Input
+                  type="email"
+                  onChange={(e) => setKinEmail(e.target.value)}
+                  value={kinEmail}
+                />
+              </Form.Item>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Form.Item
+                label="Mobile Number"
+                name="kin_mobile_number"
+                style={{ marginBottom: 2 }}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please enter your kin mobile number!",
+                  },
+                ]}
+              >
+                <PhoneMask
+                  onChange={(e) => setKinPhone(e.target.value)}
+                  value={kinPhone}
+                />
+              </Form.Item>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="h6">Appointment Information</Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Form.Item
+                label="Appointment Loacation"
+                name="appointment_location"
+                style={{ marginBottom: 2 }}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please select an appointment location!",
+                  },
+                ]}
+              >
+                <Select
+                  onSelect={(e) => dispatch(getType(e))}
+                  disabled={location.loading}
+                  onChange={(e) => setAppointmentLocation(e)}
+                >
+                  {location.locations &&
+                    location.locations.map((item) => (
+                      <Option value={item.value}>{item.label}</Option>
+                    ))}
+                </Select>
+              </Form.Item>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Form.Item
+                label="Appointment Date"
+                name="appointment_date"
+                style={{ marginBottom: 2 }}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please enter your appointment date!",
+                  },
+                ]}
+              >
+                <DatePicker
+                  disabled={location.loading}
+                  onChange={(e) => setAppointmentDate(formatDate(e))}
+                  disabledDate={(date) => dateFns.isBefore(date, new Date())}
+                  format="DD/MM/YYYY"
+                  style={{ width: "100%" }}
+                />
+              </Form.Item>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Form.Item
+                label="Appointment Time"
+                name="appointment_time"
+                style={{ marginBottom: 2 }}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please enter your appointment time!",
+                  },
+                ]}
+              >
+                <TimePicker
+                  disabledHours={() => [
+                    0, 1, 2, 3, 4, 5, 6, 7, 17, 18, 19, 20, 21, 22, 23, 24,
+                  ]}
+                  minuteStep={15}
+                  disabled={location.loading}
+                  format="HH:mm"
+                  hideDisabledOptions
+                  showNow={false}
+                  style={{ width: "100%" }}
+                  //showMeridian
+                  onSelect={(e) =>
+                    setAppointmentTime(e._d.toLocaleTimeString("it-IT"))
+                  }
+                />
+              </Form.Item>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Form.Item
+                label="Appointment Type"
+                name="appointment_type"
+                style={{ marginBottom: 2 }}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please select your appointment type!",
+                  },
+                ]}
+              >
+                <Select
+                  onChange={(e) => setAppointmentType(e)}
+                  disabled={location.loading}
+                  searchable={false}
+                >
+                  {location.data &&
+                    location.data.Offer.map((item, index) => (
+                      <Option value={item.value} key={index}>
                         {item.label}
                       </Option>
                     ))}
-                  </Select>
-                </Form.Item>
-              </Grid>
+                </Select>
+              </Form.Item>
+            </Grid>
+            {appointmentType === "Testing" ? (
               <Grid item xs={12} sm={6}>
                 <Form.Item
-                  label="First Name"
-                  name="first_name"
+                  label="Test"
+                  name="test"
                   style={{ marginBottom: 2 }}
                   rules={[
                     {
                       required: true,
-                      message: "Please enter your First Name!",
-                    },
-                  ]}
-                >
-                  <Input
-                    onChange={(e) => setFirstName(e.target.value)}
-                    value={firstName}
-                  />
-                </Form.Item>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Form.Item
-                  label="Last Name"
-                  name="last_name"
-                  style={{ marginBottom: 2 }}
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please enter your Last Name!",
-                    },
-                  ]}
-                >
-                  <Input
-                    onChange={(e) => setLastName(e.target.value)}
-                    value={lastName}
-                  />
-                </Form.Item>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Form.Item
-                  label="Email"
-                  name="email"
-                  style={{ marginBottom: 2 }}
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please enter your email!",
-                    },
-                  ]}
-                >
-                  <Input
-                    type="email"
-                    onChange={(e) => setEmail(e.target.value)}
-                    value={email}
-                  />
-                </Form.Item>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Form.Item
-                  label="Mobile Number"
-                  name="mobile_number"
-                  style={{ marginBottom: 2 }}
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please enter your mobile number!",
-                    },
-                  ]}
-                >
-                  <PhoneMask
-                    onChange={(e) => setPhone(e.target.value)}
-                    value={phone}
-                  />
-                </Form.Item>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Form.Item
-                  label="Date of Birth"
-                  name="date_of_birth"
-                  style={{ marginBottom: 2 }}
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please enter your date of birth!",
-                    },
-                  ]}
-                >
-                  <DatePicker
-                    onChange={(e) => setDOB(formatDate(e))}
-                    value={DOB}
-                    format="DD/MM/YYYY"
-                    style={{ width: "100%" }}
-                  />
-                </Form.Item>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Form.Item
-                  label="Gender"
-                  name="gender"
-                  style={{ marginBottom: 2 }}
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please select your gender!",
+                      message: "Please select your test type!",
                     },
                   ]}
                 >
                   <Select
-                    data={genderData}
-                    onChange={(e) => setGender(e)}
-                    value={gender}
-                  >
-                    {genderData.map((item, index) => (
-                      <Option value={item.value} key={index}>
-                        {item.value}
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Form.Item
-                  label="Street Address"
-                  name="street_address"
-                  style={{ marginBottom: 2 }}
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please enter your street address!",
-                    },
-                  ]}
-                >
-                  <Input
-                    onChange={(e) => setStreetAddress(e.target.value)}
-                    value={streetAddress}
-                  />
-                </Form.Item>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Form.Item
-                  label="City"
-                  name="city"
-                  style={{ marginBottom: 2 }}
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please enter your city!",
-                    },
-                  ]}
-                >
-                  <Input
-                    onChange={(e) => setCity(e.target.value)}
-                    value={city}
-                  />
-                </Form.Item>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Form.Item
-                  label="Parish"
-                  name="parish"
-                  style={{ marginBottom: 2 }}
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please select your parish!",
-                    },
-                  ]}
-                >
-                  <Select value={parish} onChange={(e) => setParish(e)}>
-                    {parishData.map((item, index) => (
-                      <Option value={item.value} key={index}>
-                        {item.label}
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Form.Item
-                  label="Country"
-                  name="country"
-                  style={{ marginBottom: 2 }}
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please enter your country!",
-                    },
-                  ]}
-                >
-                  <Input
-                    readOnly
-                    onChange={(e) => setCountry(e)}
-                    value="Jamaica"
-                  />
-                </Form.Item>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Form.Item
-                  label="Picture"
-                  name="picture"
-                  style={{ marginBottom: 2 }}
-                >
-                  <Uploader
-                    autoUpload={false}
-                    listType="picture"
-                    onChange={(e) =>
-                      setImage(e.length !== 0 ? e[0].blobFile : null)
-                    }
-                    // onChange={(e) => console.log(e)}
-                  >
-                    <Button>
-                      <Icon icon="camera-retro" size="lg" />
-                    </Button>
-                  </Uploader>
-                </Form.Item>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Form.Item
-                  label="Identification"
-                  name="id"
-                  style={{ marginBottom: 2 }}
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please select your ID!",
-                    },
-                  ]}
-                >
-                  <Uploader
-                    autoUpload={false}
-                    listType="text"
-                    onChange={(e) =>
-                      setId(e.length !== 0 ? e[0].blobFile : null)
-                    }
-                  >
-                    <Button size="lg" style={{ marginTop: 10 }}>
-                      <FileUploadIcon style={{ fontSize: 24 }} />
-                    </Button>
-                  </Uploader>
-                </Form.Item>
-              </Grid>
-              <Grid item xs={12}>
-                <Typography variant="h6">Next of Kin</Typography>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Form.Item
-                  label="First Name"
-                  name="kin_first_name"
-                  style={{ marginBottom: 2 }}
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please enter your kin first name!",
-                    },
-                  ]}
-                >
-                  <Input
-                    onChange={(e) => setKinFirstName(e.target.value)}
-                    value={kinFirstName}
-                  />
-                </Form.Item>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Form.Item
-                  label="Last Name"
-                  name="kin_last_name"
-                  style={{ marginBottom: 2 }}
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please enter your kin last name!",
-                    },
-                  ]}
-                >
-                  <Input
-                    onChange={(e) => setKinLastName(e.target.value)}
-                    value={kinLastName}
-                  />
-                </Form.Item>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Form.Item
-                  label="Email"
-                  name="kin_email"
-                  style={{ marginBottom: 2 }}
-                >
-                  <Input
-                    type="email"
-                    onChange={(e) => setKinEmail(e.target.value)}
-                    value={kinEmail}
-                  />
-                </Form.Item>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Form.Item
-                  label="Mobile Number"
-                  name="kin_mobile_number"
-                  style={{ marginBottom: 2 }}
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please enter your kin mobile number!",
-                    },
-                  ]}
-                >
-                  <PhoneMask
-                    onChange={(e) => setKinPhone(e.target.value)}
-                    value={kinPhone}
-                  />
-                </Form.Item>
-              </Grid>
-              <Grid item xs={12}>
-                <Typography variant="h6">Appointment Information</Typography>
-              </Grid>
-              <Grid item xs={12}>
-                <Form.Item
-                  label="Appointment Loacation"
-                  name="appointment_location"
-                  style={{ marginBottom: 2 }}
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please select an appointment location!",
-                    },
-                  ]}
-                >
-                  <Select
-                    onSelect={(e) => dispatch(getType(e))}
                     disabled={location.loading}
-                    onChange={(e) => setAppointmentLocation(e)}
-                  >
-                    {location.locations &&
-                      location.locations.map((item) => (
-                        <Option value={item.value}>{item.label}</Option>
-                      ))}
-                  </Select>
-                </Form.Item>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Form.Item
-                  label="Appointment Date"
-                  name="appointment_date"
-                  style={{ marginBottom: 2 }}
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please enter your appointment date!",
-                    },
-                  ]}
-                >
-                  <DatePicker
-                    disabled={location.loading}
-                    onChange={(e) => setAppointmentDate(formatDate(e))}
-                    disabledDate={(date) => dateFns.isBefore(date, new Date())}
-                    format="DD/MM/YYYY"
-                    style={{ width: "100%" }}
-                  />
-                </Form.Item>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Form.Item
-                  label="Appointment Time"
-                  name="appointment_time"
-                  style={{ marginBottom: 2 }}
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please enter your appointment time!",
-                    },
-                  ]}
-                >
-                  <TimePicker
-                    disabledHours={() => [
-                      0, 1, 2, 3, 4, 5, 6, 7, 17, 18, 19, 20, 21, 22, 23, 24,
-                    ]}
-                    minuteStep={15}
-                    disabled={location.loading}
-                    format="HH:mm"
-                    hideDisabledOptions
-                    showNow={false}
-                    style={{ width: "100%" }}
-                    //showMeridian
-                    onSelect={(e) =>
-                      setAppointmentTime(e._d.toLocaleTimeString("it-IT"))
-                    }
-                  />
-                </Form.Item>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <Form.Item
-                  label="Appointment Type"
-                  name="appointment_type"
-                  style={{ marginBottom: 2 }}
-                  rules={[
-                    {
-                      required: true,
-                      message: "Please select your appointment type!",
-                    },
-                  ]}
-                >
-                  <Select
-                    onChange={(e) => setAppointmentType(e)}
-                    disabled={location.loading}
-                    searchable={false}
+                    onChange={(e) => setPChoice(e)}
                   >
                     {location.data &&
-                      location.data.Offer.map((item, index) => (
+                      location.data.Test.map((item, index) => (
                         <Option value={item.value} key={index}>
                           {item.label}
                         </Option>
@@ -806,86 +825,59 @@ export default function MakeAppointment() {
                   </Select>
                 </Form.Item>
               </Grid>
-              {appointmentType === "Testing" ? (
-                <Grid item xs={12} sm={6}>
-                  <Form.Item
-                    label="Test"
-                    name="test"
-                    style={{ marginBottom: 2 }}
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please select your test type!",
-                      },
-                    ]}
-                  >
-                    <Select
-                      disabled={location.loading}
-                      onChange={(e) => setPChoice(e)}
-                    >
-                      {location.data &&
-                        location.data.Test.map((item, index) => (
-                          <Option value={item.value} key={index}>
-                            {item.label}
-                          </Option>
-                        ))}
-                    </Select>
-                  </Form.Item>
-                </Grid>
-              ) : appointmentType === "Vaccination" ? (
-                <Grid item xs={12} sm={6}>
-                  <Form.Item
-                    label="Vaccine"
-                    name="vaccine"
-                    style={{ marginBottom: 2 }}
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please select your vaccine choice!",
-                      },
-                    ]}
-                  >
-                    <Select
-                      disabled={location.loading}
-                      onChange={(e) => setPChoice(e)}
-                    >
-                      {location.data &&
-                        location.data.Vaccine.map((item, index) => (
-                          <Option value={item.value} key={index}>
-                            {item.label}
-                          </Option>
-                        ))}
-                    </Select>
-                  </Form.Item>
-                </Grid>
-              ) : null}
-              <Grid item xs={12}></Grid>
-              <Grid item xs={6}>
-                <Form.Item style={{ marginBottom: 2 }}>
-                  <Button
-                    type="primary"
-                    htmlType="submit"
-                    appearance="primary"
+            ) : appointmentType === "Vaccination" ? (
+              <Grid item xs={12} sm={6}>
+                <Form.Item
+                  label="Vaccine"
+                  name="vaccine"
+                  style={{ marginBottom: 2 }}
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please select your vaccine choice!",
+                    },
+                  ]}
+                >
+                  <Select
                     disabled={location.loading}
+                    onChange={(e) => setPChoice(e)}
                   >
-                    Submit
-                  </Button>
+                    {location.data &&
+                      location.data.Vaccine.map((item, index) => (
+                        <Option value={item.value} key={index}>
+                          {item.label}
+                        </Option>
+                      ))}
+                  </Select>
                 </Form.Item>
               </Grid>
-              <Grid item xs={6} align="right">
-                <Form.Item style={{ marginBottom: 2 }}>
-                  <Button
-                    appearance="default"
-                    onClick={cancel}
-                    disabled={location.loading}
-                  >
-                    Cancel
-                  </Button>
-                </Form.Item>
-              </Grid>
+            ) : null}
+            <Grid item xs={12}></Grid>
+            <Grid item xs={6}>
+              <Form.Item style={{ marginBottom: 2 }}>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  appearance="primary"
+                  disabled={location.loading}
+                >
+                  Submit
+                </Button>
+              </Form.Item>
             </Grid>
-          </Form>
-        </CardContent>
+            <Grid item xs={6} align="right">
+              <Form.Item style={{ marginBottom: 2 }}>
+                <Button
+                  appearance="default"
+                  onClick={cancel}
+                  disabled={location.loading}
+                >
+                  Cancel
+                </Button>
+              </Form.Item>
+            </Grid>
+          </Grid>
+        </Form>
       </Card>
       {appointment.loading ? <Loading /> : null}
       {patient.loading ? <Loading /> : null}

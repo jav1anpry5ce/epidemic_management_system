@@ -128,6 +128,7 @@ export default function UpdateInfo() {
           bordered={false}
           style={{ width: "100%" }}
         >
+          {patient.message && <Alert type="error" message={patient.message} />}
           <Form layout="vertical" onFinish={() => handelSubmit("verify-info")}>
             <Form.Item
               label="Tax Number"

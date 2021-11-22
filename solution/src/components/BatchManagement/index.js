@@ -1,33 +1,30 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { getAllBatch, clearState } from "../../store/mohSlice";
+import { clearState } from "../../store/mohSlice";
 import { setActiveKey } from "../../store/navbarSlice";
 import Container from "@mui/material/Container";
-import Typography from "@mui/material/Typography";
-import Grid from "@mui/material/Grid";
-import Card from "@mui/material/Card";
-import CardHeader from "@mui/material/CardHeader";
-import CardContent from "@mui/material/CardContent";
-import { Icon, IconButton, Table, Input } from "rsuite";
-import PlusIcon from "@rsuite/icons/Plus";
-const { Column, HeaderCell, Cell, Pagination } = Table;
+import { Table, Tooltip, Typography, Card, Button } from "antd";
+import axios from "axios";
+const { Title } = Typography;
 
 export default function BatchManagement() {
-  const data = useSelector((state) => state.moh);
   const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const history = useHistory();
-  const [search, setSearch] = useState();
-  const [sortColumn, setSortColumn] = useState();
-  const [sortType, setSortType] = useState("asc");
+  const [data, setData] = useState();
+  const [order, setOrder] = useState("");
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 20,
+  });
+  const [pageSize, setPageSize] = useState(20);
   const [page, setPage] = useState(1);
-  const [displayLength, setDisplayLength] = useState(15);
   const [loading, setLoading] = useState(false);
+  const scroll = { y: 560 };
 
   useEffect(() => {
     dispatch(setActiveKey("4"));
-    dispatch(getAllBatch());
     return () => dispatch(clearState());
     // eslint-disable-next-line
   }, []);
@@ -39,185 +36,139 @@ export default function BatchManagement() {
     // eslint-disable-next-line
   }, [auth.is_auth, auth.is_moh_staff]);
 
-  const ActionCell = ({ rowData, dataKey, ...props }) => {
-    function handleAction() {
-      // const data = {
-      //   id: rowData[dataKey],
-      // };
-    }
-    return (
-      <Cell {...props}>
-        <IconButton
-          appearance="subtle"
-          onClick={handleAction}
-          icon={<Icon icon="eye" />}
-        />
-      </Cell>
-    );
-  };
-
-  const getData = () => {
-    var batches = data.batches;
-    if (sortColumn && sortType) {
-      batches = data.batches.slice().sort((a, b) => {
-        let x = a[sortColumn];
-        let y = b[sortColumn];
-        if (typeof x === "string") {
-          x = x.charCodeAt();
-        }
-        if (typeof y === "string") {
-          y = y.charCodeAt();
-        }
-        if (sortType === "asc") {
-          return x - y;
-        } else {
-          return y - x;
-        }
-      });
-    }
-    return batches.filter((v, i) => {
-      const start = displayLength * (page - 1);
-      const end = start + displayLength;
-      return i >= start && i < end;
-    });
-  };
-
-  const filteredData = () => {
-    var batches = data.batches;
-    batches = batches.filter((batch) => {
-      return (
-        batch.location.value.toLowerCase().includes(search.toLowerCase()) ||
-        batch.batch_id.includes(search) ||
-        batch.vaccine.value.toLowerCase().includes(search.toLowerCase())
-      );
-    });
-    return batches;
-  };
-
-  const filtered = () => {
-    var f = filteredData();
-    return f.filter((v, i) => {
-      const start = displayLength * (page - 1);
-      const end = start + displayLength;
-      return i >= start && i < end;
-    });
-  };
-
-  const handleSortColumn = (sortColumn, sortType) => {
+  const fetch = () => {
     setLoading(true);
-    setTimeout(() => {
-      setSortColumn(sortColumn);
-      setSortType(sortType);
-      setLoading(false);
-    }, 500);
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Token " + sessionStorage.getItem("token"),
+      },
+    };
+    axios
+      .get(
+        `/api/get-location-batchs/?page=${page}&pageSize=${pageSize}&ordering=${order}status`,
+        config
+      )
+      .then((data) => {
+        setLoading(false);
+        setData(data.data.results);
+        setPagination({
+          current: page,
+          pageSize: pageSize,
+          total: data.data.count,
+        });
+      })
+      .catch(() => {
+        setLoading(false);
+      });
   };
 
-  const handlePagechange = (dataKey) => {
-    setPage(dataKey);
+  useEffect(() => {
+    fetch();
+    // eslint-disable-next-line
+  }, [page, order, pageSize]);
+
+  const handleTableChange = (pagination, a, sorter) => {
+    if (sorter.order === "ascend") setOrder("");
+    else if (sorter.order === "descend") setOrder("-");
+    else setOrder("");
+    setPage(pagination.current);
+    setPageSize(pagination.pageSize);
   };
 
-  const handleLengthChange = (dataKey) => {
-    setPage(1);
-    setDisplayLength(dataKey);
-  };
+  const columns = [
+    {
+      title: "ID",
+      dataIndex: "batch_id",
+      render: (batch_id) => (
+        <Tooltip placement="topLeft" title={batch_id}>
+          {batch_id}
+        </Tooltip>
+      ),
+      ellipsis: {
+        showTitle: false,
+      },
+    },
+    {
+      title: "Location",
+      dataIndex: "location",
+      render: (location) => (
+        <Tooltip placement="topLeft" title={location.value}>
+          {location.value}
+        </Tooltip>
+      ),
+      ellipsis: {
+        showTitle: false,
+      },
+    },
+    {
+      title: "Vaccine",
+      dataIndex: "vaccine",
+      render: (vaccine) => (
+        <Tooltip placement="topLeft" title={vaccine.value}>
+          {vaccine.value}
+        </Tooltip>
+      ),
+      ellipsis: {
+        showTitle: false,
+      },
+    },
+
+    {
+      title: "Number of Dose",
+      dataIndex: "number_of_dose",
+      render: (number_of_dose) => (
+        <Tooltip placement="topLeft" title={number_of_dose}>
+          {number_of_dose}
+        </Tooltip>
+      ),
+      ellipsis: {
+        showTitle: false,
+      },
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      sorter: true,
+      render: (status) => (
+        <Tooltip placement="topLeft" title={status}>
+          {status}
+        </Tooltip>
+      ),
+      ellipsis: {
+        showTitle: false,
+      },
+    },
+  ];
 
   return (
-    <Container maxWidth="lg">
-      <Grid container spacing={2}>
-        <Grid item sm={12} xs={12}>
-          <Card>
-            <CardHeader
-              style={{ backgroundColor: "#383d42" }}
-              title={
-                <Typography
-                  variant="h5"
-                  align="center"
-                  style={{ color: "#ffff" }}
-                >
-                  Batches
-                </Typography>
-              }
-            />
-            <CardContent>
-              <div className="d-flex justify-content-between">
-                <Input
-                  size="sm"
-                  placeholder="Search by batch id or location"
-                  onChange={(e) => setSearch(e)}
-                  style={{ width: "35%" }}
-                />
-                <IconButton
-                  icon={<PlusIcon />}
-                  onClick={() => history.push("/moh/batch-creation")}
-                >
-                  Add A New Location Batch
-                </IconButton>
-              </div>
-              <Table
-                virtualized
-                hover
-                loading={data.loading ? data.loading : loading}
-                height={600}
-                sortColumn={sortColumn}
-                sortType={sortType}
-                onSortColumn={handleSortColumn}
-                data={data.batches ? (search ? filtered() : getData()) : []}
-              >
-                <Column width={340} sortable>
-                  <HeaderCell>Batch ID</HeaderCell>
-                  <Cell dataKey={"batch_id"} />
-                </Column>
-                <Column flexGrow>
-                  <HeaderCell>Location</HeaderCell>
-                  <Cell>{(rowData) => rowData.location.value}</Cell>
-                </Column>
-                <Column flexGrow>
-                  <HeaderCell>Vaccine</HeaderCell>
-                  <Cell>{(rowData) => rowData.vaccine.value}</Cell>
-                </Column>
-                <Column flexGrow>
-                  <HeaderCell>Number of Doses</HeaderCell>
-                  <Cell dataKey={"number_of_dose"} />
-                </Column>
-                <Column flexGrow sortable>
-                  <HeaderCell>Status</HeaderCell>
-                  <Cell dataKey={"status"} />
-                </Column>
-                <Column align="center">
-                  <HeaderCell>Action</HeaderCell>
-                  <ActionCell dataKey={"id"} />
-                </Column>
-              </Table>
-              <Pagination
-                ellipsis
-                style={{ height: 10 }}
-                lengthMenu={[
-                  {
-                    value: 15,
-                    label: 15,
-                  },
-                  {
-                    value: 30,
-                    label: 30,
-                  },
-                ]}
-                activePage={page}
-                displayLength={displayLength}
-                total={
-                  data.batches
-                    ? search
-                      ? filteredData().length
-                      : data.batches.length
-                    : null
-                }
-                onChangePage={handlePagechange}
-                onChangeLength={handleLengthChange}
-              />
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item sm={1} xs={12}></Grid>
-      </Grid>
+    <Container maxWidth="lg" style={{ marginTop: "2%" }}>
+      <Card
+        headStyle={{ backgroundColor: "#1F2937", border: "none" }}
+        title={
+          <Title level={3} style={{ color: "white" }} align="center">
+            Batches
+          </Title>
+        }
+        bordered={false}
+        style={{ width: "100%" }}
+      >
+        <Button
+          type="primary"
+          onClick={() => history.push("/moh/batch-creation")}
+          style={{ marginBottom: 2, marginTop: -8 }}
+        >
+          Add Location Batch
+        </Button>
+        <Table
+          columns={columns}
+          dataSource={data}
+          pagination={pagination}
+          loading={loading}
+          onChange={handleTableChange}
+          scroll={scroll}
+        />
+      </Card>
     </Container>
   );
 }

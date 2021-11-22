@@ -37,7 +37,7 @@ import {
 
 import IdleTimer from "./functions/IdleTimer";
 
-import background from "./images/background3.jpg";
+import background from "./images/background2.jpg";
 
 axios.defaults.baseURL = "http://192.168.0.200:8000/";
 
@@ -79,7 +79,7 @@ function App() {
           <NavBar />
         </Header>
         <Switch>
-          <Content style={{ backgroundColor: "rgba(28, 37, 59, 0.7)" }}>
+          <Content style={{ backgroundColor: "rgba(28, 37, 59, 0.3)" }}>
             <Route exact path="/" component={Home} />
             <Route exact path="/patient-info/:uuid" component={PatientInfo} />
             <Route exact path="/appointments" component={Appointments} />

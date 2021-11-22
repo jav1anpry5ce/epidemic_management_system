@@ -1,23 +1,31 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { addLocation, clearState } from "../../store/mohSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { setActiveKey } from "../../store/navbarSlice";
 import Container from "@mui/material/Container";
-import Card from "@mui/material/Card";
-import CardHeader from "@mui/material/CardHeader";
-import CardContent from "@mui/material/CardContent";
-import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
-import {
-  Button,
-  Form,
-  FormGroup,
-  FormControl,
-  ControlLabel,
-  Checkbox,
-} from "rsuite";
+import { Card, Input, Form, Button, Typography, Select, Checkbox } from "antd";
 import { open } from "../../functions/Notifications";
+
+const { Title } = Typography;
+const { Option } = Select;
+
+const parishData = [
+  { label: "Kingston", value: "Kingston" },
+  { label: "St. Andrew", value: "St. Andrew" },
+  { label: "Portland ", value: "Portland " },
+  { label: "St. Thomas", value: "St. Thomas" },
+  { label: "St. Catherine", value: "St. Catherine" },
+  { label: "St. Mary", value: "St. Mary" },
+  { label: "St. Ann", value: "St. Ann" },
+  { label: "Manchester", value: "Manchester" },
+  { label: "Clarendon", value: "Clarendon" },
+  { label: "Hanover", value: "Hanover" },
+  { label: "Westmoreland", value: "Westmoreland" },
+  { label: "St. James", value: "St. James" },
+  { label: "Trelawny", value: "Trelawny" },
+  { label: "St. Elizabeth", value: "St. Elizabeth" },
+];
 
 export default function AddLocation() {
   const data = useSelector((state) => state.moh);
@@ -32,7 +40,7 @@ export default function AddLocation() {
   const [vaccination, setVaccination] = useState(false);
   const [antigen, setAntigen] = useState(false);
   const [pcr, setPcr] = useState(false);
-  const formRef = useRef();
+  const [form] = Form.useForm();
 
   useEffect(() => {
     if (!auth.is_moh_admin) {
@@ -45,7 +53,7 @@ export default function AddLocation() {
 
   useEffect(() => {
     if (data.success) {
-      formRef.current._reactInternals.child.stateNode.reset();
+      form.resetFields();
       open(
         "success",
         "Location Added!",
@@ -105,84 +113,114 @@ export default function AddLocation() {
   };
 
   return (
-    <Container maxWidth="sm">
-      <Card style={{ width: "100%", borderRadius: 15 }}>
-        <CardHeader
-          style={{ backgroundColor: "#383d42", color: "#fff" }}
-          title={
-            <Typography align="center" variant="h5">
-              Add Location
-            </Typography>
-          }
-        />
-        <CardContent>
-          <Form ref={formRef} fluid onSubmit={onSubmit}>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <FormGroup>
-                  <ControlLabel>Location Name</ControlLabel>
-                  <FormControl required onChange={(e) => setLocation(e)} />
-                </FormGroup>
-              </Grid>
-              <Grid item xs={12}>
-                <FormGroup>
-                  <ControlLabel>Street Address</ControlLabel>
-                  <FormControl required onChange={(e) => setStreetAddress(e)} />
-                </FormGroup>
-              </Grid>
-              <Grid item xs={12}>
-                <FormGroup>
-                  <ControlLabel>City</ControlLabel>
-                  <FormControl required onChange={(e) => setCity(e)} />
-                </FormGroup>
-              </Grid>
-              <Grid item xs={12}>
-                <FormGroup>
-                  <ControlLabel>Parish</ControlLabel>
-                  <FormControl required onChange={(e) => setParish(e)} />
-                </FormGroup>
-              </Grid>
-              <Grid item xs={12}>
-                <FormGroup>
-                  <ControlLabel>Offers</ControlLabel>
-                  <Checkbox checked={testing} onChange={() => handelClick(1)}>
-                    Testing
-                  </Checkbox>
-                  <Checkbox
-                    checked={vaccination}
-                    onChange={() => handelClick(2)}
-                  >
-                    Vaccination
-                  </Checkbox>
-                </FormGroup>
-              </Grid>
-              {testing ? (
-                <Grid item xs={12}>
-                  <FormGroup>
-                    <ControlLabel>Test Type</ControlLabel>
-                    <Checkbox checked={antigen} onChange={() => handelClick(3)}>
-                      ANTIGEN
-                    </Checkbox>
-                    <Checkbox checked={pcr} onChange={() => handelClick(4)}>
-                      PCR
-                    </Checkbox>
-                  </FormGroup>
-                </Grid>
-              ) : null}
-              <Grid item xs={12} className="d-flex justify-content-between">
-                <Button color="blue" type="submit" disabled={data.loading}>
-                  Submit
-                </Button>
-                <Button
-                  onClick={() => history.push("/moh/locations")}
-                  disabled={data.loading}
-                >
-                  Cancel
-                </Button>
-              </Grid>
-            </Grid>
-          </Form>
-        </CardContent>
+    <Container maxWidth="sm" style={{ marginTop: "2%" }}>
+      <Card
+        headStyle={{ backgroundColor: "#1F2937", border: "none" }}
+        title={
+          <Title style={{ color: "white" }} align="center">
+            Add Location
+          </Title>
+        }
+        bordered={false}
+        style={{ width: "100%" }}
+      >
+        <Form layout="vertical" form={form} onFinish={onSubmit}>
+          <Form.Item
+            label="Location Name"
+            name="loaction_name"
+            style={{ marginBottom: 2 }}
+            rules={[
+              {
+                required: true,
+                message: "Please enter location name!",
+              },
+            ]}
+          >
+            <Input onChange={(e) => setLocation(e.target.value)} />
+          </Form.Item>
+          <Form.Item
+            label="Streer Address"
+            name="street_address"
+            style={{ marginBottom: 2 }}
+            rules={[
+              {
+                required: true,
+                message: "Please enter location street address!",
+              },
+            ]}
+          >
+            <Input onChange={(e) => setStreetAddress(e.target.value)} />
+          </Form.Item>
+          <Form.Item
+            label="City"
+            name="city"
+            style={{ marginBottom: 2 }}
+            rules={[
+              {
+                required: true,
+                message: "Please enter location city!",
+              },
+            ]}
+          >
+            <Input onChange={(e) => setCity(e.target.value)} />
+          </Form.Item>
+
+          <Form.Item
+            label="Parish"
+            name="parish"
+            style={{ marginBottom: 2 }}
+            rules={[
+              {
+                required: true,
+                message: "Please enter location parish!",
+              },
+            ]}
+          >
+            <Select onChange={(e) => setParish(e)}>
+              {parishData.map((item, index) => (
+                <Option key={index} value={item.value}>
+                  {item.label}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+          <Form.Item name="testing" style={{ marginBottom: 2 }}>
+            <Checkbox onChange={() => handelClick(1)}>Testing</Checkbox>
+          </Form.Item>
+          <Form.Item name="vaccination" style={{ marginBottom: 2 }}>
+            <Checkbox onChange={() => handelClick(2)}>Vaccination</Checkbox>
+          </Form.Item>
+          {testing && (
+            <div>
+              <Form.Item name="antigen" style={{ marginBottom: 2 }}>
+                <Checkbox onChange={() => handelClick(3)}>ANTIGEN</Checkbox>
+              </Form.Item>
+              <Form.Item style={{ marginBottom: 2 }}>
+                <Checkbox name="pcr" onChange={() => handelClick(4)}>
+                  PCR
+                </Checkbox>
+              </Form.Item>
+            </div>
+          )}
+          <Form.Item style={{ marginBottom: 2, marginTop: 12 }}>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <Button
+                type="primary"
+                htmlType="submit"
+                appearance="primary"
+                loading={data.loading}
+              >
+                Submit
+              </Button>
+              <Button
+                onClick={() => history.push("/moh/locations")}
+                disabled={data.loading}
+              >
+                Back
+              </Button>
+            </div>
+          </Form.Item>
+        </Form>
       </Card>
     </Container>
   );

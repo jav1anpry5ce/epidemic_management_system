@@ -5,6 +5,9 @@ from rest_framework import status, permissions
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView
+from rest_framework.pagination import PageNumberPagination
+from rest_framework import filters
+from django_filters import rest_framework as filterss
 from django.contrib.sites.models import Site
 from .models import LocationBatch, LocationVaccine, Vaccine
 from .serializers import LocationBatchSerializer, VaccineSerializer
@@ -24,7 +27,6 @@ class IsMohStaff(permissions.BasePermission):
 
 
 class Batches(ListAPIView, IsMohStaff):
-    
     queryset = LocationBatch.objects.all()
     serializer_class = LocationBatchSerializer
     permission_classes = [permissions.IsAuthenticated, IsMohStaff]
@@ -32,17 +34,6 @@ class Batches(ListAPIView, IsMohStaff):
 
 class BatchView(APIView):
     permission_classes = [permissions.IsAuthenticated]
-    pagination_class = PageNumberPagination
-    def get(self, request):
-        try:
-            if request.user.is_moh_staff:
-                batch = LocationBatch.objects.all()
-                seraializer = LocationBatchSerializer(batch, many=True)
-                return Response(seraializer.data, status=status.HTTP_200_OK)
-            return Response({'Message': 'You are not authorized.'}, status=status.HTTP_401_UNAUTHORIZED)
-        except:
-            return Response(status.HTTP_400_BAD_REQUEST)
-
     def post(self, request):
         if request.user.is_moh_staff:
             if request.data.get('location'):
@@ -78,6 +69,22 @@ class BatchView(APIView):
                 return Response({'Message': 'Vaccine name is required.'}, status=status.HTTP_400_BAD_REQUEST)
             return Response({'Message': 'Location is required.'}, status=status.HTTP_400_BAD_REQUEST)
 
+class CustomPageNumberPagination(PageNumberPagination):
+    page_size_query_param = 'pageSize'
+
+class UserFiltering(filters.BaseFilterBackend):
+    def filter_queryset(self, request, queryset, view):
+        if request.user.is_authenticated:
+                return queryset.all()
+
+class LocationBatchList(ListAPIView):
+    queryset = LocationBatch.objects.all()
+    serializer_class = LocationBatchSerializer
+    filter_backends = [UserFiltering, filterss.DjangoFilterBackend, filters.OrderingFilter]
+    filter_fields = {
+        'status': ['exact', 'contains', 'in']
+    }
+    pagination_class = CustomPageNumberPagination
 
 
 @api_view(['PATCH'])

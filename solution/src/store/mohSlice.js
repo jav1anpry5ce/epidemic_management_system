@@ -15,14 +15,14 @@ export const getAllPatients = createAsyncThunk("all/patients", async () => {
   }
 });
 
-export const getPatient = createAsyncThunk("get/patient", async (data) => {
+export const getPatient = createAsyncThunk("get/patient", async (trn) => {
   const config = {
     headers: {
       "Content-Type": "application/json",
       Authorization: "Token " + sessionStorage.getItem("token"),
     },
   };
-  const response = await axios.post("api/all-patients/", data, config);
+  const response = await axios.get(`api/get-patient/${trn}`, config);
   if (response.status === 200) {
     const data = response.data;
     return { data };

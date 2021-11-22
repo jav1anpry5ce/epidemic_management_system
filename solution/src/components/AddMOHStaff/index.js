@@ -1,25 +1,14 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { clearState } from "../../store/mohSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { setActiveKey } from "../../store/navbarSlice";
 import { register, clearState as CS } from "../../store/authSlice";
 import Container from "@mui/material/Container";
-import Card from "@mui/material/Card";
-import CardHeader from "@mui/material/CardHeader";
-import CardContent from "@mui/material/CardContent";
-import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
-
-import {
-  Button,
-  Form,
-  FormGroup,
-  FormControl,
-  ControlLabel,
-  Checkbox,
-} from "rsuite";
+import { Card, Input, Form, Button, Typography, Checkbox } from "antd";
 import { open } from "../../functions/Notifications";
+
+const { Title } = Typography;
 
 export default function AddMOHStaff() {
   const auth = useSelector((state) => state.auth);
@@ -30,7 +19,7 @@ export default function AddMOHStaff() {
   const [firstName, setFirstName] = useState();
   const [lastName, setLastName] = useState();
   const [isAdmin, setIsAdmin] = useState();
-  const formRef = useRef();
+  const [form] = Form.useForm();
 
   useEffect(() => {
     dispatch(setActiveKey("7"));
@@ -43,7 +32,7 @@ export default function AddMOHStaff() {
 
   useEffect(() => {
     if (auth.success) {
-      formRef.current._reactInternals.child.stateNode.reset();
+      form.resetFields();
       open("success", "Success", "Location Admin successfully added");
       setIsAdmin(false);
       dispatch(CS());
@@ -73,63 +62,84 @@ export default function AddMOHStaff() {
   };
 
   return (
-    <Container maxWidth="sm">
-      <Card style={{ borderRadius: 9 }}>
-        <CardHeader
-          style={{ backgroundColor: "#383d42", color: "#fff" }}
-          title={
-            <Typography align="center" variant="h5">
-              Add MOH Staff
-            </Typography>
-          }
-        />
-        <CardContent>
-          <Form fluid onSubmit={handelSubmit} ref={formRef}>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <FormGroup>
-                  <ControlLabel>Email</ControlLabel>
-                  <FormControl
-                    onChange={(e) => setEmail(e)}
-                    required
-                    type="email"
-                  />
-                </FormGroup>
-              </Grid>
-              <Grid item xs={12}>
-                <FormGroup>
-                  <ControlLabel>Username</ControlLabel>
-                  <FormControl onChange={(e) => setUsername(e)} required />
-                </FormGroup>
-              </Grid>
-              <Grid item xs={12}>
-                <FormGroup>
-                  <ControlLabel>First Name</ControlLabel>
-                  <FormControl onChange={(e) => setFirstName(e)} required />
-                </FormGroup>
-              </Grid>
-              <Grid item xs={12}>
-                <FormGroup>
-                  <ControlLabel>Last Email</ControlLabel>
-                  <FormControl onChange={(e) => setLastName(e)} required />
-                </FormGroup>
-              </Grid>
-              <Grid item xs={12}>
-                <FormGroup>
-                  <ControlLabel>Permissions</ControlLabel>
-                  <Checkbox checked={isAdmin} onChange={() => handelClick(1)}>
-                    Is Admin
-                  </Checkbox>
-                </FormGroup>
-              </Grid>
-              <Grid item xs={12}>
-                <Button type="submit" color="primary" disabled={auth.loading}>
-                  Submit
-                </Button>
-              </Grid>
-            </Grid>
-          </Form>
-        </CardContent>
+    <Container maxWidth="sm" style={{ marginTop: "2%" }}>
+      <Card
+        headStyle={{ backgroundColor: "#1F2937", border: "none" }}
+        title={
+          <Title level={3} style={{ color: "white" }} align="center">
+            Add MOH Staff
+          </Title>
+        }
+        bordered={false}
+        style={{ width: "100%" }}
+      >
+        <Form layout="vertical" onFinish={handelSubmit} form={form}>
+          <Form.Item
+            label="Email"
+            name="email"
+            rules={[
+              {
+                required: true,
+                message: "Please enter staff email!",
+              },
+            ]}
+            style={{ marginBottom: 2 }}
+          >
+            <Input onChange={(e) => setEmail(e.target.value)} />
+          </Form.Item>
+          <Form.Item
+            label="Username"
+            name="username"
+            rules={[
+              {
+                required: true,
+                message: "Please enter staff username!",
+              },
+            ]}
+            style={{ marginBottom: 2 }}
+          >
+            <Input onChange={(e) => setUsername(e.target.value)} />
+          </Form.Item>
+          <Form.Item
+            label="First Name"
+            name="first_name"
+            rules={[
+              {
+                required: true,
+                message: "Please enter staff first name!",
+              },
+            ]}
+            style={{ marginBottom: 2 }}
+          >
+            <Input onChange={(e) => setFirstName(e.target.value)} />
+          </Form.Item>
+          <Form.Item
+            label="Last Name"
+            name="last_name"
+            rules={[
+              {
+                required: true,
+                message: "Please enter staff last name!",
+              },
+            ]}
+            style={{ marginBottom: 2 }}
+          >
+            <Input onChange={(e) => setLastName(e.target.value)} />
+          </Form.Item>
+          <Form.Item style={{ marginBottom: 12 }}>
+            <Checkbox onChange={() => handelClick(1)}>Is Admin</Checkbox>
+          </Form.Item>
+          <Form.Item style={{ marginBottom: 2 }}>
+            <Button
+              type="primary"
+              htmlType="submit"
+              appearance="primary"
+              loading={auth.loading}
+            >
+              Submit
+            </Button>
+          </Form.Item>
+        </Form>
       </Card>
     </Container>
   );
