@@ -3,7 +3,7 @@ import axios from "axios";
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "./store/authSlice";
-import { Container, Header, Content } from "rsuite";
+import { Container, Header, Content, Footer as Foot } from "rsuite";
 import "./App.css";
 import {
   ActivateAccount,
@@ -33,6 +33,7 @@ import {
   UpdateInfo,
   VaccinationAndTesting,
   Home,
+  Footer,
 } from "./components";
 
 import IdleTimer from "./functions/IdleTimer";
@@ -78,8 +79,9 @@ function App() {
         <Header>
           <NavBar />
         </Header>
-        <Switch>
-          <Content style={{ backgroundColor: "rgba(28, 37, 59, 0.3)" }}>
+
+        <Content style={{ backgroundColor: "rgba(28, 37, 59, 0.3)" }}>
+          <Switch>
             <Route exact path="/" component={Home} />
             <Route exact path="/patient-info/:uuid" component={PatientInfo} />
             <Route exact path="/appointments" component={Appointments} />
@@ -150,8 +152,11 @@ function App() {
             />
             <Route exact path="/got-the-stach/:uuid" component={ReceiveBatch} />
             <Route exact path="/moh/positive-cases" component={PositiveCases} />
-          </Content>
-        </Switch>
+          </Switch>
+        </Content>
+        <Foot>
+          <Footer />
+        </Foot>
       </Router>
     </Container>
   );

@@ -160,7 +160,7 @@ export default function Locations() {
           onClick={() => history.push("/moh/add-location")}
           style={{ marginBottom: 2, marginTop: -8 }}
         >
-          Add Location Batch
+          Add Location
         </Button>
         <Table
           columns={columns}
