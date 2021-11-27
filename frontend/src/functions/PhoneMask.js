@@ -10,7 +10,7 @@ export default function PhoneMask(props) {
       readOnly={props.read}
     >
       {() => {
-        return <Input className="rounded-md" placeholder="+1(876) 123-4567" />;
+        return <Input placeholder="+1(876) 123-4567" />;
       }}
     </InputMask>
   );

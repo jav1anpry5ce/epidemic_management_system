@@ -69,7 +69,7 @@ export default function CreateBatch() {
 
   const pageStyle = `
   @page {
-    size: 80mm 50mm;
+    size: 280mm 160mm;
   }
   @media all {
     .pagebreak {
@@ -95,17 +95,15 @@ export default function CreateBatch() {
                     data={data.batchData}
                   />
                 </Grid>
-                <Grid
-                  item
-                  xs={12}
-                  className="d-flex justify-content-between mb-3"
-                >
-                  <Button type="primary" onClick={handlePrint}>
-                    Print
-                  </Button>
-                  <Button onClick={() => dispatch(updateSuccess())}>
-                    Create new batch
-                  </Button>
+                <Grid item xs={12}>
+                  <div className="flex justify-between mb-3 w-full">
+                    <Button type="primary" onClick={handlePrint}>
+                      Print
+                    </Button>
+                    <Button onClick={() => dispatch(updateSuccess())}>
+                      Create new batch
+                    </Button>
+                  </div>
                 </Grid>
               </Grid>
             </Container>

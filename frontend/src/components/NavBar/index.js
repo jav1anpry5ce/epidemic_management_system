@@ -95,12 +95,11 @@ export default function NavBar() {
           {auth.is_moh_staff ? (
             <Container maxWidth="xsl">
               <Nav onSelect={handelSelect} activeKey={nav.activeKey}>
-                <Nav.Item
-                  eventKey="1"
-                  icon={<Icon icon="home" />}
-                  onClick={() => nagivate("/moh/home")}
-                >
-                  Home
+                <Nav.Item eventKey="1" onClick={() => nagivate("/moh/home")}>
+                  <div className="flex">
+                    {<AiFillHome className="flex text-lg mr-1" />}
+                    Home
+                  </div>
                 </Nav.Item>
                 <Nav.Item
                   eventKey="2"
@@ -138,28 +137,17 @@ export default function NavBar() {
                     Locations
                   </div>
                 </Nav.Item>
-                {auth.is_moh_admin ? (
+                {auth.is_moh_admin && (
                   <Nav.Item
                     eventKey="6"
                     onClick={() => nagivate("/moh/add-location-admin")}
                   >
                     <div className="flex">
                       {<BsPersonPlusFill className="flex text-lg mr-1" />}
-                      Add Location Admin
+                      Add Staff
                     </div>
                   </Nav.Item>
-                ) : null}
-                {auth.is_moh_admin ? (
-                  <Nav.Item
-                    eventKey="7"
-                    onClick={() => nagivate("/moh/add-moh-staff")}
-                  >
-                    <div className="flex">
-                      {<BsPersonPlusFill className="flex text-lg mr-1" />}
-                      Add MOH Staff
-                    </div>
-                  </Nav.Item>
-                ) : null}
+                )}
               </Nav>
               <Nav pullRight>
                 <Nav.Item
@@ -199,10 +187,12 @@ export default function NavBar() {
               <Nav onSelect={handelSelect} activeKey={nav.activeKey}>
                 <Nav.Item
                   eventKey="1"
-                  icon={<Icon icon="home" />}
                   onClick={() => nagivate(`/${auth.location}/home`)}
                 >
-                  Home
+                  <div className="flex">
+                    {<AiFillHome className="flex text-lg mr-1" />}
+                    Home
+                  </div>
                 </Nav.Item>
                 <Nav.Item
                   eventKey="2"
@@ -319,9 +309,6 @@ export default function NavBar() {
                   Appoinments
                 </Nav.Item>
               </Nav>
-              {/* <Nav pullRight>
-              <Nav.Item></Nav.Item>
-            </Nav> */}
               <Nav
                 pullRight
                 onSelect={handelSelect}
@@ -365,16 +352,23 @@ export default function NavBar() {
                   }}
                 >
                   <Nav onSelect={handelSelect} activeKey={nav.activeKey}>
-                    <Grid item xs={12} style={{ marginTop: "7%" }}>
+                    <Grid
+                      item
+                      xs={12}
+                      style={{ marginTop: "7%" }}
+                      align="center"
+                    >
                       <Nav.Item
-                        icon={<Icon icon="home" />}
                         onClick={() => {
                           nagivate("/");
                           setExpand(!expand);
                         }}
                         eventKey="1"
                       >
-                        Home
+                        <div className="flex">
+                          {<AiFillHome className="flex text-lg mr-1" />}
+                          Home
+                        </div>
                       </Nav.Item>
                       <Nav.Item
                         eventKey="2"
@@ -384,13 +378,11 @@ export default function NavBar() {
                             "_self"
                           )
                         }
-                        icon={
-                          <BiTestTube
-                            style={{ fontSize: 18, marginRight: 3 }}
-                          />
-                        }
                       >
-                        Testing Information
+                        <div className="flex">
+                          {<BiTestTube className="flex text-lg mr-1" />}
+                          Testing Information
+                        </div>
                       </Nav.Item>
                       <Dropdown title="Settings" icon={<Icon icon="cog" />}>
                         <Dropdown.Item
@@ -404,7 +396,7 @@ export default function NavBar() {
                         </Dropdown.Item>
                       </Dropdown>
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid item xs={12} align="center">
                       <Nav.Item
                         eventKey="3"
                         onClick={() =>
@@ -413,13 +405,11 @@ export default function NavBar() {
                             "_self"
                           )
                         }
-                        icon={
-                          <GiHypodermicTest
-                            style={{ fontSize: 18, marginRight: 5 }}
-                          />
-                        }
                       >
-                        Vaccine Information
+                        <div className="flex">
+                          {<GiHypodermicTest className="flex text-lg mr-1" />}
+                          Vaccine Information
+                        </div>
                       </Nav.Item>
 
                       <Nav.Item
@@ -433,7 +423,6 @@ export default function NavBar() {
                         Appoinments
                       </Nav.Item>
                     </Grid>
-                    <Grid item xs={12}></Grid>
                   </Nav>
                 </Grid>
               ) : null}

@@ -21,7 +21,7 @@ export default function BatchManagement() {
   const [pageSize, setPageSize] = useState(20);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
-  const scroll = { y: 560 };
+  const scroll = { y: 470 };
 
   useEffect(() => {
     dispatch(setActiveKey("4"));
@@ -92,6 +92,7 @@ export default function BatchManagement() {
     {
       title: "Location",
       dataIndex: "location",
+      sorter: (a, b) => a.location.value.length - b.location.value.length,
       render: (location) => (
         <Tooltip placement="topLeft" title={location.value}>
           {location.value}
@@ -104,6 +105,7 @@ export default function BatchManagement() {
     {
       title: "Vaccine",
       dataIndex: "vaccine",
+      sorter: (a, b) => a.vaccine.value.length - b.vaccine.value.length,
       render: (vaccine) => (
         <Tooltip placement="topLeft" title={vaccine.value}>
           {vaccine.value}
@@ -151,7 +153,7 @@ export default function BatchManagement() {
           </Title>
         }
         bordered={false}
-        style={{ width: "100%" }}
+        style={{ width: "100%", marginBottom: "3%" }}
       >
         <Button
           type="primary"

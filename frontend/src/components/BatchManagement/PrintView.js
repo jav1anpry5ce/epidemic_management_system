@@ -1,8 +1,6 @@
 import React from "react";
 import Container from "@mui/material/Container";
-import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
-import Stack from "@mui/material/Stack";
 
 export default function PrintView({ componenetRef, data }) {
   return (
@@ -14,38 +12,25 @@ export default function PrintView({ componenetRef, data }) {
       }}
       ref={componenetRef}
     >
-      {data ? (
-        <Grid
-          container
-          spacing={4}
-          style={{
-            marginBottom: "2%",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
+      {data && (
+        <Grid container>
           <Grid item xs={6}>
-            <Stack spacing={1} style={{ marginTop: "2%" }}>
-              <Typography variant="inhert">
-                Location Name: {data.location_name}
-              </Typography>
-              <Typography variant="inhert">
-                Street Address: {data.street_address}
-              </Typography>
-              <Typography variant="inhert">City: {data.city}</Typography>
-              <Typography variant="inhert">Parish: {data.parish}</Typography>
-              <Typography variant="inhert">
+            <div className="space-y-3">
+              <h3 className="text-sm">Location Name: {data.location_name}</h3>
+              <h3 className="text-sm">Street Address: {data.street_address}</h3>
+              <h3 className="text-sm">City: {data.city}</h3>
+              <h3 className="text-sm">Parish: {data.parish}</h3>
+              <h3 className="text-sm">
                 Date Created:{" "}
                 {new Date(data.date_created).toLocaleString("en-us")}
-              </Typography>
-            </Stack>
+              </h3>
+            </div>
           </Grid>
           <Grid item xs={6} align="right">
             <img width="145" src={data.qr_image} alt="qr" />
           </Grid>
         </Grid>
-      ) : null}
+      )}
     </Container>
   );
 }

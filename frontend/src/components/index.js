@@ -1,7 +1,6 @@
 export { default as ActivateAccount } from "./ActivateAccount";
 export { default as AddLocation } from "./AddLocation";
 export { default as AddLocationAdmin } from "./AddLocationAdmin";
-export { default as AddMOHStaff } from "./AddMOHStaff";
 export { default as AddStaff } from "./AddStaff";
 export { default as AppointmentManagement } from "./AppointmentManagement";
 export { default as Appointments } from "./Appointments";

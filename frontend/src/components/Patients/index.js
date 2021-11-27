@@ -49,7 +49,7 @@ export default function Patients() {
   const [vaccinedExpaned, setVaccinedExpanded] = useState(false);
   const [testingExpaned, setTestingExpanded] = useState(false);
   const [form] = Form.useForm();
-  const scroll = { y: 560 };
+  const scroll = { y: 470 };
 
   useEffect(() => {
     if (!auth.is_auth && !auth.is_moh_staff) {
@@ -187,6 +187,7 @@ export default function Patients() {
     {
       title: "Gender",
       dataIndex: "gender",
+      sorter: (a, b) => a.patient.gender.length - b.patient.gender.length,
       render: (gender) => (
         <Tooltip placement="topLeft" title={gender}>
           {gender}

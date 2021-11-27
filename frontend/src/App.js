@@ -4,12 +4,12 @@ import { HashRouter as Router, Switch, Route } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "./store/authSlice";
 import { Container, Header, Content, Footer as Foot } from "rsuite";
+import { BackTop } from "antd";
 import "./App.css";
 import {
   ActivateAccount,
   AddLocation,
   AddLocationAdmin,
-  AddMOHStaff,
   AddStaff,
   AppointmentManagement,
   Appointments,
@@ -48,7 +48,7 @@ function App() {
 
   useEffect(() => {
     const timer = new IdleTimer({
-      timeout: 900,
+      timeout: 300,
       onTimeout: () => {
         if (auth.is_auth) {
           dispatch(logout());
@@ -81,6 +81,7 @@ function App() {
         </Header>
 
         <Content style={{ backgroundColor: "rgba(28, 37, 59, 0.3)" }}>
+          <BackTop />
           <Switch>
             <Route exact path="/" component={Home} />
             <Route exact path="/patient-info/:uuid" component={PatientInfo} />
@@ -144,7 +145,6 @@ function App() {
               path="/moh/add-location-admin"
               component={AddLocationAdmin}
             />
-            <Route exact path="/moh/add-moh-staff" component={AddMOHStaff} />
             <Route
               exact
               path={`/${auth.location}/home`}

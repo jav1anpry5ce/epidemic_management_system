@@ -13,12 +13,11 @@ from functions import convertTime
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import filters
 from django_filters import rest_framework as filterss
-from django.core.paginator import Paginator
 
 from .models import Location, Offer, Test, Appointment
 from .serializers import LocationSerializer, OfferSerializer, TestSerializer, AppointmentSerializer, CreateAppointmentSerializer
 from patient_management.serializers import CreatePatientSerializer, NextOfKinSerializer
-from patient_management.models import Patient, PositiveCase, NextOfKin
+from patient_management.models import Patient, PositiveCase
 from testing.models import Testing
 from vaccination.models import Vaccination
 from inventory.models import LocationVaccine, Vaccine
@@ -527,6 +526,9 @@ def get_breakdown(request):
             number_of_locations = len(locations)
             test_count = len(Testing.objects.filter(status='Completed'))
             vaccines_administer = len(Vaccination.objects.filter(status='Completed'))
+            pfizer_to_disb = Vaccine.objects.get(value='Pfizer').number_of_dose
+            moderna_to_disb = Vaccine.objects.get(value='Moderna').number_of_dose
+            JJ_to_disb = Vaccine.objects.get(value='Johnson & Johnson').number_of_dose
             
             for location in locations:
                 pfizers = LocationVaccine.objects.filter(location=location, value='Pfizer')
@@ -540,6 +542,9 @@ def get_breakdown(request):
                     number_of_JJ += jj.number_of_dose
                 
             general_breakdown = {
+                'pfizer_to_disb': pfizer_to_disb,
+                'moderna_to_disb': moderna_to_disb,
+                'JJ_to_disb': JJ_to_disb,
                 'pfizer_in_stock':number_of_pfizer,
                 'moderna_in_stock':number_of_moderna,
                 'JJ_in_stock':number_of_JJ,

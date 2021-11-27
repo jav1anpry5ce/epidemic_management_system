@@ -48,7 +48,7 @@ export default function LocationAppointments() {
   const [pageSize, setPageSize] = useState(20);
   const [status, setStatus] = useState("Pending");
   const [form] = Form.useForm();
-  const scroll = { y: 560 };
+  const scroll = { y: 470 };
 
   const fdata = [
     { label: "All", value: "All" },

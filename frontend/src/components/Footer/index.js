@@ -1,17 +1,16 @@
 import React from "react";
-import { Container, ItemContainer, Item, Title } from "./Elements";
 
 export default function Footer() {
   return (
-    <Container>
-      <ItemContainer>
-        <Item>
-          <Title>© 2021 Ministry of Health & Wellness Jamaica.</Title>
-        </Item>
-        <Item style={{ marginTop: -26 }}>
-          <Title>Site developed by Blue Star Technologies Solution.</Title>
-        </Item>
-      </ItemContainer>
-    </Container>
+    <div className="flex w-full justify-center bg-navBlue-normal h-full">
+      <div className="p-1">
+        <h3 className="text-base text-white text-center">
+          © 2021 Ministry of Health & Wellness Jamaica.
+        </h3>
+        <h3 className="text-base text-white text-center">
+          Site developed by Blue Star Technologies Solution.
+        </h3>
+      </div>
+    </div>
   );
 }

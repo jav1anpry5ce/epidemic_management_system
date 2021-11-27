@@ -31,6 +31,7 @@ class Batches(ListAPIView, IsMohStaff):
     serializer_class = LocationBatchSerializer
     permission_classes = [permissions.IsAuthenticated, IsMohStaff]
     pagination_class = PageNumberPagination
+    ordering = ['date_created']
 
 class BatchView(APIView):
     permission_classes = [permissions.IsAuthenticated]

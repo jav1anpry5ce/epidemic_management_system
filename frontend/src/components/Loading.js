@@ -8,7 +8,7 @@ function Loading() {
         size={90}
         thickness={67}
         speed={100}
-        color="rgba(4,73,132,255)"
+        color="rgba(71, 172, 255, 255)"
         secondaryColor="rgba(172, 57, 59, 0)"
       />
     </div>

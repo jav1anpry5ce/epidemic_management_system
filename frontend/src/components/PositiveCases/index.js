@@ -69,7 +69,7 @@ export default function PositiveCases() {
   const [pageSize, setPageSize] = useState(20);
   const [page, setPage] = useState(1);
   const [form] = Form.useForm();
-  const scroll = { y: 560 };
+  const scroll = { y: 470 };
 
   useEffect(() => {
     if (!auth.is_auth && !auth.is_moh_staff) {
@@ -212,6 +212,8 @@ export default function PositiveCases() {
     {
       title: "Age",
       dataIndex: "patient",
+      sorter: (a, b) =>
+        calculate_age(a.date_of_birth) - calculate_age(b.date_of_birth),
       render: (patient) => (
         <Tooltip
           placement="topLeft"
@@ -450,8 +452,11 @@ export default function PositiveCases() {
             </Grid>
           </Form>
         )}
-        {moh.loading && (
-          <Spin indicator={<LoadingOutlined style={{ fontSize: 42 }} />} />
+        {!moh.caseData && (
+          <Spin
+            className="flex justify-center align-center"
+            indicator={<LoadingOutlined style={{ fontSize: 62 }} />}
+          />
         )}
       </Modal>
       <Card

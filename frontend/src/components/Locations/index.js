@@ -18,10 +18,10 @@ export default function Locations() {
     current: 1,
     pageSize: 20,
   });
-  const [pageSize, setPageSize] = useState(20);
+  const [pageSize, setPageSize] = useState(60);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
-  const scroll = { y: 560 };
+  const scroll = { y: 470 };
 
   useEffect(() => {
     if (!auth.is_moh_staff) {

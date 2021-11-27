@@ -1,5 +1,4 @@
 import React from "react";
-import { makeStyles } from "@mui/styles";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
@@ -7,51 +6,27 @@ import CardContent from "@mui/material/CardContent";
 import Collapse from "@mui/material/Collapse";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
-import clsx from "clsx";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import toLocalDate from "../functions/toLocalDate";
 
-const useStyle = makeStyles((theme) => ({
-  root: {
-    display: "flex",
-  },
-  text: {
-    color: "white",
-  },
-  background: {
-    backgroundColor: "#1F2937",
-  },
-  expand: {
-    transform: "rotate(0deg)",
-    marginLeft: "auto",
-    // transition: theme.transitions.create("transform", {
-    //   duration: theme.transitions.duration.shortest,
-    // }),
-  },
-  expandOpen: {
-    transform: "rotate(180deg)",
-  },
-}));
-
 export default function CollapseCard({ Title, Data, expand, setExpand }) {
-  const classes = useStyle();
   return (
     <Card style={{ marginBottom: "1%" }}>
       <CardHeader
-        className={classes.background}
+        className="bg-[#1F2937]"
         title={
-          <div className="d-flex justify-content-between">
-            <Typography className={classes.text} align="center" variant="h6">
+          <div className="flex justify-between">
+            <Typography className="text-white" align="center" variant="h6">
               {Title}
             </Typography>
             <IconButton
               onClick={setExpand}
               aria-label="show more"
-              className={clsx(classes.expand, {
-                [classes.expandOpen]: expand,
-              })}
+              className={`transition  duration-700 ease-in-out transform ml-auto   ${
+                expand ? "rotate-180" : "rotate-0"
+              }`}
             >
-              <ExpandMoreIcon className={classes.text} />
+              <ExpandMoreIcon className="text-white" />
             </IconButton>
           </div>
         }

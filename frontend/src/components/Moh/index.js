@@ -25,6 +25,21 @@ export default function MOHHOME() {
   if (data.breakdownData) {
     const cardData = [
       {
+        name: "Pfizer To Distribute",
+        data: data.breakdownData.pfizer_to_disb,
+        backgroundcolour: "#4f8598",
+      },
+      {
+        name: "Moderna To Distribute",
+        data: data.breakdownData.moderna_to_disb,
+        backgroundcolour: "#10496d",
+      },
+      {
+        name: "Johnson&Johnson To Distribute",
+        data: data.breakdownData.JJ_to_disb,
+        backgroundcolour: "#437ab2",
+      },
+      {
         name: "Pfizer In Stock",
         data: data.breakdownData.pfizer_in_stock,
         backgroundcolour: "#225955",
@@ -47,7 +62,7 @@ export default function MOHHOME() {
       {
         name: "Hospitalized",
         data: data.breakdownData.hospitalized,
-        backgroundcolour: "#10496d",
+        backgroundcolour: "#437ab2",
       },
       {
         name: "Recovered",

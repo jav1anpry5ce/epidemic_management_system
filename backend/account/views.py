@@ -100,7 +100,7 @@ def activate(request):
                     msg.content_subtype = "html"
                     msg.send()
                     return Response(status=status.HTTP_202_ACCEPTED)
-                return Response({'Message': 'password must contain at least one digit.\npassword must contain at least one special character.\npassword must contain at least one upper case letter'} ,status=status.HTTP_400_BAD_REQUEST)
+                return Response({'Message': 'Password must be at lease 8 character in length, contain at least one digit,\nat least one special character and\nat least one upper case letter.'} ,status=status.HTTP_400_BAD_REQUEST)
             return Response({'Message': 'Password and confirm password must be the same!'}, status=status.HTTP_400_BAD_REQUEST)
     except:
         return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -241,7 +241,7 @@ def resetPassword(request):
                 user.save()
                 ResetAccount.objects.get(token=request.data.get('reset_token')).delete()
                 return Response(status=status.HTTP_202_ACCEPTED)
-            return Response({'Message': 'password must contain at least one digit.\npassword must contain at least one special character.\npassword must contain at least one upper case letter'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'Message': 'Password must be at lease 8 character in length, contain at least one digit,\nat least one special character and\nat least one upper case letter.'} ,status=status.HTTP_400_BAD_REQUEST)
         return Response({'Message': 'Confirm password must match password!'}, status=status.HTTP_400_BAD_REQUEST)
     except:
         return Response({'Message': 'Invalid Token!'}, status=status.HTTP_400_BAD_REQUEST)
@@ -259,7 +259,7 @@ def changePassword(request):
                         return Response({'Message': 'Your password was sucessfully changed!'}, status=status.HTTP_204_NO_CONTENT)
                     return Response({'Message': 'New Password cannot be the same as old password!'}, status=status.HTTP_400_BAD_REQUEST)
                 return Response({'Message': 'Password does not match!'}, status=status.HTTP_400_BAD_REQUEST)
-            return Response({'Message': 'password must contain at least one digit.\npassword must contain at least one special character.\npassword must contain at least one upper case letter'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'Message': 'Password must be at lease 8 character in length, contain at least one digit,\nat least one special character and\nat least one upper case letter.'} ,status=status.HTTP_400_BAD_REQUEST)
         return Response({'Message': 'The password you entered does not match the one on file!'}, status=status.HTTP_400_BAD_REQUEST)
     except:
         return Response(status=status.HTTP_400_BAD_REQUEST)

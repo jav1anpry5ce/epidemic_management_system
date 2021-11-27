@@ -24,7 +24,7 @@ class LocationBatch(models.Model):
     last_updated = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ('-last_updated',)
+        ordering = ('-date_created',)
 
     def __str__(self):
         return str(self.batch_id)

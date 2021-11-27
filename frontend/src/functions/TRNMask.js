@@ -11,7 +11,7 @@ export default function TRNMask(props) {
       readOnly={props.read}
     >
       {() => {
-        return <Input className="rounded-md" placeholder="123-456-789" />;
+        return <Input placeholder="123-456-789" />;
       }}
     </InputMask>
   );
