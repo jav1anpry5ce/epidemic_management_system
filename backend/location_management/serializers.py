@@ -9,7 +9,6 @@ class LocationSerializer(serializers.ModelSerializer):
         'id',
         'label', 
         'value', 
-        'role'
         )
 
 class OfferSerializer(serializers.ModelSerializer):
@@ -18,7 +17,6 @@ class OfferSerializer(serializers.ModelSerializer):
         fields = (
             'label',
             'value',
-            'role',
         )
 
 
@@ -28,7 +26,6 @@ class TestSerializer(serializers.ModelSerializer):
         fields = (
             'label',
             'value',
-            'role',
         )
 
 class AppointmentSerializer(serializers.ModelSerializer):

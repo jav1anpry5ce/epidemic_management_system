@@ -6,7 +6,6 @@ import uuid
 class Vaccine(models.Model):
     label = models.CharField(max_length=50)
     value = models.CharField(max_length=50)
-    role = models.CharField(max_length=50, default='Master')
     number_of_dose = models.IntegerField()
 
     def __str__(self):
@@ -35,7 +34,6 @@ class LocationVaccine(models.Model):
     location = models.ForeignKey(Location, on_delete=models.CASCADE)
     label = models.CharField(max_length=50)
     value = models.CharField(max_length=50)
-    role = models.CharField(max_length=50, default='Master')
     number_of_dose = models.IntegerField()
 
     def __str__(self):

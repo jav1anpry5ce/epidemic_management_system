@@ -14,7 +14,6 @@ class Location(models.Model):
     authorization_code = models.CharField(max_length=8, default=codeGenerator)
     label = models.CharField(max_length=255, null=True, blank=True)
     value = models.CharField(max_length=255, null=True, blank=True)
-    role = models.CharField(max_length=255, null=True, default="Master")
     street_address = models.CharField(max_length=255, null=True, blank=True)
     city = models.CharField(max_length=255, null=True, blank=True)
     parish = models.CharField(max_length=255, null=True, blank=True)
@@ -26,7 +25,6 @@ class Offer(models.Model):
     location = models.ForeignKey(Location, on_delete=models.CASCADE, blank=True, null=True)
     label = models.CharField(max_length=255, null=True, blank=True)
     value = models.CharField(max_length=255, null=True, blank=True)
-    role = models.CharField(max_length=255, null=True, default="Master")
 
     def __str__(self):
         return self.location.value
@@ -36,7 +34,6 @@ class Test(models.Model):
     location = models.ForeignKey(Location, on_delete=models.CASCADE, blank=True, null=True)
     label = models.CharField(max_length=255, null=True, blank=True)
     value = models.CharField(max_length=255, null=True, blank=True)
-    role = models.CharField(max_length=255, null=True, default="Master")
     type = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):

@@ -8,7 +8,6 @@ class VaccineSerializer(serializers.ModelSerializer):
         fields = (
             'label',
             'value',
-            'role',
         )
 
 
@@ -18,7 +17,6 @@ class LocationVaccineSerializer(serializers.ModelSerializer):
         fields = (
             'value',
             'label', 
-            'role',
             'number_of_dose',
         )
 

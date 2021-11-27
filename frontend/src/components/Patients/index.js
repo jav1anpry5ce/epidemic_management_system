@@ -19,6 +19,7 @@ import {
   Input,
   Spin,
   Select,
+  Button,
 } from "antd";
 import axios from "axios";
 const { Title } = Typography;
@@ -243,8 +244,12 @@ export default function Patients() {
         width={720}
         visible={show}
         onCancel={() => setShow(false)}
-        onOk={() => setShow(false)}
-        title={<Title>Patient Information</Title>}
+        title={<Title level={4}>Patient Information</Title>}
+        footer={[
+          <Button type="primary" onClick={() => setShow(false)}>
+            OK
+          </Button>,
+        ]}
       >
         {moh.patient && (
           <Form layout="vertical" form={form}>

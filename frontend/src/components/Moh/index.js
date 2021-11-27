@@ -85,7 +85,11 @@ export default function MOHHOME() {
         <Grid
           container
           spacing={3}
-          style={{ marginTop: "6%", justifyContent: "center" }}
+          style={{
+            marginTop: "6%",
+            marginBottom: "2%",
+            justifyContent: "center",
+          }}
         >
           {cardData.map((data, index) => (
             <Grid item sm={6} md={4} lg={3} key={index}>

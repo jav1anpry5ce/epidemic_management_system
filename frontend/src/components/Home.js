@@ -8,6 +8,8 @@ import {
   LineSeries,
   Tooltip,
   SplineSeries,
+  Title,
+  Legend,
 } from "@devexpress/dx-react-chart-material-ui";
 import {
   EventTracker,
@@ -35,34 +37,24 @@ export default function Home() {
           <ArgumentAxis />
           <ValueAxis />
 
-          <SplineSeries valueField="value" argumentField="argument" />
-          <LineSeries valueField="Vvalue" argumentField="Vargument" />
+          <SplineSeries
+            name="something 1"
+            valueField="value"
+            argumentField="argument"
+          />
+          <LineSeries
+            name="something 2"
+            valueField="Vvalue"
+            argumentField="Vargument"
+          />
           <EventTracker />
           <HoverState />
           <Tooltip />
           <Animation />
+          <Title text="Something" />
+          <Legend />
         </Chart>
       </Paper>
-      {/* <Grid container spacing={3}>
-        <Grid item sm={6} xs={12}>
-          <Card>
-            <CardContent>
-              <Typography variant="h4">
-                lorem ipsum dolor sit amet, consectetur adip
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item sm={6} xs={12}>
-          <Card>
-            <CardContent>
-              <Typography variant="h4">
-                lorem ipsum dolor sit amet, consectetur adip
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid> */}
     </Container>
   );
 }
