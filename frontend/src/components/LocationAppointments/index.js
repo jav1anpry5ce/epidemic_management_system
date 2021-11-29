@@ -37,7 +37,7 @@ export default function LocationAppointments() {
   const dispatch = useDispatch();
   const [show, setShow] = useState(false);
   const [order, setOrder] = useState("");
-  // const [search, setSearch] = useState();
+  const [q, setQ] = useState();
   const [loading, setLoading] = useState();
   const [data, setdata] = useState([]);
   const [pagination, setPagination] = useState({
@@ -63,6 +63,7 @@ export default function LocationAppointments() {
     if (!auth.is_auth) {
       history.push("/account/login");
     }
+    return () => dispatch(clearState());
   }, [auth.is_auth, dispatch, history]);
 
   useEffect(() => {
@@ -100,7 +101,7 @@ export default function LocationAppointments() {
       .get(
         `/api/location/appointments/?page=${page}&pageSize=${pageSize}${
           status === "All" ? "" : `&status=${status}`
-        }&ordering=${order}id`,
+        }&ordering=${order}id${q && `&search=${q}`}`,
         config
       )
       .then((data) => {
@@ -249,7 +250,7 @@ export default function LocationAppointments() {
         width={720}
         visible={show}
         onCancel={() => setShow(false)}
-        title={<Title>Appointment Information</Title>}
+        title={<Title level={4}>Appointment Information</Title>}
         footer={[
           <Button
             disabled={appointments.aLoading}
@@ -342,41 +343,32 @@ export default function LocationAppointments() {
       <Card
         headStyle={{ backgroundColor: "#1F2937", border: "none" }}
         title={
-          <Title style={{ color: "white" }} align="center">
+          <Title level={3} style={{ color: "white" }} align="center">
             Appointments
           </Title>
         }
         bordered={false}
         style={{ width: "100%" }}
       >
-        <Grid
-          container
-          justifyContent="space-between"
-          spacing={2}
-          style={{ marginBottom: 13 }}
-        >
-          <Grid item xs={2}>
-            <Select
-              defaultValue={status}
-              onChange={(e) => setStatus(e)}
-              style={{ width: "100%" }}
-            >
-              {fdata.map((item, index) => (
-                <Option value={item.value} key={index}>
-                  {item.label}
-                </Option>
-              ))}
-            </Select>
-          </Grid>
-          {/* <Grid item xs={4}>
-            <Input
-              size="sm"
-              virtualized
-              placeholder="Search appointments"
-              onChange={(e) => setSearch(e)}
-            />
-          </Grid> */}
-        </Grid>
+        <div className="flex justify-between">
+          <Select
+            defaultValue={status}
+            onChange={(e) => setStatus(e)}
+            className="w-56 mb-6"
+          >
+            {fdata.map((item, index) => (
+              <Option value={item.value} key={index}>
+                {item.label}
+              </Option>
+            ))}
+          </Select>
+          <Input.Search
+            placeholder="Search by last name or TRN"
+            onChange={(e) => setQ(e.target.value)}
+            onSearch={fetch}
+            className="w-2/5"
+          />
+        </div>
         <Table
           columns={columns}
           dataSource={data}

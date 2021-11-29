@@ -3,14 +3,14 @@ from .models import Testing
 
 class TestingConfig(admin.ModelAdmin):
     list_display = (
-        'testing_id',
+        'id',
         'patient',
         'location',
         'type',
         'status',
     )
-    readonly_fields = ('testing_id',)
-    search_fields = ('testing_id',)
+    readonly_fields = ('id',)
+    search_fields = ('id',)
     ordering = ('status',)
     order_by = ('status',)
 

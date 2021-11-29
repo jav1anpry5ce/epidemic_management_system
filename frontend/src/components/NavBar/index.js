@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Icon, Navbar, Nav, Dropdown } from "rsuite";
-import Grid from "@mui/material/Grid";
 import { FaBars } from "react-icons/fa";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -211,10 +210,12 @@ export default function NavBar() {
                 {auth.is_location_admin ? (
                   <Nav.Item
                     eventKey="4"
-                    icon={<Icon icon="plus" />}
                     onClick={() => nagivate("/admin/add-staff")}
                   >
-                    Add Staff
+                    <div className="flex">
+                      {<BsPersonPlusFill className="flex text-lg mr-1" />}
+                      Add Staff
+                    </div>
                   </Nav.Item>
                 ) : null}
               </Nav>
@@ -342,90 +343,159 @@ export default function NavBar() {
                 }}
                 onClick={() => setExpand(!expand)}
               />
-              {expand ? (
-                <Grid
-                  align="center"
-                  container
-                  spacing={2}
-                  style={{
-                    animation: expand ? "fadeIn ease 2s" : "fadeOut ease 2s",
-                  }}
+              {expand && (
+                <Nav
+                  onSelect={handelSelect}
+                  activeKey={nav.activeKey}
+                  className="transition-all duration-500 ease-in-out w-full"
                 >
-                  <Nav onSelect={handelSelect} activeKey={nav.activeKey}>
-                    <Grid
-                      item
-                      xs={12}
-                      style={{ marginTop: "7%" }}
-                      align="center"
+                  <div className="grid grid-cols-1 place-items-center">
+                    <Nav.Item
+                      onClick={() => {
+                        nagivate("/");
+                        setExpand(!expand);
+                      }}
+                      eventKey="1"
                     >
-                      <Nav.Item
+                      <div className="flex">
+                        {<AiFillHome className="flex text-lg mr-1" />}
+                        Home
+                      </div>
+                    </Nav.Item>
+                    <Nav.Item
+                      eventKey="2"
+                      onClick={() =>
+                        window.open(
+                          "https://www.cdc.gov/coronavirus/2019-ncov/symptoms-testing/testing.html",
+                          "_self"
+                        )
+                      }
+                    >
+                      <div className="flex">
+                        {<BiTestTube className="flex text-lg mr-1" />}
+                        Testing Information
+                      </div>
+                    </Nav.Item>
+                    <Nav.Item
+                      eventKey="3"
+                      onClick={() =>
+                        window.open(
+                          "https://www.cdc.gov/coronavirus/2019-ncov/vaccines/facts.html",
+                          "_self"
+                        )
+                      }
+                    >
+                      <div className="flex">
+                        {<GiHypodermicTest className="flex text-lg mr-1" />}
+                        Vaccine Information
+                      </div>
+                    </Nav.Item>
+                    <Nav.Item
+                      onClick={() => {
+                        nagivate("/appointments");
+                        setExpand(!expand);
+                      }}
+                      eventKey="4"
+                      icon={<Icon icon="calendar" />}
+                    >
+                      Appoinments
+                    </Nav.Item>
+                    <Dropdown title="Settings" icon={<Icon icon="cog" />}>
+                      <Dropdown.Item
+                        eventKey="5"
                         onClick={() => {
-                          nagivate("/");
+                          nagivate("/update/patient/info");
                           setExpand(!expand);
                         }}
-                        eventKey="1"
                       >
-                        <div className="flex">
-                          {<AiFillHome className="flex text-lg mr-1" />}
-                          Home
-                        </div>
-                      </Nav.Item>
-                      <Nav.Item
-                        eventKey="2"
-                        onClick={() =>
-                          window.open(
-                            "https://www.cdc.gov/coronavirus/2019-ncov/symptoms-testing/testing.html",
-                            "_self"
-                          )
-                        }
-                      >
-                        <div className="flex">
-                          {<BiTestTube className="flex text-lg mr-1" />}
-                          Testing Information
-                        </div>
-                      </Nav.Item>
-                      <Dropdown title="Settings" icon={<Icon icon="cog" />}>
-                        <Dropdown.Item
-                          eventKey="5"
-                          onClick={() => {
-                            nagivate("/update/patient/info");
-                            setExpand(!expand);
-                          }}
-                        >
-                          Update Information
-                        </Dropdown.Item>
-                      </Dropdown>
-                    </Grid>
-                    <Grid item xs={12} align="center">
-                      <Nav.Item
-                        eventKey="3"
-                        onClick={() =>
-                          window.open(
-                            "https://www.cdc.gov/coronavirus/2019-ncov/vaccines/facts.html",
-                            "_self"
-                          )
-                        }
-                      >
-                        <div className="flex">
-                          {<GiHypodermicTest className="flex text-lg mr-1" />}
-                          Vaccine Information
-                        </div>
-                      </Nav.Item>
+                        Update Information
+                      </Dropdown.Item>
+                    </Dropdown>
+                  </div>
+                </Nav>
+                // <Grid
+                //   align="center"
+                //   container
+                //   spacing={2}
+                //   style={{
+                //     animation: expand ? "fadeIn ease 2s" : "fadeOut ease 2s",
+                //   }}
+                // >
+                //   <Nav onSelect={handelSelect} activeKey={nav.activeKey}>
+                //     <Grid
+                //       item
+                //       xs={12}
+                //       style={{ marginTop: "7%" }}
+                //       align="center"
+                //     >
+                //       <Nav.Item
+                //         onClick={() => {
+                //           nagivate("/");
+                //           setExpand(!expand);
+                //         }}
+                //         eventKey="1"
+                //       >
+                //         <div className="flex">
+                //           {<AiFillHome className="flex text-lg mr-1" />}
+                //           Home
+                //         </div>
+                //       </Nav.Item>
+                //       <Nav.Item
+                //         eventKey="2"
+                //         onClick={() =>
+                //           window.open(
+                //             "https://www.cdc.gov/coronavirus/2019-ncov/symptoms-testing/testing.html",
+                //             "_self"
+                //           )
+                //         }
+                //       >
+                //         <div className="flex">
+                //           {<BiTestTube className="flex text-lg mr-1" />}
+                //           Testing Information
+                //         </div>
+                //       </Nav.Item>
+                //       <Dropdown title="Settings" icon={<Icon icon="cog" />}>
+                //         <Dropdown.Item
+                //           eventKey="5"
+                //           onClick={() => {
+                //             nagivate("/update/patient/info");
+                //             setExpand(!expand);
+                //           }}
+                //         >
+                //           Update Information
+                //         </Dropdown.Item>
+                //       </Dropdown>
+                //     </Grid>
+                //     <Grid item xs={12} align="center">
+                //       <Nav.Item
+                //         eventKey="3"
+                //         onClick={() =>
+                //           window.open(
+                //             "https://www.cdc.gov/coronavirus/2019-ncov/vaccines/facts.html",
+                //             "_self"
+                //           )
+                //         }
+                //       >
+                //         <div className="flex">
+                //           {<GiHypodermicTest className="flex text-lg mr-1" />}
+                //           Vaccine Information
+                //         </div>
+                //       </Nav.Item>
 
-                      <Nav.Item
-                        onClick={() => {
-                          nagivate("/appointments");
-                          setExpand(!expand);
-                        }}
-                        eventKey="4"
-                        icon={<Icon icon="calendar" />}
-                      >
-                        Appoinments
-                      </Nav.Item>
-                    </Grid>
-                  </Nav>
-                </Grid>
-              ) : null}
+                //       <Nav.Item
+                //         onClick={() => {
+                //           nagivate("/appointments");
+                //           setExpand(!expand);
+                //         }}
+                //         eventKey="4"
+                //         icon={<Icon icon="calendar" />}
+                //       >
+                //         Appoinments
+                //       </Nav.Item>
+                //     </Grid>
+                //   </Nav>
+                // </Grid>
+              )}
             </Container>
           )}
         </Navbar.Body>

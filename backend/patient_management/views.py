@@ -11,8 +11,8 @@ import django_filters
 from rest_framework import filters
 from django_filters import rest_framework as filterss
 
-from .models import Patient, UpdatePatientCode, PatientCode, NextOfKin, PositiveCase
-from .serializers import PatientSerializer, CreatePatientSerializer, GetDetailedPatient, UpdatePatientSerializer, NextOfKinSerializer, PositiveCaseSerializer
+from .models import Patient, UpdatePatientCode, PatientCode, NextOfKin, PositiveCase, Representative
+from .serializers import PatientSerializer, CreatePatientSerializer, GetDetailedPatient, UpdatePatientSerializer, NextOfKinSerializer, PositiveCaseSerializer, RepresentativeSerializer
 from testing.models import Testing
 from vaccination.models import Vaccination
 from testing.serializers import TestingSerializer
@@ -161,11 +161,13 @@ class UserFiltering(filters.BaseFilterBackend):
 class MOHPatientView(ListAPIView):
     queryset = Patient.objects.all()
     serializer_class = GetDetailedPatient
-    filter_backends = [UserFiltering, filterss.DjangoFilterBackend, filters.OrderingFilter]
+    filter_backends = [UserFiltering, filterss.DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
     filter_fields = {
             'last_name': ['exact', 'contains', 'in'],
             'tax_number': ['exact', 'contains', 'in']
         }
+    ordering = ['tax_number']
+    search_fields = ['last_name', 'tax_number']
     pagination_class = CustomPageNumberPagination
 
 @api_view(['GET'])
@@ -189,20 +191,11 @@ def get_patient(request, trn):
 class GetPositiveCases(ListAPIView):
     queryset = PositiveCase.objects.all()
     serializer_class = PositiveCaseSerializer
-    filter_backends = [UserFiltering, filterss.DjangoFilterBackend, filters.OrderingFilter]
+    filter_backends = [UserFiltering, filterss.DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
     pagination_class = CustomPageNumberPagination
+    ordering = ['patient__tax_number']
+    search_fields = ['patient__last_name', 'patient__tax_number']
 
-# @api_view(['GET'])
-# @permission_classes([permissions.IsAuthenticated])
-# def get_positive_cases(request):
-#     try:
-#         if request.user.is_moh_staff:
-#             cases = PositiveCase.objects.all()
-#             serializer = PositiveCaseSerializer(cases, many=True)
-#             return Response(serializer.data, status=status.HTTP_200_OK)
-#         return Response({'Message': 'You are not authorized to view positive cases!'}, status=status.HTTP_401_UNAUTHORIZED)
-#     except:
-#         return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET'])
@@ -214,9 +207,16 @@ def get_case(request, case_id):
             next_of_kin = NextOfKin.objects.get(patient=case.patient)
             next_of_kin_serializer = NextOfKinSerializer(next_of_kin)
             serializer = PositiveCaseSerializer(case)
+            try: 
+                rep = Representative.objects.get(patient=case.patient)
+                rep_serializer = RepresentativeSerializer(rep)
+                rep_data = rep_serializer.data
+            except:
+                rep_data = None
             res = {
                 "case": serializer.data,
-                "next_of_kin": next_of_kin_serializer.data
+                "next_of_kin": next_of_kin_serializer.data,
+                "rep": rep_data
             }
             return Response(res, status=status.HTTP_200_OK)
         return Response({'Message': 'You are not authorized to view positive cases!'}, status=status.HTTP_401_UNAUTHORIZED)

@@ -12,7 +12,7 @@ class Patient(models.Model):
     title = models.CharField(max_length=50, null=True)
     first_name = models.CharField(max_length=150, null=True)
     last_name = models.CharField(max_length=150, null=True)
-    email = models.EmailField(max_length=255, unique=True, null=True)
+    email = models.EmailField(max_length=255, unique=True, null=True, blank=True)
     phone = models.CharField(max_length=255, null=True)
     date_of_birth = models.DateField(null=True)
     gender = models.CharField(max_length=50, null=True)
@@ -38,6 +38,13 @@ class NextOfKin(models.Model):
 
     def __str__(self):
         return self.patient.tax_number
+
+class Representative(models.Model):
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, blank=True, null=True)
+    rep_first_name = models.CharField(max_length=50)
+    rep_last_name = models.CharField(max_length=50)
+    rep_email = models.EmailField(max_length=75, blank=True, null=True)
+    rep_phone = models.CharField(max_length=50)
 
 
 class PositiveCase(models.Model):

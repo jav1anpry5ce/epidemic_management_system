@@ -30,8 +30,11 @@ class Batches(ListAPIView, IsMohStaff):
     queryset = LocationBatch.objects.all()
     serializer_class = LocationBatchSerializer
     permission_classes = [permissions.IsAuthenticated, IsMohStaff]
+    filter_backends = [filterss.DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
     pagination_class = PageNumberPagination
     ordering = ['date_created']
+    search_fields = ['location__value', 'batch_id']
+
 
 class BatchView(APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -81,10 +84,12 @@ class UserFiltering(filters.BaseFilterBackend):
 class LocationBatchList(ListAPIView):
     queryset = LocationBatch.objects.all()
     serializer_class = LocationBatchSerializer
-    filter_backends = [UserFiltering, filterss.DjangoFilterBackend, filters.OrderingFilter]
+    filter_backends = [UserFiltering, filterss.DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
     filter_fields = {
         'status': ['exact', 'contains', 'in']
     }
+    ordering = ['date_created']
+    search_fields = ['location__value', 'batch_id']
     pagination_class = CustomPageNumberPagination
 
 

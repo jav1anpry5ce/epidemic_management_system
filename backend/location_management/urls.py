@@ -16,4 +16,6 @@ urlpatterns = [
     path('add-location/', views.add_location),
     path('get-breakdown/', views.get_breakdown),
     path('location-breakdown/', views.location_breakdown),
+    path('appointment-search/<shorten_id>', views.search_appointments),
+    path('get-checked-in/<type>', views.CheckedIn.as_view()),
 ]

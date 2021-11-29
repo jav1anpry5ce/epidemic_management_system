@@ -35,6 +35,10 @@ export const makeAppointment = createAsyncThunk(
     formData.append("kin_last_name", data.kin_last_name);
     formData.append("kin_email", data.kin_email);
     formData.append("kin_phone", data.kin_phone);
+    formData.append("rep_first_name", data.rep_first_name);
+    formData.append("rep_last_name", data.rep_last_name);
+    formData.append("rep_email", data.rep_email);
+    formData.append("rep_phone", data.rep_phone);
     try {
       const response = await axios.post("/api/appointments/", formData, config);
       if (response.status === 201) {
@@ -70,6 +74,25 @@ export const searchAppointments = createAsyncThunk(
   }
 );
 
+export const AppointmentSearch = createAsyncThunk(
+  "appointment/search",
+  async (shorten_id) => {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    const response = await axios.get(
+      `api/appointment-search/${shorten_id}`,
+      config
+    );
+    if (response.status === 200) {
+      const appointment = response.data;
+      return { appointment };
+    }
+  }
+);
+
 export const updateAppointments = createAsyncThunk(
   "update/appointments",
   async (data, { rejectWithValue }) => {
@@ -101,6 +124,7 @@ export const appointmentSlice = createSlice({
     success: false,
     appointmentInfo: null,
     appointments: null,
+    appointment: null,
     message: null,
     searchMessage: null,
     secondDose: false,
@@ -108,6 +132,7 @@ export const appointmentSlice = createSlice({
   reducers: {
     clearAppointments: (state) => {
       state.appointments = null;
+      state.appointment = null;
     },
     updateState: (state) => {
       state.success = false;
@@ -116,6 +141,7 @@ export const appointmentSlice = createSlice({
       state.message = null;
       state.success = false;
       state.appointments = null;
+      state.appointment = null;
       state.searchMessage = null;
       state.loading = false;
       state.secondDose = false;
@@ -185,6 +211,17 @@ export const appointmentSlice = createSlice({
       } catch (err) {
         state.message = "Something went wrong.";
       }
+    },
+    [AppointmentSearch.pending]: (state) => {
+      state.loading = true;
+    },
+    [AppointmentSearch.fulfilled]: (state, { payload }) => {
+      state.loading = false;
+      state.appointment = payload.appointment;
+    },
+    [AppointmentSearch.rejected]: (state) => {
+      state.loading = false;
+      state.searchMessage = "No results found for your search!";
     },
   },
 });

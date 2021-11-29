@@ -13,7 +13,7 @@ export default function CollapseCard({ Title, Data, expand, setExpand }) {
   return (
     <Card style={{ marginBottom: "1%" }}>
       <CardHeader
-        className="bg-[#1F2937]"
+        className="bg-gray-700"
         title={
           <div className="flex justify-between">
             <Typography className="text-white" align="center" variant="h6">
@@ -33,17 +33,11 @@ export default function CollapseCard({ Title, Data, expand, setExpand }) {
       />
       <Collapse in={expand}>
         <CardContent>
-          {Data.map((record) => {
-            return (
-              <Grid
-                container
-                spacing={3}
-                key={
-                  record.testing_id ? record.testing_id : record.vaccination_id
-                }
-              >
+          <Grid container spacing={1}>
+            {Data.map((record) => {
+              return (
                 <Grid item xs={12}>
-                  <Card style={{ marginBottom: "1%" }}>
+                  <Card>
                     <CardContent>
                       {record.testing_id ? (
                         <Grid container spacing={2}>
@@ -105,9 +99,9 @@ export default function CollapseCard({ Title, Data, expand, setExpand }) {
                     </CardContent>
                   </Card>
                 </Grid>
-              </Grid>
-            );
-          })}
+              );
+            })}
+          </Grid>
         </CardContent>
       </Collapse>
     </Card>

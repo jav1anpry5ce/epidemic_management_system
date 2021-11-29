@@ -8,6 +8,7 @@ import {
   Modal,
   TimePicker,
   Card,
+  Checkbox,
 } from "antd";
 import { Uploader, Icon } from "rsuite";
 import PhoneMask from "../../functions/PhoneMask";
@@ -100,6 +101,11 @@ export default function MakeAppointment() {
   const [verifyLastName, setVerifyLastName] = useState("");
   const [show, setShow] = useState(false);
   const [form] = Form.useForm();
+  const [someoneElse, setSomeoneElse] = useState(false);
+  const [repFirstName, setRepFirstName] = useState("");
+  const [repLastName, setRepLastName] = useState("");
+  const [repEmail, setRepEmail] = useState("");
+  const [repPhone, setRepPhone] = useState("");
   const [effect, setEffect] = useState("");
 
   useEffect(() => {
@@ -244,6 +250,10 @@ export default function MakeAppointment() {
         kin_last_name: kinLastName,
         kin_email: kinEmail,
         kin_phone: kinPhone,
+        rep_first_name: repFirstName,
+        rep_last_name: repLastName,
+        rep_email: repEmail,
+        rep_phone: repPhone,
       };
       dispatch(makeAppointment(data));
     }
@@ -353,7 +363,7 @@ export default function MakeAppointment() {
             <Grid item xs={12} sm={8}>
               <Form.Item
                 required
-                label="Tax Number"
+                label="Tax Registration Number"
                 name="tax_number"
                 style={{ marginBottom: 2 }}
                 rules={[
@@ -429,17 +439,7 @@ export default function MakeAppointment() {
               </Form.Item>
             </Grid>
             <Grid item xs={12} sm={6}>
-              <Form.Item
-                label="Email"
-                name="email"
-                style={{ marginBottom: 2 }}
-                rules={[
-                  {
-                    required: true,
-                    message: "Please enter your email!",
-                  },
-                ]}
-              >
+              <Form.Item label="Email" name="email" style={{ marginBottom: 2 }}>
                 <Input
                   type="email"
                   onChange={(e) => setEmail(e.target.value)}
@@ -852,7 +852,77 @@ export default function MakeAppointment() {
                 </Form.Item>
               </Grid>
             ) : null}
-            <Grid item xs={12}></Grid>
+            <Grid item xs={12}>
+              <Checkbox
+                onChange={() => setSomeoneElse(!someoneElse)}
+                className="mb-3"
+              >
+                Are you making this for someone else?
+              </Checkbox>
+            </Grid>
+            {someoneElse && (
+              <Grid container spacing={1} className="mt-2 pl-2">
+                <Grid item xs={12}>
+                  <Typography variant="h6">
+                    Representative Information
+                  </Typography>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <Form.Item
+                    label="First Name"
+                    name="rep_first_name"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please enter your first name!",
+                      },
+                    ]}
+                    style={{ marginBottom: 0 }}
+                  >
+                    <Input onChange={(e) => setRepFirstName(e.target.value)} />
+                  </Form.Item>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <Form.Item
+                    label="Last Name"
+                    name="rep_last_name"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please enter your last name!",
+                      },
+                    ]}
+                    style={{ marginBottom: 0 }}
+                  >
+                    <Input onChange={(e) => setRepLastName(e.target.value)} />
+                  </Form.Item>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <Form.Item
+                    label="Email"
+                    name="rep_email"
+                    style={{ marginBottom: 0 }}
+                  >
+                    <Input onChange={(e) => setRepEmail(e.target.value)} />
+                  </Form.Item>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <Form.Item
+                    label="Phone"
+                    name="rep_mobile"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please enter your mobile number!",
+                      },
+                    ]}
+                    style={{ marginBottom: 0 }}
+                  >
+                    <PhoneMask onChange={(e) => setRepPhone(e.target.value)} />
+                  </Form.Item>
+                </Grid>
+              </Grid>
+            )}
             <Grid item xs={6}>
               <Form.Item style={{ marginBottom: 2 }}>
                 <Button

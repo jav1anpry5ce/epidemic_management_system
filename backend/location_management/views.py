@@ -1,3 +1,4 @@
+import django_filters
 from rest_framework import status, permissions
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView
@@ -5,6 +6,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, FormParser
 from django.core.mail import EmailMultiAlternatives
+from sms import send_sms
 from django.contrib.sites.models import Site
 from django.db.models import Case, When
 import pyqrcode
@@ -13,15 +15,18 @@ from functions import convertTime
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import filters
 from django_filters import rest_framework as filterss
+import datetime
 
 from .models import Location, Offer, Test, Appointment
 from .serializers import LocationSerializer, OfferSerializer, TestSerializer, AppointmentSerializer, CreateAppointmentSerializer
-from patient_management.serializers import CreatePatientSerializer, NextOfKinSerializer
-from patient_management.models import Patient, PositiveCase
+from patient_management.serializers import CreatePatientSerializer, NextOfKinSerializer, RepresentativeSerializer
+from patient_management.models import Patient, PositiveCase, Representative
 from testing.models import Testing
 from vaccination.models import Vaccination
 from inventory.models import LocationVaccine, Vaccine
 from inventory.serializers import LocationVaccineSerializer
+from vaccination.serializers import GetVaccinationSerializer
+from testing.serializers import getTestSerializer
 
 site = Site.objects.get_current()
 
@@ -64,6 +69,14 @@ class AppointmentView(APIView):
     def post(self, request):
         try:
             try:
+                try:
+                    rep_serializer = RepresentativeSerializer(data=request.data)
+                    if rep_serializer.is_valid():
+                        patient = Patient.objects.get(tax_number=request.data.get('tax_number'))
+                        instance = Representative.objects.get(patient=patient)
+                        rep_serializer.update(instance=instance, validated_data=request.data)
+                except:
+                    pass
                 seraializer = CreateAppointmentSerializer(data=request.data)
                 if seraializer.is_valid():
                     patient = Patient.objects.get(tax_number=request.data.get('tax_number'))
@@ -72,11 +85,12 @@ class AppointmentView(APIView):
                         try:
                             seraializer.save(patient=patient, location=location)
                             aid = seraializer.data['id']
+                            shorten_id = seraializer.data['shorten_id']
                             date = seraializer.data['date']
                             time = seraializer.data['time']
                             appointment = Appointment.objects.get(id=aid)
                             test = Testing.objects.create(patient=patient, location=location, type=request.data.get('patient_choice'), appointment=appointment)
-                            qr = pyqrcode.create(str(test.testing_id))
+                            qr = pyqrcode.create(str(test.id))
                             qr.png(f'qr_codes/{aid}.png', scale = 8)
                             src = f'qr_codes/{aid}.png'
                             subject, from_email, to = 'Appointment for COVID-19 Test', 'donotreply@localhost', patient.email
@@ -85,6 +99,7 @@ class AppointmentView(APIView):
                                 <body>
                                     <p>Your appointment for your COVID-19 test was successfully made for {date} at {convertTime(time)}.</p>
                                     <p>You can manage your appointmnet at <a href="{site}appointment/management/{aid}">{site}appointment/management/{aid}</a></p>
+                                    <p>You can search for your appointment using the following code: {shorten_id}</p>
                                     <img src="{src} />
                                 </body>
                             </html>
@@ -95,6 +110,14 @@ class AppointmentView(APIView):
                             msg.content_subtype = 'html'
                             msg.attach_file(src)
                             msg.send()
+                            text = f'''Your appointment for your COVID-19 test was successfully made for {date} at {convertTime(time)}.\nYou can manage your appointmnet at {site}appointment/management/{aid}\nYou can search for your appointment using the following code: {shorten_id}\n
+                            '''
+                            send_sms(
+                            text.strip(),
+                            '+12065550100',
+                            [f'{patient.phone},'],
+                            fail_silently=True
+                            )
                         except:
                             removeFile(src)
                             appointment = Appointment.objects.get(id=aid).delete()
@@ -120,11 +143,12 @@ class AppointmentView(APIView):
                                                     return Response({'Message': 'Something went wrong! Try again later'}, status=status.HTTP_400_BAD_REQUEST)
                                                 seraializer.save(patient=patient, location=location)
                                                 aid = seraializer.data['id']
+                                                shorten_id = seraializer.data['shorten_id']
                                                 date = seraializer.data['date']
                                                 time = seraializer.data['time']
                                                 appointment = Appointment.objects.get(id=aid)
                                                 vac = Vaccination.objects.create(patient=patient, location=location, manufacture=request.data.get('patient_choice'), appointment=appointment)
-                                                qr = pyqrcode.create(str(vac.vaccination_id))
+                                                qr = pyqrcode.create(str(vac.id))
                                                 qr.png(f'qr_codes/{aid}.png', scale = 8)
                                                 src = f'qr_codes/{aid}.png'
                                                 subject, from_email, to = 'Appointment for COVID-19 Vaccine', 'donotreply@localhost', patient.email
@@ -133,6 +157,7 @@ class AppointmentView(APIView):
                                                     <body>
                                                         <p>Your appointment for your {vac.manufacture} vaccine was successfully made for {date} at {convertTime(time)}.</p>
                                                         <p>You can manage your appointment at <a href="{site}appointment/management/{aid}">{site}appointment/management/{aid}</a></p>
+                                                        <p>You can search for your appointment using the following code: {shorten_id}</p>
                                                     </body>
                                                 </html>
                                                 '''
@@ -142,6 +167,14 @@ class AppointmentView(APIView):
                                                 msg.content_subtype = "html"
                                                 msg.attach_file(src)
                                                 msg.send()
+                                                text = f'''Your appointment for your COVID-19 test was successfully made for {date} at {convertTime(time)}.\nYou can manage your appointmnet at {site}appointment/management/{aid}\nYou can search for your appointment using the following code: {shorten_id}\n
+                                                '''
+                                                send_sms(
+                                                text.strip(),
+                                                '+12065550100',
+                                                [f'{patient.phone},'],
+                                                fail_silently=True
+                                                )
                                                 return Response(status=status.HTTP_201_CREATED)
                                             except:
                                                 removeFile(src)
@@ -161,11 +194,12 @@ class AppointmentView(APIView):
                                                 return Response({'Message': 'Something went wrong! Try again later.'}, status=status.HTTP_400_BAD_REQUEST)
                                             seraializer.save(patient=patient, location=location)
                                             aid = seraializer.data['id']
+                                            shorten_id = seraializer.data['shorten_id']
                                             date = seraializer.data['date']
                                             time = seraializer.data['time']
                                             appointment = Appointment.objects.get(id=aid)
                                             vac = Vaccination.objects.create(patient=patient, location=location, manufacture=request.data.get('patient_choice'), appointment=appointment)
-                                            qr = pyqrcode.create(str(vac.vaccination_id))
+                                            qr = pyqrcode.create(str(vac.id))
                                             qr.png(f'qr_codes/{aid}.png', scale = 8)
                                             src = f'qr_codes/{aid}.png'
                                             subject, from_email, to = 'Appointment for COVID-19 Vaccine', 'donotreply@localhost', patient.email
@@ -174,6 +208,7 @@ class AppointmentView(APIView):
                                                 <body>
                                                     <p>Your appointment for your {vac.manufacture} vaccine was successfully made for {date} at {convertTime(time)}.</p>
                                                     <p>You can manage your appointment at <a href="{site}appointment/management/{aid}">{site}appointment/management/{aid}</a></p>
+                                                    <p>You can search for your appointment using the following code: {shorten_id}</p>
                                                 </body>
                                             </html>
                                             '''
@@ -183,6 +218,14 @@ class AppointmentView(APIView):
                                             msg.content_subtype = "html"
                                             msg.attach_file(src)
                                             msg.send()
+                                            text = f'''Your appointment for your COVID-19 test was successfully made for {date} at {convertTime(time)}.\nYou can manage your appointmnet at {site}appointment/management/{aid}\nYou can search for your appointment using the following code: {shorten_id}\n
+                                            '''
+                                            send_sms(
+                                            text.strip(),
+                                            '+12065550100',
+                                            [f'{patient.phone},'],
+                                            fail_silently=True
+                                            )
                                             return Response(status=status.HTTP_201_CREATED)
                                         except:
                                             removeFile(src)
@@ -197,94 +240,126 @@ class AppointmentView(APIView):
                 if seraializer.is_valid():
                     kinSerializer = NextOfKinSerializer(data=request.data)
                     if kinSerializer.is_valid():
-                        seraializer.save()
-                        patient = Patient.objects.get(tax_number=request.data.get('tax_number'))
-                        kinSerializer.save(patient=patient)
-                        location = Location.objects.get(value=request.data.get('location'))
-                        seraializer = CreateAppointmentSerializer(data=request.data)
-                        if seraializer.is_valid():
-                            if request.data.get('type') == "Testing":
-                                try:
-                                    seraializer.save(patient=patient, location=location)
-                                    aid = seraializer.data['id']
-                                    date = seraializer.data['date']
-                                    time = seraializer.data['time']
-                                    appointment = Appointment.objects.get(id=aid)
-                                    test = Testing.objects.create(patient=patient, location=location, type=request.data.get('patient_choice'), appointment=appointment)
-                                    qr = pyqrcode.create(str(test.testing_id))
-                                    qr.png(f'qr_codes/{aid}.png', scale = 8)
-                                    src = f'qr_codes/{aid}.png'
-                                    subject, from_email, to = 'Appointment for COVID-19 Test', 'donotreply@localhost', patient.email
-                                    html_content = f'''
-                                    <html>
-                                        <body>
-                                            <p>Your appointment for your COVID-19 test was successfully made for {date} at {convertTime(time)}.</p>
-                                            <p>You can manage your appointmnet at <a href="{site}appointment/management/{aid}">{site}appointment/management/{aid}</a></p>
-                                            <img src="{src} />
-                                        </body>
-                                    </html>
-                                    '''
-                                    text_content = ""
-                                    msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
-                                    msg.attach_alternative(html_content, "text/html")
-                                    msg.content_subtype = "html"
-                                    msg.attach_file(src)
-                                    msg.send()
-                                except:
-                                    removeFile(src)
-                                    patient.image.delete()
-                                    patient.identification.delete()
-                                    patient.delete()
-                                    return Response({'Message': 'There was an error. Please try again later.'}, status=status.HTTP_400_BAD_REQUEST)
-                                return Response(status=status.HTTP_201_CREATED)
-                            else:
-                                try:
+                        rep_serializer = RepresentativeSerializer(data=request.data)
+                        if rep_serializer.is_valid():
+                            seraializer.save()
+                            patient = Patient.objects.get(tax_number=request.data.get('tax_number'))
+                            kinSerializer.save(patient=patient)
+                            rep_serializer.save(patient=patient)
+                            location = Location.objects.get(value=request.data.get('location'))
+                            seraializer = CreateAppointmentSerializer(data=request.data)
+                            if seraializer.is_valid():
+                                if request.data.get('type') == "Testing":
                                     try:
-                                        if len(Appointment.objects.filter(patient=patient, type='Vaccination')) == 0:
-                                            vaccines = LocationVaccine.objects.get(location=location, value=request.data.get('patient_choice'))
-                                            if request.data.get('patient_choice') == 'Johnson & Johnson':
-                                                vaccines.number_of_dose -= 1
-                                            else:
-                                                vaccines.number_of_dose -= 2
-                                            vaccines.save()
+                                        seraializer.save(patient=patient, location=location)
+                                        aid = seraializer.data['id']
+                                        shorten_id = seraializer.data['shorten_id']
+                                        date = seraializer.data['date']
+                                        time = seraializer.data['time']
+                                        appointment = Appointment.objects.get(id=aid)
+                                        test = Testing.objects.create(patient=patient, location=location, type=request.data.get('patient_choice'), appointment=appointment)
+                                        qr = pyqrcode.create(str(test.id))
+                                        qr.png(f'qr_codes/{aid}.png', scale = 8)
+                                        src = f'qr_codes/{aid}.png'
+                                        subject, from_email, to = 'Appointment for COVID-19 Test', 'donotreply@localhost', patient.email
+                                        html_content = f'''
+                                        <html>
+                                            <body>
+                                                <p>Your appointment for your COVID-19 test was successfully made for {date} at {convertTime(time)}.</p>
+                                                <p>You can manage your appointmnet at <a href="{site}appointment/management/{aid}">{site}appointment/management/{aid}</a></p>
+                                                <p>You can search for your appointment using the following code: {shorten_id}</p>
+                                                <img src="{src} />
+                                            </body>
+                                        </html>
+                                        '''
+                                        text_content = ""
+                                        msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+                                        msg.attach_alternative(html_content, "text/html")
+                                        msg.content_subtype = "html"
+                                        msg.attach_file(src)
+                                        msg.send()
+                                        text = f'''Your appointment for your COVID-19 test was successfully made for {date} at {convertTime(time)}.\nYou can manage your appointmnet at {site}appointment/management/{aid}\nYou can search for your appointment using the following code: {shorten_id}\n
+                                        '''
+                                        send_sms(
+                                        text.strip(),
+                                        '+12065550100',
+                                        [f'{patient.phone},'],
+                                        fail_silently=True
+                                        )
                                     except:
-                                        return Response({'Message': 'Something went wrong! Try again later.'}, status=status.HTTP_400_BAD_REQUEST)
-                                    seraializer.save(patient=patient, location=location)
-                                    aid = seraializer.data['id']
-                                    date = seraializer.data['date']
-                                    time = seraializer.data['time']
-                                    appointment = Appointment.objects.get(id=aid)
-                                    vac = Vaccination.objects.create(patient=patient, location=location,manufacture=request.data.get('patient_choice'), appointment=appointment)
-                                    qr = pyqrcode.create(str(vac.vaccination_id))
-                                    qr.png(f'qr_codes/{aid}.png', scale = 8)
-                                    src = f'qr_codes/{aid}.png'
-                                    subject, from_email, to = 'Appointment for COVID-19 Vaccine', 'donotreply@localhost', patient.email
-                                    html_content = f'''
-                                    <html>
-                                        <body>
-                                            <p>Your appointment for your {vac.manufacture} vaccine was successfully made for {date} at {convertTime(time)}</p>
-                                            <p>You can manage your appointment at <a href="{site}ppointment/management/{aid}">{site}appointment/management/{aid}</a></p>
-                                        </body>
-                                    </html>
-                                    '''
-                                    text_content = ""
-                                    msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
-                                    msg.attach_alternative(html_content, "text/html")
-                                    msg.content_subtype = "html"
-                                    msg.attach_file(src)
-                                    msg.send()
-                                except:
-                                    removeFile(src)
-                                    patient.image.delete()
-                                    patient.delete()
-                                    return Response({'Message': 'There was an error. Please try again later.'}, status=status.HTTP_400_BAD_REQUEST)
-                                return Response(status=status.HTTP_201_CREATED)
-                        return Response(seraializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                                        removeFile(src)
+                                        patient.image.delete()
+                                        patient.identification.delete()
+                                        patient.delete()
+                                        return Response({'Message': 'There was an error. Please try again later.'}, status=status.HTTP_400_BAD_REQUEST)
+                                    return Response(status=status.HTTP_201_CREATED)
+                                else:
+                                    try:
+                                        try:
+                                            if len(Appointment.objects.filter(patient=patient, type='Vaccination')) == 0:
+                                                vaccines = LocationVaccine.objects.get(location=location, value=request.data.get('patient_choice'))
+                                                if request.data.get('patient_choice') == 'Johnson & Johnson':
+                                                    vaccines.number_of_dose -= 1
+                                                else:
+                                                    vaccines.number_of_dose -= 2
+                                                vaccines.save()
+                                        except:
+                                            return Response({'Message': 'Something went wrong! Try again later.'}, status=status.HTTP_400_BAD_REQUEST)
+                                        seraializer.save(patient=patient, location=location)
+                                        aid = seraializer.data['id']
+                                        shorten_id = seraializer.data['shorten_id']
+                                        date = seraializer.data['date']
+                                        time = seraializer.data['time']
+                                        appointment = Appointment.objects.get(id=aid)
+                                        vac = Vaccination.objects.create(patient=patient, location=location,manufacture=request.data.get('patient_choice'), appointment=appointment)
+                                        qr = pyqrcode.create(str(vac.id))
+                                        qr.png(f'qr_codes/{aid}.png', scale = 8)
+                                        src = f'qr_codes/{aid}.png'
+                                        subject, from_email, to = 'Appointment for COVID-19 Vaccine', 'donotreply@localhost', patient.email
+                                        html_content = f'''
+                                        <html>
+                                            <body>
+                                                <p>Your appointment for your {vac.manufacture} vaccine was successfully made for {date} at {convertTime(time)}</p>
+                                                <p>You can manage your appointment at <a href="{site}ppointment/management/{aid}">{site}appointment/management/{aid}</a></p>
+                                                <p>You can search for your appointment using the following code: {shorten_id}</p>
+                                            </body>
+                                        </html>
+                                        '''
+                                        text_content = ""
+                                        msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+                                        msg.attach_alternative(html_content, "text/html")
+                                        msg.content_subtype = "html"
+                                        msg.attach_file(src)
+                                        msg.send()
+                                        text = f'''Your appointment for your COVID-19 test was successfully made for {date} at {convertTime(time)}.\nYou can manage your appointmnet at {site}appointment/management/{aid}\nYou can search for your appointment using the following code: {shorten_id}\n
+                                        '''
+                                        send_sms(
+                                        text.strip(),
+                                        '+12065550100',
+                                        [f'{patient.phone},'],
+                                        fail_silently=True
+                                        )
+                                    except:
+                                        removeFile(src)
+                                        patient.image.delete()
+                                        patient.delete()
+                                        return Response({'Message': 'There was an error. Please try again later.'}, status=status.HTTP_400_BAD_REQUEST)
+                                    return Response(status=status.HTTP_201_CREATED)
+                            return Response(seraializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                        return Response(rep_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
                     return Response(seraializer.errors, status=status.HTTP_400_BAD_REQUEST)
                 return Response(seraializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
+@api_view(['GET'])
+def search_appointments(request, shorten_id):
+    try:
+        appointment = Appointment.objects.get(shorten_id=shorten_id)
+        seraializer = AppointmentSerializer(appointment)
+        return Response(seraializer.data, status=status.HTTP_200_OK)
+    except:
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
 class AppointmentManagementView(APIView):
     def post(self, request):
@@ -404,11 +479,13 @@ class UserFiltering(filters.BaseFilterBackend):
 class LocationAppointments(ListAPIView):
     queryset = Appointment.objects.all()
     serializer_class = AppointmentSerializer
-    filter_backends = [UserFiltering, filterss.DjangoFilterBackend, filters.OrderingFilter]
+    filter_backends = [UserFiltering, filterss.DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
     filter_fields = {
         'status': ["in", "exact"],
     }
     pagination_class = CustomPageNumberPagination
+    ordering = ['patient__tax_number']
+    search_fields = ['patient__last_name', 'patient__tax_number']
 
 @api_view(['PATCH'])
 @permission_classes([permissions.IsAuthenticated])
@@ -576,3 +653,24 @@ def location_breakdown(request):
         return Response(res, status=status.HTTP_200_OK)
     except:
         return Response({'Message': 'Something went wrong'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class SearchFilter(filters.BaseFilterBackend):
+    def filter_queryset(self, request, queryset, view):
+        return queryset.filter(location=request.user.location, status='Pending', appointment__status='Checked In')
+
+
+class CheckedIn(ListAPIView):
+    serializer_class = getTestSerializer
+    filter_backends = [SearchFilter, filterss.DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
+    ordering = ['patient__tax_number']
+    search_fields = ['patient__last_name', 'patient__tax_number']
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        if self.kwargs['type'] == 'Testing':
+            return Testing.objects.all()
+        elif self.kwargs['type'] == 'Vaccination':
+            return Vaccination.objects.all()
+        else:
+            return None

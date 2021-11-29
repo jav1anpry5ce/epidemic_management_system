@@ -1,5 +1,5 @@
 module.exports = {
-  mode: 'jit',
+  // mode: 'jit',
   purge: ["./src/**/*.{js,jsx,ts,tsx}", "./public/**/*.html"],
   darkMode: "media", // or 'media' or 'class'
   theme: {
@@ -8,6 +8,9 @@ module.exports = {
         navBlue: {
           normal: "#12142b",
         },
+      },
+      screens: {
+        xs: { max: "550px" },
       },
     },
   },

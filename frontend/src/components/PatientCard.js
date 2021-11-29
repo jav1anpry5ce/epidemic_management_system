@@ -1,32 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
-import Avatar from "@mui/material/Avatar";
-import { makeStyles } from "@mui/styles";
-
-const useStyle = makeStyles(() => ({
-  root: {
-    display: "flex",
-    alignItems: "center",
-  },
-  details: {
-    display: "flex",
-    flexDirection: "column",
-  },
-  profile: {
-    width: 285,
-    height: 155,
-  },
-  text: {
-    color: "white",
-  },
-  background: {
-    backgroundColor: "#1F2937",
-  },
-}));
 
 export default function PatientCard({
   image,
@@ -38,45 +15,24 @@ export default function PatientCard({
   country,
   raised,
 }) {
-  const classes = useStyle();
-  const [height, setHeight] = useState(150);
-  useEffect(() => {
-    window.addEventListener("resize", resize);
-    resize();
-    // eslint-disable-next-line
-  }, [window]);
-
-  const resize = () => {
-    if (window.innerHeight > 960) {
-      setHeight(150);
-    }
-    if (window.innerWidth <= 760) {
-      setHeight(200);
-    }
-    if (window.innerWidth <= 560) {
-      setHeight(250);
-    } else {
-      setHeight(150);
-    }
-  };
-
   return (
     <Card raised={raised}>
       <CardHeader
-        className={classes.background}
+        className="bg-gray-700"
         title={
-          <Typography className={classes.text} align="center" variant="h6">
+          <Typography className="text-white" align="center" variant="h6">
             Patient Information
           </Typography>
         }
       />
-      <div className={classes.root}>
-        <Avatar
-          variant="square"
+      <div className="flex items-center justify-items-center justify-center">
+        <img
           src={image}
-          sx={{ width: 135, height: height }}
-          loading="lazy"
+          alt="patient"
+          width={150}
+          className="h-full xs:hidden md:inline-flex"
         />
+
         <CardContent>
           <Grid container spacing={3}>
             <Grid item xs={6}>

@@ -4,8 +4,9 @@ import { useHistory } from "react-router-dom";
 import { clearState } from "../../store/mohSlice";
 import { setActiveKey } from "../../store/navbarSlice";
 import Container from "@mui/material/Container";
-import { Table, Tooltip, Typography, Card, Button } from "antd";
+import { Table, Tooltip, Typography, Card, Button, Input } from "antd";
 import axios from "axios";
+// import { Input } from "@mui/material";
 const { Title } = Typography;
 
 export default function BatchManagement() {
@@ -21,6 +22,7 @@ export default function BatchManagement() {
   const [pageSize, setPageSize] = useState(20);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [q, setQ] = useState();
   const scroll = { y: 470 };
 
   useEffect(() => {
@@ -46,7 +48,9 @@ export default function BatchManagement() {
     };
     axios
       .get(
-        `/api/get-location-batchs/?page=${page}&pageSize=${pageSize}&ordering=${order}status`,
+        `/api/get-location-batchs/?page=${page}&pageSize=${pageSize}&ordering=${order}status${
+          q && `&search=${q}`
+        }`,
         config
       )
       .then((data) => {
@@ -155,13 +159,20 @@ export default function BatchManagement() {
         bordered={false}
         style={{ width: "100%", marginBottom: "3%" }}
       >
-        <Button
-          type="primary"
-          onClick={() => history.push("/moh/batch-creation")}
-          style={{ marginBottom: 2, marginTop: -8 }}
-        >
-          Add Location Batch
-        </Button>
+        <div className="flex justify-between items-center justify-items-center mb-4">
+          <Input.Search
+            className="w-2/5"
+            onChange={(e) => setQ(e.target.value)}
+            onSearch={fetch}
+            placeholder="Search using location name or batch id"
+          />
+          <Button
+            type="primary"
+            onClick={() => history.push("/moh/batch-creation")}
+          >
+            Add Location Batch
+          </Button>
+        </div>
         <Table
           columns={columns}
           dataSource={data}

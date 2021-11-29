@@ -18,7 +18,7 @@ class TestingView(APIView):
     permission_classes = [permissions.IsAuthenticated]
     def post(self, request):
         try:
-            test = Testing.objects.get(testing_id=request.data.get('id'), status='Pending')
+            test = Testing.objects.get(id=request.data.get('id'), status='Pending')
             if request.user.location == test.location:
                 serializer = TestingSerializer(test)
                 return Response(serializer.data, status=status.HTTP_200_OK)
@@ -40,7 +40,7 @@ class TestingView(APIView):
     def patch(self, request):
         try:
             serializer = UpdateTestingSerializer(data=request.data)
-            test = Testing.objects.get(testing_id=request.data.get('id'))
+            test = Testing.objects.get(id=request.data.get('id'))
             if request.user.location == test.location and request.user.can_update_test:
                 if serializer.is_valid():
                     if not request.data.get('result') == "":

@@ -67,6 +67,7 @@ export default function PositiveCases() {
     pageSize: 20,
   });
   const [pageSize, setPageSize] = useState(20);
+  const [q, setQ] = useState();
   const [page, setPage] = useState(1);
   const [form] = Form.useForm();
   const scroll = { y: 470 };
@@ -84,7 +85,7 @@ export default function PositiveCases() {
     // eslint-disable-next-line
   }, []);
 
-  const fetch = (searchField, q) => {
+  const fetch = (q) => {
     setLoading(true);
     const config = {
       headers: {
@@ -95,11 +96,7 @@ export default function PositiveCases() {
     axios
       .get(
         `/api/get-positive-cases/?page=${page}&pageSize=${pageSize}&ordering=${order}status${
-          searchField === "trn"
-            ? `&tax_number=${q}`
-            : searchField === "last_name"
-            ? `&last_name=${q}`
-            : ""
+          q && `&search=${q}`
         }`,
         config
       )
@@ -145,6 +142,10 @@ export default function PositiveCases() {
         kin_last_name: moh.caseData.next_of_kin.kin_last_name,
         kin_email: moh.caseData.next_of_kin.kin_email,
         kin_phone: moh.caseData.next_of_kin.kin_phone,
+        rep_first_name: moh.caseData.rep && moh.caseData.rep.rep_first_name,
+        rep_last_name: moh.caseData.rep && moh.caseData.rep.rep_last_name,
+        rep_email: moh.caseData.rep && moh.caseData.rep.rep_email,
+        rep_phone: moh.caseData.rep && moh.caseData.rep.rep_phone,
         tested: toLocaldate(moh.caseData.case.date_tested),
         location: moh.caseData.case.recovering_location,
         status: moh.caseData.case.status,
@@ -200,6 +201,7 @@ export default function PositiveCases() {
     {
       title: "Gender",
       dataIndex: "patient",
+      sorter: (a, b) => a.patient.gender.length - b.patient.gender.length,
       render: (patient) => (
         <Tooltip placement="topLeft" title={patient.gender}>
           {patient.gender}
@@ -212,8 +214,7 @@ export default function PositiveCases() {
     {
       title: "Age",
       dataIndex: "patient",
-      sorter: (a, b) =>
-        calculate_age(a.date_of_birth) - calculate_age(b.date_of_birth),
+      // sorter: (a, b) => a.date_of_birth.length - b.date_of_birth.length,
       render: (patient) => (
         <Tooltip
           placement="topLeft"
@@ -271,7 +272,7 @@ export default function PositiveCases() {
   return (
     <Container maxWidth="lg" style={{ marginTop: "2%" }}>
       <Modal
-        style={{ marginTop: -100 }}
+        style={{ top: 0 }}
         width={720}
         visible={show}
         onCancel={() => setShow(false)}
@@ -407,6 +408,51 @@ export default function PositiveCases() {
                   <Input readOnly />
                 </Form.Item>
               </Grid>
+              {moh.caseData.rep && (
+                <Grid container spacing={2} className="pl-4">
+                  <Grid item xs={12}>
+                    <Title level={4} className="mt-4">
+                      Representative Information
+                    </Title>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Form.Item
+                      label="First Name"
+                      name="rep_first_name"
+                      style={{ marginBottom: 0 }}
+                    >
+                      <Input readOnly />
+                    </Form.Item>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Form.Item
+                      label="Last Name"
+                      name="rep_last_name"
+                      style={{ marginBottom: 0 }}
+                    >
+                      <Input readOnly />
+                    </Form.Item>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Form.Item
+                      label="Email"
+                      name="rep_email"
+                      style={{ marginBottom: 0 }}
+                    >
+                      <Input readOnly />
+                    </Form.Item>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Form.Item
+                      label="Mobile Number"
+                      name="rep_phone"
+                      style={{ marginBottom: 0 }}
+                    >
+                      <Input readOnly />
+                    </Form.Item>
+                  </Grid>
+                </Grid>
+              )}
               <Grid item xs={12}>
                 <Title level={4}>Case Information</Title>
               </Grid>
@@ -469,6 +515,12 @@ export default function PositiveCases() {
         bordered={false}
         style={{ width: "100%" }}
       >
+        <Input.Search
+          className="w-2/5 mb-4"
+          onChange={(e) => setQ(e.target.value)}
+          placeholder="Search using last name or TRN"
+          onSearch={() => fetch(q)}
+        />
         <Table
           columns={columns}
           dataSource={data}

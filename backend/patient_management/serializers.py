@@ -1,11 +1,12 @@
 from rest_framework import serializers
 
-from .models import Patient, NextOfKin, PositiveCase
+from .models import Patient, NextOfKin, PositiveCase, Representative
 
 class PatientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Patient
         fields = (
+            'tax_number',
             'image_url',
             'first_name',
             'last_name',
@@ -62,6 +63,16 @@ class NextOfKinSerializer(serializers.ModelSerializer):
             'kin_last_name',
             'kin_email',
             'kin_phone',
+        )
+
+class RepresentativeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Representative
+        fields = (
+            'rep_first_name',
+            'rep_last_name',
+            'rep_email',
+            'rep_phone',
         )
 
 class UpdatePatientSerializer(serializers.ModelSerializer):

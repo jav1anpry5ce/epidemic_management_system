@@ -4,10 +4,10 @@ import uuid
 from location_management.models import Location, Appointment
 
 class Vaccination(models.Model):
+    id = models.UUIDField(default=uuid.uuid4, primary_key=True)
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, blank=True, null=True)
     location = models.ForeignKey(Location, on_delete=models.CASCADE, blank=True, null=True)
     appointment = models.ForeignKey(Appointment, on_delete=models.CASCADE, blank=True, null=True)
-    vaccination_id = models.UUIDField(default=uuid.uuid4, null=True, blank=True)
     manufacture = models.CharField(max_length=255, blank=True, null=True)
     vile_number = models.IntegerField(unique=True, blank=True, null=True)
     date_given = models.DateField(blank=True, null=True)
@@ -17,4 +17,4 @@ class Vaccination(models.Model):
     status = models.CharField(max_length=255, blank=True, null=True, default='Pending')
     
     def __str__(self):
-        return str(self.vaccination_id)
+        return str(self.id)

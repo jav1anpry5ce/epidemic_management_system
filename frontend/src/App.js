@@ -67,13 +67,13 @@ function App() {
 
   return (
     <Container
-      className="App"
       style={{
         backgroundColor: "#f5f5f5",
         backgroundImage: `url(${background})`,
         backgroundSize: "cover",
         backgroundAttachment: "fixed",
       }}
+      className="App"
     >
       <Router>
         <Header>

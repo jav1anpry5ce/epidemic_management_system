@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Patient, PositiveCase, NextOfKin
+from .models import Patient, PositiveCase, NextOfKin, Representative
 
 class PatientConfig(admin.ModelAdmin):
     list_display = (
@@ -21,6 +21,17 @@ class NextOfKinConfig(admin.ModelAdmin):
     )
     search_fields = ('patient',)
 
+class RepresentativeConfig(admin.ModelAdmin):
+    list_display = (
+        'patient',
+        'rep_first_name',
+        'rep_last_name',
+        'rep_email',
+        'rep_phone',
+    )
+    search_fields = ('patient',)
+
 admin.site.register(Patient, PatientConfig)
 admin.site.register(NextOfKin, NextOfKinConfig)
 admin.site.register(PositiveCase)
+admin.site.register(Representative, RepresentativeConfig)

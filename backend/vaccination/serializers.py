@@ -11,7 +11,7 @@ class VaccinationSerializer(serializers.ModelSerializer):
         fields = (
             'patient',
             'location',
-            'vaccination_id',
+            'id',
             'manufacture',
             'vile_number',
             'date_given',
@@ -31,4 +31,13 @@ class UpdateVaccinationSerializer(serializers.ModelSerializer):
             'admister_person',
             'arm',
             'dose_number',
+        )
+
+class GetVaccinationSerializer(serializers.ModelSerializer):
+    patient = PatientSerializer()
+    class Meta:
+        model = Vaccination
+        fields = (
+            'id',
+            'patient',
         )

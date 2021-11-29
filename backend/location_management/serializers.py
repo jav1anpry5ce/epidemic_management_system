@@ -49,6 +49,7 @@ class CreateAppointmentSerializer(serializers.ModelSerializer):
         model = Appointment
         fields = (
             'id',
+            'shorten_id',
             'date',
             'time',
             'type',

@@ -16,7 +16,7 @@ class VaccinationView(APIView):
     permission_classes = [permissions.IsAuthenticated]
     def post(self, request):
         try:
-            record = Vaccination.objects.get(vaccination_id=request.data.get('id'), status='Pending')
+            record = Vaccination.objects.get(id=request.data.get('id'), status='Pending')
             if request.user.location == record.location: 
                 try:
                     dose = Vaccination.objects.filter(patient=record.patient, status='Completed')
@@ -41,7 +41,7 @@ class VaccinationView(APIView):
     def patch(self, request):
         serializer = UpdateVaccinationSerializer(data=request.data)
         try:
-            record = Vaccination.objects.get(vaccination_id=request.data.get('id'))
+            record = Vaccination.objects.get(id=request.data.get('id'))
             if request.user.location == record.location and request.user.can_update_vaccine:
                 if serializer.is_valid():
                     if not request.data.get('arm') == "":

@@ -1,18 +1,14 @@
 import React, { useState, useEffect } from "react";
 import Container from "@mui/material/Container";
-// import { Input, InputGroup, Icon } from "rsuite";
 import { Input, Card } from "antd";
 import Grid from "@mui/material/Grid";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  searchAppointments,
+  AppointmentSearch,
   clearAppointments,
   updateState,
   clearState,
 } from "../../store/appointmentSlice";
-// import Card from "@mui/material/Card";
-// import CardContent from "@mui/material/CardContent";
-// import CardHeader from "@mui/material/CardHeader";
 import Typography from "@mui/material/Typography";
 import { Button, Placeholder } from "rsuite";
 import { useHistory } from "react-router-dom";
@@ -45,7 +41,7 @@ export default function Appointments() {
   const handelSearch = () => {
     dispatch(clearAppointments());
     setActivePage(1);
-    dispatch(searchAppointments(q));
+    dispatch(AppointmentSearch(q));
   };
   function navigate(link) {
     dispatch(clearAppointments());
@@ -61,7 +57,7 @@ export default function Appointments() {
       open(
         "success",
         "Appointment made successfully",
-        "You can go to the appointment home page to reschedule or cancel your appointments"
+        "A text message has been sent to the you confirming your appointment.\n You can managing your appointment by clicking on the link that was sent to you or use the code provided in the text message."
       );
       dispatch(updateState());
     }
@@ -100,148 +96,152 @@ export default function Appointments() {
               onChange={(e) => setQ(e.target.value)}
               onSearch={handelSearch}
               style={{ marginBottom: -18 }}
+              size="large"
             />
           </Grid>
-          {appointments.searchMessage ? (
+          {appointments.searchMessage && (
             <Grid item xs={12}>
               <Typography variant="h5" align="center">
                 {appointments.searchMessage}
               </Typography>
             </Grid>
-          ) : null}
-          {appointments.loading ? (
+          )}
+          {appointments.loading && (
             <Grid item xs={12}>
               <Placeholder.Paragraph rows={2} active></Placeholder.Paragraph>
             </Grid>
-          ) : null}
+          )}
           <Grid item xs={12}>
-            {appointments.appointments &&
-            appointments.appointments.length >= 1 ? (
-              currentItem.map((appointment) => (
-                <Grid container spacing={2}>
-                  <Grid item xs={12}>
-                    <Card>
-                      <Grid container spacing={1}>
-                        <Grid item xs={2}>
-                          <Typography variant="caption">First Name</Typography>
-                          <br />
-                          <Typography variant="caption">
-                            {appointment.patient.first_name}
-                          </Typography>
+            {appointments.appointments && appointments.appointments.length >= 1
+              ? currentItem.map((appointment) => (
+                  <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                      <Card>
+                        <Grid container spacing={1}>
+                          <Grid item xs={2}>
+                            <Typography variant="caption">
+                              First Name
+                            </Typography>
+                            <br />
+                            <Typography variant="caption">
+                              {appointment.patient.first_name}
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={2}>
+                            <Typography variant="caption">Last Name</Typography>
+                            <br />
+                            <Typography variant="caption">
+                              {appointment.patient.last_name}
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={2}>
+                            <Typography variant="caption">Date</Typography>
+                            <br />
+                            <Typography variant="caption">
+                              {appointment.date}
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={2}>
+                            <Typography variant="caption">Time</Typography>
+                            <br />
+                            <Typography variant="caption">
+                              {appointment.time}
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={2}>
+                            <Typography variant="caption">Type</Typography>
+                            <br />
+                            <Typography variant="caption">
+                              {appointment.type}
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={2}>
+                            <Typography variant="caption">Manage</Typography>
+                            <br />
+                            <Button
+                              size="xs"
+                              onClick={() =>
+                                navigate(
+                                  "/appointment/management/" + appointment.id
+                                )
+                              }
+                              appearance="primary"
+                            >
+                              View
+                            </Button>
+                          </Grid>
                         </Grid>
-                        <Grid item xs={2}>
-                          <Typography variant="caption">Last Name</Typography>
-                          <br />
-                          <Typography variant="caption">
-                            {appointment.patient.last_name}
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={2}>
-                          <Typography variant="caption">Date</Typography>
-                          <br />
-                          <Typography variant="caption">
-                            {appointment.date}
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={2}>
-                          <Typography variant="caption">Time</Typography>
-                          <br />
-                          <Typography variant="caption">
-                            {appointment.time}
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={2}>
-                          <Typography variant="caption">Type</Typography>
-                          <br />
-                          <Typography variant="caption">
-                            {appointment.type}
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={2}>
-                          <Typography variant="caption">Manage</Typography>
-                          <br />
-                          <Button
-                            size="xs"
-                            onClick={() =>
-                              navigate(
-                                "/appointment/management/" + appointment.id
-                              )
-                            }
-                            appearance="primary"
-                          >
-                            View
-                          </Button>
-                        </Grid>
-                      </Grid>
-                    </Card>
-                  </Grid>
-                </Grid>
-              ))
-            ) : appointments.appointments ? (
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <Card>
-                    <Grid container spacing={0}>
-                      <Grid item xs={2}>
-                        <Typography variant="caption">First Name</Typography>
-                        <br />
-                        <Typography variant="caption">
-                          {appointments.appointments.patient.first_name}
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={2}>
-                        <Typography variant="caption">Last Name</Typography>
-                        <br />
-                        <Typography variant="caption">
-                          {appointments.appointments.patient.last_name}
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={2}>
-                        <Typography variant="caption">Date</Typography>
-                        <br />
-                        <Typography variant="caption">
-                          {appointments.appointments.date}
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={2}>
-                        <Typography variant="caption">Time</Typography>
-                        <br />
-                        <Typography variant="caption">
-                          {new Date(
-                            "1990-01-01 " + appointments.appointments.time
-                          )
-                            .toLocaleTimeString()
-                            .replace(/:\d+ /, " ")}
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={2}>
-                        <Typography variant="caption">Status</Typography>
-                        <br />
-                        <Typography variant="caption">
-                          {appointments.appointments.status}
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={2}>
-                        <Typography variant="caption">Manage</Typography>
-                        <br />
-                        <Button
-                          size="xs"
-                          onClick={() =>
-                            navigate(
-                              "/appointment/management/" +
-                                appointments.appointments.id
-                            )
-                          }
-                          appearance="primary"
-                        >
-                          View
-                        </Button>
-                      </Grid>
+                      </Card>
                     </Grid>
-                  </Card>
-                </Grid>
-              </Grid>
-            ) : null}
+                  </Grid>
+                ))
+              : appointments.appointment && (
+                  <Grid container spacing={2} style={{ marginTop: 2 }}>
+                    <Grid item xs={12}>
+                      <Card className="shadow-lg rounded-lg">
+                        <Grid container spacing={0}>
+                          <Grid item xs={2}>
+                            <Typography variant="caption">
+                              First Name
+                            </Typography>
+                            <br />
+                            <Typography variant="caption">
+                              {appointments.appointment.patient.first_name}
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={2}>
+                            <Typography variant="caption">Last Name</Typography>
+                            <br />
+                            <Typography variant="caption">
+                              {appointments.appointment.patient.last_name}
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={2}>
+                            <Typography variant="caption">Date</Typography>
+                            <br />
+                            <Typography variant="caption">
+                              {appointments.appointment.date}
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={2}>
+                            <Typography variant="caption">Time</Typography>
+                            <br />
+                            <Typography variant="caption">
+                              {new Date(
+                                "1990-01-01 " + appointments.appointment.time
+                              )
+                                .toLocaleTimeString()
+                                .replace(/:\d+ /, " ")}
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={2}>
+                            <Typography variant="caption">Status</Typography>
+                            <br />
+                            <Typography variant="caption">
+                              {appointments.appointment.status}
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={2}>
+                            <Typography variant="caption">Manage</Typography>
+                            <br />
+                            <Button
+                              size="xs"
+                              onClick={() =>
+                                navigate(
+                                  "/appointment/management/" +
+                                    appointments.appointment.id
+                                )
+                              }
+                              appearance="primary"
+                            >
+                              View
+                            </Button>
+                          </Grid>
+                        </Grid>
+                      </Card>
+                    </Grid>
+                  </Grid>
+                )}
           </Grid>
           <Grid item xs={12}>
             <Button
@@ -252,8 +252,7 @@ export default function Appointments() {
             </Button>
           </Grid>
 
-          {appointments.appointments &&
-          appointments.appointments.length >= 6 ? (
+          {appointments.appointments && appointments.appointments.length >= 6 && (
             <Grid item xs={12}>
               <CustomPagination
                 pages={pages}
@@ -261,7 +260,7 @@ export default function Appointments() {
                 paginate={paginate}
               />
             </Grid>
-          ) : null}
+          )}
         </Grid>
       </Card>
     </Container>

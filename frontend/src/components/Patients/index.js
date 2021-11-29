@@ -3,7 +3,7 @@ import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
 import Grid from "@mui/material/Grid";
 import { useSelector, useDispatch } from "react-redux";
-import { getPatient } from "../../store/mohSlice";
+import { getPatient, clearState } from "../../store/mohSlice";
 import { useHistory } from "react-router-dom";
 import CollapseCard from "../CollapseCard";
 import { setActiveKey } from "../../store/navbarSlice";
@@ -18,17 +18,10 @@ import {
   Form,
   Input,
   Spin,
-  Select,
   Button,
 } from "antd";
 import axios from "axios";
 const { Title } = Typography;
-const { Option } = Select;
-
-const searchFields = [
-  { value: "trn", label: "TRN" },
-  { value: "last_name", label: "Last Name" },
-];
 
 export default function Patients() {
   const moh = useSelector((state) => state.moh);
@@ -45,7 +38,6 @@ export default function Patients() {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [q, setQ] = useState();
-  const [searchField, setSearchField] = useState();
   const [show, setShow] = useState(false);
   const [vaccinedExpaned, setVaccinedExpanded] = useState(false);
   const [testingExpaned, setTestingExpanded] = useState(false);
@@ -66,7 +58,7 @@ export default function Patients() {
     setLoading(moh.loading);
   }, [moh.loading]);
 
-  const fetch = (searchField, q) => {
+  const fetch = (q) => {
     setLoading(true);
     const config = {
       headers: {
@@ -77,11 +69,7 @@ export default function Patients() {
     axios
       .get(
         `/api/all-patients/?page=${page}&pageSize=${pageSize}&ordering=${order}tax_number${
-          searchField === "trn"
-            ? `&tax_number=${q}`
-            : searchField === "last_name"
-            ? `&last_name=${q}`
-            : ""
+          q && `&search=${q}`
         }`,
         config
       )
@@ -240,13 +228,22 @@ export default function Patients() {
   return (
     <Container maxWidth="lg" style={{ marginTop: "2%" }}>
       <Modal
-        style={{ marginTop: -100 }}
+        style={{ top: 0 }}
         width={720}
         visible={show}
-        onCancel={() => setShow(false)}
+        onCancel={() => {
+          setShow(false);
+          dispatch(clearState());
+        }}
         title={<Title level={4}>Patient Information</Title>}
         footer={[
-          <Button type="primary" onClick={() => setShow(false)}>
+          <Button
+            type="primary"
+            onClick={() => {
+              setShow(false);
+              dispatch(clearState());
+            }}
+          >
             OK
           </Button>,
         ]}
@@ -364,8 +361,11 @@ export default function Patients() {
             </Grid>
           </Form>
         )}
-        {moh.loading && (
-          <Spin indicator={<LoadingOutlined style={{ fontSize: 42 }} />} />
+        {!moh.patient && (
+          <Spin
+            className="flex justify-center align-center"
+            indicator={<LoadingOutlined style={{ fontSize: 62 }} />}
+          />
         )}
       </Modal>
       <Card
@@ -379,22 +379,11 @@ export default function Patients() {
         style={{ width: "100%" }}
       >
         <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <Select
-            onChange={(e) => setSearchField(e)}
-            style={{ width: "25%" }}
-            placeholder="Select Search Field"
-          >
-            {searchFields.map((item, index) => (
-              <Option value={item.value} key={index}>
-                {item.label}
-              </Option>
-            ))}
-          </Select>
           <Input.Search
             style={{ width: "40%", marginBottom: 15 }}
-            placeholder="Search Here"
+            placeholder="Search using TRN or last name"
             onChange={(e) => setQ(e.target.value)}
-            onSearch={() => fetch(searchField, q)}
+            onSearch={() => fetch(q)}
           />
         </div>
 

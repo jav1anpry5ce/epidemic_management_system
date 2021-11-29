@@ -8,11 +8,13 @@ import {
 } from "../../store/patientSlice";
 import Grid from "@mui/material/Grid";
 import Container from "@mui/material/Container";
-import Typography from "@mui/material/Typography";
 import { setActiveKey } from "../../store/navbarSlice";
 import PatientCard from "../PatientCard";
 import Loading from "../Loading";
 import CollapseCard from "../CollapseCard";
+import { Typography } from "antd";
+
+const { Title } = Typography;
 
 function PatientInfo({ match }) {
   const dispatch = useDispatch();
@@ -45,19 +47,18 @@ function PatientInfo({ match }) {
     return <Loading />;
   } else if (!patient.info && !patient.loading) {
     return (
-      <Typography
-        variant="h5"
-        align="center"
-        component="h5"
-        style={{ marginTop: "15%" }}
+      <Title
+        level={2}
+        className="flex text-white self-center justify-items-center justify-center"
+        style={{ marginTop: "17%", color: "white" }}
       >
-        Patient Dose not exist in our records!
-      </Typography>
+        Patient dose not exist in our records!
+      </Title>
     );
   } else {
     return (
-      <Container style={{ marginTop: "2%" }}>
-        {patient.info && patient.vaccineRecord && patient.testingRecord ? (
+      <Container style={{ marginTop: "2%", marginBottom: "4%" }}>
+        {patient.info && patient.vaccineRecord && patient.testingRecord && (
           <Grid container spacing={4}>
             <Grid item xs={12} sm={6}>
               <PatientCard
@@ -86,7 +87,7 @@ function PatientInfo({ match }) {
               />
             </Grid>
           </Grid>
-        ) : null}
+        )}
       </Container>
     );
   }

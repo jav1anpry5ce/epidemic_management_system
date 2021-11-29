@@ -3,13 +3,13 @@ from .models import Vaccination
 
 class VaccinationConfig(admin.ModelAdmin):
     list_display = (
-        'vaccination_id',
+        'id',
         'patient',
         'location',
         'manufacture',
         'status'
     )
-    readonly_fields = ('vaccination_id',)
+    readonly_fields = ('id',)
     order_by = ('status',)
     ordering = ('status',)
 

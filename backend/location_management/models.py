@@ -39,8 +39,14 @@ class Test(models.Model):
     def __str__(self):
         return self.value
 
+def shorten_id_generator():
+    S = 6
+    ran = ''.join(random.choices(string.ascii_uppercase + string.digits, k = S))
+    return ran
+
 class Appointment(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
+    shorten_id = models.CharField(max_length=6, null=True, blank=True, default=shorten_id_generator, unique=True)
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, null=True)
     location = models.ForeignKey(Location, on_delete=models.CASCADE, blank=True, null=True)
     date = models.DateField(blank=True, null=True)

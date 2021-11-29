@@ -142,12 +142,12 @@ export default function AppointmentManagement({ match }) {
           >
             <Card
               style={{
-                backgroundColor: "rgba(255,255,255, 0.9)",
+                backgroundColor: "rgba(255,255,255, 1)",
                 color: "black",
               }}
             >
               <CardHeader
-                style={{ backgroundColor: "#1F2937", color: "#fff" }}
+                className="bg-gray-700"
                 title={
                   <Typography
                     align="center"

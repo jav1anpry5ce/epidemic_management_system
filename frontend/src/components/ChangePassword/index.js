@@ -3,7 +3,7 @@ import { Card, Input, Form, Button, Alert, Typography } from "antd";
 import Container from "@mui/material/Container";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { changePassword, clearState } from "../../store/authSlice";
+import { changePassword, clearState, logout } from "../../store/authSlice";
 import { setActiveKey } from "../../store/navbarSlice";
 
 const { Title } = Typography;
@@ -38,7 +38,8 @@ export default function ChangePassword() {
       history.push("/");
     }
     if (auth.success) {
-      history.push("/");
+      dispatch(logout());
+      history.push("/account/login");
       dispatch(clearState());
     }
     return () => dispatch(clearState());
