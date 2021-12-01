@@ -117,7 +117,7 @@ export default function AddLocation() {
       <Card
         headStyle={{ backgroundColor: "#1F2937", border: "none" }}
         title={
-          <Title style={{ color: "white" }} align="center">
+          <Title level={3} style={{ color: "white" }} align="center">
             Add Location
           </Title>
         }
@@ -139,7 +139,7 @@ export default function AddLocation() {
             <Input onChange={(e) => setLocation(e.target.value)} />
           </Form.Item>
           <Form.Item
-            label="Streer Address"
+            label="Street Address"
             name="street_address"
             style={{ marginBottom: 2 }}
             rules={[
@@ -209,6 +209,8 @@ export default function AddLocation() {
                 htmlType="submit"
                 appearance="primary"
                 loading={data.loading}
+                style={{ border: "none" }}
+                className="rounded-sm bg-gray-700 text-white hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white transition duration-300"
               >
                 Submit
               </Button>

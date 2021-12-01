@@ -342,6 +342,8 @@ export default function VaccinationAndTesting() {
                       htmlType="submit"
                       appearance="primary"
                       loading={testVac.loading}
+                      style={{ border: "none" }}
+                      className="rounded-sm bg-gray-700 text-white hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white transition duration-300"
                     >
                       Submit
                     </Button>

@@ -74,6 +74,8 @@ export default function ResetPasswordRequest() {
               htmlType="submit"
               appearance="primary"
               loading={auth.loading}
+              style={{ border: "none" }}
+              className="rounded-sm bg-gray-700 text-white hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white transition duration-300"
             >
               Submit
             </Button>

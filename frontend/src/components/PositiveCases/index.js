@@ -278,7 +278,13 @@ export default function PositiveCases() {
         onCancel={() => setShow(false)}
         onOk={() => setShow(false)}
         footer={[
-          <Button type="primary" onClick={onSubmit} disabled={moh.updating}>
+          <Button
+            type="primary"
+            onClick={onSubmit}
+            loading={moh.updating}
+            style={{ border: "none" }}
+            className="rounded-sm bg-gray-700 text-white hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white transition duration-300"
+          >
             Submit
           </Button>,
           <Button onClick={onHide} disabled={moh.updating}>

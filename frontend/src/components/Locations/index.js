@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { locationDetails, clearState } from "../../store/mohSlice";
+import { clearState } from "../../store/mohSlice";
 import { setActiveKey } from "../../store/navbarSlice";
 import Container from "@mui/material/Container";
 import { Table, Tooltip, Typography, Card, Button } from "antd";
@@ -28,7 +28,6 @@ export default function Locations() {
       history.push("/moh/home");
     }
     dispatch(setActiveKey("5"));
-    dispatch(locationDetails());
     return () => clearState();
     // eslint-disable-next-line
   }, [auth.is_moh_staff]);
@@ -158,7 +157,8 @@ export default function Locations() {
         <Button
           type="primary"
           onClick={() => history.push("/moh/add-location")}
-          style={{ marginBottom: 2, marginTop: -8 }}
+          style={{ marginBottom: 2, marginTop: -8, border: "none" }}
+          className="rounded-sm bg-gray-700 text-white hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white transition duration-300"
         >
           Add Location
         </Button>

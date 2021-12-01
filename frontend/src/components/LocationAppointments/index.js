@@ -253,11 +253,13 @@ export default function LocationAppointments() {
         title={<Title level={4}>Appointment Information</Title>}
         footer={[
           <Button
-            disabled={appointments.aLoading}
+            loading={appointments.aLoading}
             onClick={handleCheckIn}
             type="primary"
             appearance="primary"
             key="submit"
+            style={{ border: "none" }}
+            className="rounded-sm bg-gray-700 text-white hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white transition duration-300"
           >
             Check Patient In
           </Button>,

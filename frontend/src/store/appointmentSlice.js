@@ -218,6 +218,7 @@ export const appointmentSlice = createSlice({
     [AppointmentSearch.fulfilled]: (state, { payload }) => {
       state.loading = false;
       state.appointment = payload.appointment;
+      state.searchMessage = null;
     },
     [AppointmentSearch.rejected]: (state) => {
       state.loading = false;

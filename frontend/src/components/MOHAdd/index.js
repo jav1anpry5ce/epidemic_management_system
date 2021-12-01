@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getBatchInfo, clearState } from "../../store/mohSlice";
+import { clearState, getAllLocations } from "../../store/mohSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { setActiveKey } from "../../store/navbarSlice";
@@ -11,7 +11,7 @@ import { open } from "../../functions/Notifications";
 const { Title } = Typography;
 const { Option } = Select;
 
-export default function AddLocationAdmin() {
+export default function MohAdd() {
   const data = useSelector((state) => state.moh);
   const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
@@ -30,7 +30,7 @@ export default function AddLocationAdmin() {
       history.push("/moh/home");
     }
     dispatch(setActiveKey("6"));
-    dispatch(getBatchInfo());
+    dispatch(getAllLocations());
     return () => {
       dispatch(clearState());
       dispatch(CS());
@@ -42,7 +42,7 @@ export default function AddLocationAdmin() {
     if (auth.success) {
       form.resetFields();
       setLocation("");
-      open("success", "Success", "Location Admin successfully added");
+      open("success", "Success", "Staff successfully added");
       dispatch(CS());
     }
     if (auth.message) {
@@ -176,8 +176,8 @@ export default function AddLocationAdmin() {
               style={{ marginBottom: 12 }}
             >
               <Select onChange={(e) => setLocation(e)}>
-                {data.batchInfo &&
-                  data.batchInfo.locations.map((item, index) => (
+                {data.locations &&
+                  data.locations.map((item, index) => (
                     <Option key={index} value={item.value}>
                       {item.label}
                     </Option>
@@ -195,7 +195,9 @@ export default function AddLocationAdmin() {
               type="primary"
               htmlType="submit"
               appearance="primary"
-              loading={data.loading}
+              loading={auth.loading}
+              style={{ border: "none" }}
+              className="rounded-sm bg-gray-700 text-white hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white transition duration-300"
             >
               Submit
             </Button>

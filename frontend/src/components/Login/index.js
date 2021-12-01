@@ -78,7 +78,13 @@ export default function Login() {
             <Input.Password onChange={(e) => setPassword(e.target.value)} />
           </Form.Item>
           <Form.Item style={{ marginBottom: 2 }}>
-            <Button type="primary" htmlType="submit" loading={auth.loading}>
+            <Button
+              type="primary"
+              htmlType="submit"
+              loading={auth.loading}
+              style={{ border: "none" }}
+              className="rounded-sm bg-gray-700 text-white hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white transition duration-300"
+            >
               Login
             </Button>
           </Form.Item>

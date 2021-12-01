@@ -8,4 +8,6 @@ urlpatterns = [
     path('get-location-batchs/', views.LocationBatchList.as_view()),
     path('batch-info/', views.get_new_batch_info),
     path('update-batch/', views.receive_batch),
+    path('get-all-locations/', views.get_locations),
+    path('get-batch/<batch_id>', views.get_batch),
 ]

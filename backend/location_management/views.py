@@ -593,12 +593,14 @@ def add_location(request):
 def get_breakdown(request):
     if request.user.is_moh_staff:
         try:
+            excludes = ['Dead', 'Recovered']
             locations = Location.objects.all()
             number_of_pfizer = Vaccine.objects.get(value='Pfizer').number_of_dose
             number_of_moderna = Vaccine.objects.get(value='Moderna').number_of_dose
             number_of_JJ = Vaccine.objects.get(value='Johnson & Johnson').number_of_dose
-            positive_cases = len(PositiveCase.objects.exclude(status='Dead') and PositiveCase.objects.exclude(status='Recovered'))
+            positive_cases = len(PositiveCase.objects.exclude(status__in=excludes))
             hospitalized = len(PositiveCase.objects.filter(status='Hospitalized'))
+            death = len(PositiveCase.objects.filter(status='Dead'))
             recovered = len(PositiveCase.objects.filter(status='Recovered'))
             number_of_locations = len(locations)
             test_count = len(Testing.objects.filter(status='Completed'))
@@ -630,7 +632,8 @@ def get_breakdown(request):
                 'vaccines_administer': vaccines_administer,
                 'test_count':test_count,
                 'hospitalized': hospitalized,
-                'recovered': recovered
+                'recovered': recovered,
+                'death': death,
             }
             return Response(general_breakdown ,status=status.HTTP_200_OK)
         except:

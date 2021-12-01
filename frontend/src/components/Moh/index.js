@@ -65,6 +65,11 @@ export default function MOHHOME() {
         backgroundcolour: "#437ab2",
       },
       {
+        name: "Death",
+        data: data.breakdownData.death,
+        backgroundcolour: "#10496d",
+      },
+      {
         name: "Recovered",
         data: data.breakdownData.recovered,
         backgroundcolour: "#4f8598",
@@ -122,7 +127,19 @@ export default function MOHHOME() {
         </Grid>
       </Container>
     );
-  } else {
+  }
+  if (data.loading) {
     return <Loading />;
   }
+  if (!data.loading && !data.breakdownData)
+    return (
+      <div
+        style={{ minHeight: "83.5vh" }}
+        className="flex justify-center items-center"
+      >
+        <h1 className="text-3xl font-semibold text-white">
+          Something went wrong!
+        </h1>
+      </div>
+    );
 }

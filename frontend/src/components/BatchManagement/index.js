@@ -1,16 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { clearState } from "../../store/mohSlice";
+import { clearState, getBatch } from "../../store/mohSlice";
 import { setActiveKey } from "../../store/navbarSlice";
 import Container from "@mui/material/Container";
-import { Table, Tooltip, Typography, Card, Button, Input } from "antd";
+import { Table, Tooltip, Typography, Card, Button, Input, Modal } from "antd";
 import axios from "axios";
-// import { Input } from "@mui/material";
+import { EyeOutlined } from "@ant-design/icons";
+import PrintView from "./PrintView";
+import { useReactToPrint } from "react-to-print";
 const { Title } = Typography;
 
 export default function BatchManagement() {
   const auth = useSelector((state) => state.auth);
+  const moh = useSelector((state) => state.moh);
   const dispatch = useDispatch();
   const history = useHistory();
   const [data, setData] = useState();
@@ -22,8 +25,10 @@ export default function BatchManagement() {
   const [pageSize, setPageSize] = useState(20);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
-  const [q, setQ] = useState();
+  const [q, setQ] = useState("");
+  const [show, setShow] = useState(false);
   const scroll = { y: 470 };
+  const componenetRef = useRef();
 
   useEffect(() => {
     dispatch(setActiveKey("4"));
@@ -48,7 +53,7 @@ export default function BatchManagement() {
     };
     axios
       .get(
-        `/api/get-location-batchs/?page=${page}&pageSize=${pageSize}&ordering=${order}status${
+        `/api/get-location-batchs/?page=${page}&pageSize=${pageSize}${
           q && `&search=${q}`
         }`,
         config
@@ -135,7 +140,6 @@ export default function BatchManagement() {
     {
       title: "Status",
       dataIndex: "status",
-      sorter: true,
       render: (status) => (
         <Tooltip placement="topLeft" title={status}>
           {status}
@@ -145,10 +149,58 @@ export default function BatchManagement() {
         showTitle: false,
       },
     },
+    {
+      title: "Action",
+      dataIndex: "batch_id",
+      render: (dataIndex) => (
+        <EyeOutlined
+          className="hover:text-blue-400 cursor-pointer"
+          onClick={() => {
+            setShow(true);
+            dispatch(getBatch(dataIndex));
+          }}
+        />
+      ),
+      width: 100,
+    },
   ];
+
+  const pageStyle = `
+  @page {
+    size: 164mm 103mm;
+  }
+  @media all {
+    .pagebreak {
+      display: none;
+    }
+  }
+  `;
+  const handlePrint = useReactToPrint({
+    content: () => componenetRef.current,
+    pageStyle: () => pageStyle,
+  });
 
   return (
     <Container maxWidth="lg" style={{ marginTop: "2%" }}>
+      <Modal
+        visible={show}
+        onCancel={() => setShow(false)}
+        footer={[
+          <Button onClick={() => setShow(false)}>Cancel</Button>,
+          <Button
+            style={{ border: "none" }}
+            className="rounded-sm bg-gray-700 text-white hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white transition duration-300"
+            onClick={handlePrint}
+          >
+            Print
+          </Button>,
+        ]}
+      >
+        <PrintView
+          componenetRef={componenetRef}
+          data={moh.batch && moh.batch}
+        />
+      </Modal>
       <Card
         headStyle={{ backgroundColor: "#1F2937", border: "none" }}
         title={
@@ -163,12 +215,17 @@ export default function BatchManagement() {
           <Input.Search
             className="w-2/5"
             onChange={(e) => setQ(e.target.value)}
-            onSearch={fetch}
+            onSearch={() => {
+              setPage(1);
+              fetch();
+            }}
             placeholder="Search using location name or batch id"
           />
           <Button
             type="primary"
             onClick={() => history.push("/moh/batch-creation")}
+            style={{ border: "none" }}
+            className="rounded-sm bg-gray-700 text-white hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white transition duration-300"
           >
             Add Location Batch
           </Button>

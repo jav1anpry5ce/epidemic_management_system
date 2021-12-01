@@ -1,5 +1,5 @@
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import serializers, status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import status, permissions
 from rest_framework.pagination import PageNumberPagination
@@ -11,7 +11,7 @@ from django_filters import rest_framework as filterss
 from django.contrib.sites.models import Site
 from .models import LocationBatch, LocationVaccine, Vaccine
 from .serializers import LocationBatchSerializer, VaccineSerializer
-from location_management.models import Location
+from location_management.models import Location, Offer
 from location_management.serializers import LocationSerializer
 from django.core.files import File
 import pyqrcode
@@ -88,7 +88,8 @@ class LocationBatchList(ListAPIView):
     filter_fields = {
         'status': ['exact', 'contains', 'in']
     }
-    ordering = ['date_created']
+    ordering = ['status', '-date_created']
+    order_by = ('date_created')
     search_fields = ['location__value', 'batch_id']
     pagination_class = CustomPageNumberPagination
 
@@ -118,12 +119,49 @@ def receive_batch(request):
 @permission_classes([permissions.IsAuthenticated])
 def get_new_batch_info(request):
     try:
-        vaccines = Vaccine.objects.filter(number_of_dose__gte=10)
-        locations = Location.objects.all()
-        vaccines_serializer = VaccineSerializer(vaccines, many=True)
-        locations_serializer = LocationSerializer(locations, many=True)
-        res = {'vaccines':vaccines_serializer.data, 'locations':locations_serializer.data}
-        return Response(res, status=status.HTTP_200_OK)
+        if request.user.is_moh_staff:
+            vaccines = Vaccine.objects.filter(number_of_dose__gte=10)
+            location_dict = []
+            locations = Offer.objects.filter(value='Vaccination')
+            for location in locations:
+                location_serializer = LocationSerializer(location.location, many=False)
+                location_dict.append(location_serializer.data)
+            vaccines_serializer = VaccineSerializer(vaccines, many=True)
+            res = {'vaccines':vaccines_serializer.data, 'locations':location_dict}
+            return Response(res, status=status.HTTP_200_OK)
+        return Response({'Message': 'You are not authorized to make this request.'}, status=status.HTTP_401_UNAUTHORIZED)
     except:
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def get_locations(request):
+    try:
+        if request.user.is_moh_staff:
+            locations = Location.objects.all()
+            serializer = LocationSerializer(locations, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({'Message': 'You are not authorized to make this request.'}, status=status.HTTP_401_UNAUTHORIZED)
+    except:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def get_batch(request, batch_id):
+    print(request)
+    try:
+        if request.user.is_moh_staff:
+            batch = LocationBatch.objects.get(batch_id=batch_id)
+            data = {
+                'location_name': batch.location.value,
+                'street_address': batch.location.street_address,
+                'city': batch.location.city,
+                'parish': batch.location.parish,
+                'date_created': batch.date_created,
+                'qr_image': f'http://192.168.0.200:8000{batch.qr_image.url}'
+            }
+            return Response(data, status=status.HTTP_200_OK)
+        return Response({'Message': 'You are not authorized to make this request.'}, status=status.HTTP_401_UNAUTHORIZED)
+    except:
+        return Response({'Message': 'Something went wrong!'}, status =status.HTTP_400_BAD_REQUEST)

@@ -146,7 +146,6 @@ export const authSlice = createSlice({
   extraReducers: {
     [register.pending]: (state) => {
       state.loading = true;
-      state.message = null;
     },
     [register.fulfilled]: (state) => {
       state.loading = false;
@@ -164,7 +163,6 @@ export const authSlice = createSlice({
     },
     [activate.pending]: (state) => {
       state.loading = true;
-      state.message = null;
     },
     [activate.fulfilled]: (state) => {
       state.loading = false;
@@ -257,10 +255,31 @@ export const authSlice = createSlice({
     },
     [logout.rejected]: (state) => {
       state.loading = false;
+      state.username = null;
+      state.is_auth = false;
+      state.token = null;
+      state.is_location_admin = false;
+      state.is_moh_staff = false;
+      state.is_moh_admin = false;
+      state.can_update_vaccine = false;
+      state.can_update_test = false;
+      state.can_check_in = false;
+      state.can_receive_location_batch = false;
+      state.location = null;
+      sessionStorage.removeItem("username");
+      sessionStorage.removeItem("is_auth");
+      sessionStorage.removeItem("is_location_admin");
+      sessionStorage.removeItem("can_update_test");
+      sessionStorage.removeItem("can_update_vaccine");
+      sessionStorage.removeItem("can_check_in");
+      sessionStorage.removeItem("is_moh_staff");
+      sessionStorage.removeItem("is_moh_admin");
+      sessionStorage.removeItem("can_receive_location_batch");
+      sessionStorage.removeItem("token");
+      sessionStorage.removeItem("location");
     },
     [changePassword.pending]: (state) => {
       state.loading = true;
-      state.message = null;
     },
     [changePassword.fulfilled]: (state) => {
       state.loading = false;
@@ -277,7 +296,6 @@ export const authSlice = createSlice({
     },
     [resetRequest.pending]: (state) => {
       state.loading = true;
-      state.message = null;
     },
     [resetRequest.fulfilled]: (state) => {
       state.loading = false;
@@ -294,7 +312,6 @@ export const authSlice = createSlice({
     },
     [resetPassword.pending]: (state) => {
       state.loading = true;
-      state.message = null;
     },
     [resetPassword.fulfilled]: (state) => {
       state.loading = false;

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,7 +9,7 @@ import "./App.css";
 import {
   ActivateAccount,
   AddLocation,
-  AddLocationAdmin,
+  MohAdd,
   AddStaff,
   AppointmentManagement,
   Appointments,
@@ -34,6 +34,7 @@ import {
   VaccinationAndTesting,
   Home,
   Footer,
+  NotFound,
 } from "./components";
 
 import IdleTimer from "./functions/IdleTimer";
@@ -45,6 +46,7 @@ axios.defaults.baseURL = "http://192.168.0.200:8000/";
 function App() {
   const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
+  const [hide, setHide] = useState(false);
 
   useEffect(() => {
     const timer = new IdleTimer({
@@ -77,7 +79,7 @@ function App() {
     >
       <Router>
         <Header>
-          <NavBar />
+          <NavBar hide={hide} setHide={setHide} />
         </Header>
 
         <Content style={{ backgroundColor: "rgba(28, 37, 59, 0.3)" }}>
@@ -140,11 +142,7 @@ function App() {
             <Route exact path="/moh/batch-creation" component={CreateBatch} />
             <Route exact path="/moh/locations" component={Locations} />
             <Route exact path="/moh/add-location" component={AddLocation} />
-            <Route
-              exact
-              path="/moh/add-location-admin"
-              component={AddLocationAdmin}
-            />
+            <Route exact path="/moh/add-staff" component={MohAdd} />
             <Route
               exact
               path={`/${auth.location}/home`}
@@ -152,6 +150,7 @@ function App() {
             />
             <Route exact path="/got-the-stach/:uuid" component={ReceiveBatch} />
             <Route exact path="/moh/positive-cases" component={PositiveCases} />
+            <Route component={() => <NotFound setHide={setHide} />} />
           </Switch>
         </Content>
         <Foot>

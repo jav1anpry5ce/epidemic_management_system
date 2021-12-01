@@ -29,20 +29,6 @@ export const getPatient = createAsyncThunk("get/patient", async (trn) => {
   }
 });
 
-export const getAllBatch = createAsyncThunk("getAllBatch", async () => {
-  const config = {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Token " + sessionStorage.getItem("token"),
-    },
-  };
-  const response = await axios.get("api/location-batch/", config);
-  if (response.status === 200) {
-    const data = response.data;
-    return { data };
-  }
-});
-
 export const getBatchInfo = createAsyncThunk("getBatchInfo", async () => {
   const config = {
     headers: {
@@ -74,23 +60,6 @@ export const addBatch = createAsyncThunk(
       }
     } catch (err) {
       return rejectWithValue(err.response.data);
-    }
-  }
-);
-
-export const locationDetails = createAsyncThunk(
-  "location/Details",
-  async () => {
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Token " + sessionStorage.getItem("token"),
-      },
-    };
-    const response = await axios.get("api/location-details/", config);
-    if (response.status === 200) {
-      const data = response.data;
-      return { data };
     }
   }
 );
@@ -174,6 +143,40 @@ export const updateCase = createAsyncThunk(
   }
 );
 
+export const getAllLocations = createAsyncThunk(
+  "get/all/locations",
+  async () => {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Token " + sessionStorage.getItem("token"),
+      },
+    };
+    const response = await axios.get("api/get-all-locations/", config);
+    const data = response.data;
+    return { data };
+  }
+);
+
+export const getBatch = createAsyncThunk(
+  "get/batch",
+  async (batch_id, { rejectWithValue }) => {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Token " + sessionStorage.getItem("token"),
+      },
+    };
+    try {
+      const response = await axios.get(`api/get-batch/${batch_id}`, config);
+      const data = response.data;
+      return { data };
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
 export const mohSlice = createSlice({
   name: "MOH",
   initialState: {
@@ -184,16 +187,18 @@ export const mohSlice = createSlice({
     patient: null,
     test: null,
     vaccine: null,
-    batches: null,
     batchInfo: null,
+    locations: null,
+    vaccinationSites: null,
     batchData: null,
     success: false,
     message: null,
-    locationDetails: null,
     breakdownData: null,
     positiveCases: null,
     caseData: null,
     updating: false,
+    bLoading: false,
+    batch: null,
   },
   reducers: {
     clearPatient: (state) => {
@@ -204,20 +209,23 @@ export const mohSlice = createSlice({
       state.caseLoading = false;
       state.patient = null;
       state.patients = null;
-      state.batches = null;
       state.batchData = null;
       state.success = false;
       state.batchInfo = null;
-      state.locationDetails = null;
       state.breakdownData = null;
       state.message = null;
       state.positiveCases = null;
       state.caseData = null;
       state.updating = false;
+      state.vaccinationSites = null;
+      state.locations = null;
+      state.bLoading = false;
+      state.batch = null;
     },
     updateSuccess: (state) => {
       state.success = false;
       state.batchData = null;
+      state.bLoading = false;
     },
   },
   extraReducers: {
@@ -242,16 +250,6 @@ export const mohSlice = createSlice({
     },
     [getPatient.rejected]: (state) => {
       state.patientLoading = false;
-    },
-    [getAllBatch.pending]: (state) => {
-      state.loading = true;
-    },
-    [getAllBatch.fulfilled]: (state, { payload }) => {
-      state.loading = false;
-      state.batches = payload.data;
-    },
-    [getAllBatch.rejected]: (state) => {
-      state.loading = false;
     },
     [getBatchInfo.pending]: (state) => {
       state.loading = true;
@@ -280,16 +278,6 @@ export const mohSlice = createSlice({
       } catch (err) {
         state.message = "Something went wrong!";
       }
-    },
-    [locationDetails.pending]: (state) => {
-      state.loading = true;
-    },
-    [locationDetails.fulfilled]: (state, { payload }) => {
-      state.loading = false;
-      state.locationDetails = payload.data;
-    },
-    [locationDetails.rejected]: (state) => {
-      state.loading = false;
     },
     [addLocation.pending]: (state) => {
       state.loading = true;
@@ -350,6 +338,26 @@ export const mohSlice = createSlice({
       state.updating = false;
       state.message = null;
       state.message = payload.Message;
+    },
+    [getAllLocations.pending]: (state) => {
+      state.loading = true;
+    },
+    [getAllLocations.fulfilled]: (state, { payload }) => {
+      state.loading = false;
+      state.locations = payload.data;
+    },
+    [getAllLocations.rejected]: (state) => {
+      state.loading = false;
+    },
+    [getBatch.pending]: (state) => {
+      state.bLoading = true;
+    },
+    [getBatch.fulfilled]: (state, { payload }) => {
+      state.bLoading = false;
+      state.batch = payload.data;
+    },
+    [getBatch.rejected]: (state) => {
+      state.bLoading = false;
     },
   },
 });

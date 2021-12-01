@@ -31,7 +31,16 @@ class RepresentativeConfig(admin.ModelAdmin):
     )
     search_fields = ('patient',)
 
+class PositiveCaseConfig(admin.ModelAdmin):
+    list_display = (
+        'case_id',
+        'patient',
+        'date_tested',
+        'recovering_location',
+        'status',
+    )
+
 admin.site.register(Patient, PatientConfig)
 admin.site.register(NextOfKin, NextOfKinConfig)
-admin.site.register(PositiveCase)
+admin.site.register(PositiveCase, PositiveCaseConfig)
 admin.site.register(Representative, RepresentativeConfig)

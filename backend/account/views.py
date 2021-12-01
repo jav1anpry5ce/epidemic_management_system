@@ -103,7 +103,7 @@ def activate(request):
                 return Response({'Message': 'Password must be at lease 8 character in length, contain at least one digit,\nat least one special character and\nat least one upper case letter.'} ,status=status.HTTP_400_BAD_REQUEST)
             return Response({'Message': 'Password and confirm password must be the same!'}, status=status.HTTP_400_BAD_REQUEST)
     except:
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response({'Message': 'Something went wrong!'}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 def login(request):

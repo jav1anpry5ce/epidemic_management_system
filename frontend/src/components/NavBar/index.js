@@ -12,13 +12,13 @@ import { BsPersonFill, BsPersonPlusFill } from "react-icons/bs";
 import { RiVirusLine } from "react-icons/ri";
 import { AiFillHome } from "react-icons/ai";
 
-export default function NavBar() {
+export default function NavBar({ hide, setHide }) {
   const auth = useSelector((state) => state.auth);
   const nav = useSelector((state) => state.navbar);
   const dispatch = useDispatch();
   const history = useHistory();
   const [show, setShow] = useState(true);
-  const [hide, setHide] = useState(false);
+
   const [expand, setExpand] = useState(false);
   const [height, setHeight] = useState(39);
 
@@ -81,7 +81,7 @@ export default function NavBar() {
     }
   };
 
-  if (auth.is_auth) {
+  if (auth.is_auth && !hide) {
     return (
       <Navbar
         appearance="inverse"
@@ -139,7 +139,7 @@ export default function NavBar() {
                 {auth.is_moh_admin && (
                   <Nav.Item
                     eventKey="6"
-                    onClick={() => nagivate("/moh/add-location-admin")}
+                    onClick={() => nagivate("/moh/add-staff")}
                   >
                     <div className="flex">
                       {<BsPersonPlusFill className="flex text-lg mr-1" />}
@@ -252,7 +252,7 @@ export default function NavBar() {
       </Navbar>
     );
   } else if (hide) {
-    return <Container></Container>;
+    return null;
   } else {
     return (
       <Navbar

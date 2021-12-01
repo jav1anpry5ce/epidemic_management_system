@@ -1,6 +1,6 @@
 export { default as ActivateAccount } from "./ActivateAccount";
 export { default as AddLocation } from "./AddLocation";
-export { default as AddLocationAdmin } from "./AddLocationAdmin";
+export { default as MohAdd } from "./MOHAdd";
 export { default as AddStaff } from "./AddStaff";
 export { default as AppointmentManagement } from "./AppointmentManagement";
 export { default as Appointments } from "./Appointments";
@@ -25,3 +25,4 @@ export { default as UpdateInfo } from "./UpdateInfo";
 export { default as VaccinationAndTesting } from "./VaccinationAndTesting";
 export { default as Home } from "./Home";
 export { default as Footer } from "./Footer";
+export { default as NotFound } from "./NotFound";

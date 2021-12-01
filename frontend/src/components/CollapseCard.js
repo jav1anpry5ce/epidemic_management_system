@@ -39,11 +39,11 @@ export default function CollapseCard({ Title, Data, expand, setExpand }) {
                 <Grid item xs={12}>
                   <Card>
                     <CardContent>
-                      {record.testing_id ? (
+                      {record.type ? (
                         <Grid container spacing={2}>
                           <Grid item xs={12}>
                             <Typography variant="body2">
-                              Testing ID: {record.testing_id}
+                              Testing ID: {record.id}
                             </Typography>
                           </Grid>
                           <Grid item xs={12}>
