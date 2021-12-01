@@ -24,6 +24,8 @@ class LocationBatch(models.Model):
 
     class Meta:
         ordering = ('-date_created',)
+        verbose_name = 'Site Batch'
+        verbose_name_plural = 'Site Batches'
 
     def __str__(self):
         return str(self.batch_id)
@@ -35,6 +37,10 @@ class LocationVaccine(models.Model):
     label = models.CharField(max_length=50)
     value = models.CharField(max_length=50)
     number_of_dose = models.IntegerField()
+
+    class Meta:
+        verbose_name = 'Site Vaccine'
+        
 
     def __str__(self):
         return '{}'.format(self.value)

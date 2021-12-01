@@ -21,6 +21,9 @@ class Location(models.Model):
     def __str__(self):
         return self.value
 
+    class Meta:
+        verbose_name = 'Site'
+
 class Offer(models.Model):
     location = models.ForeignKey(Location, on_delete=models.CASCADE, blank=True, null=True)
     label = models.CharField(max_length=255, null=True, blank=True)

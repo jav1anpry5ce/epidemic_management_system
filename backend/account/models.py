@@ -48,6 +48,9 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
     profile_picture = models.ImageField(
         upload_to='uploads/', blank=True, null=True)
 
+    class Meta:
+        verbose_name = 'Staff Account'
+
     objects = UserAccountManager()
 
     USERNAME_FIELD = 'username'

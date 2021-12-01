@@ -2,6 +2,8 @@ from django.contrib import admin
 from .models import UserAccount, ResetAccount, ActivateAccount
 from django.contrib.auth.admin import UserAdmin
 
+admin.site.site_header = 'Epidemic Response Management System Admin Panel'
+
 class UserAccountConfig(UserAdmin):
     search_fields = ("email", "username", "last_name")
     list_display = ("username", "email", "location", "last_login")
