@@ -16,6 +16,7 @@ import { Card, Input, Form, Button, Typography, Select } from "antd";
 import Loading from "../Loading";
 import PrintView from "./PrintView";
 import { open } from "../../functions/Notifications";
+import shortid from "shortid";
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -149,8 +150,8 @@ export default function CreateBatch() {
                   ]}
                 >
                   <Select onChange={(e) => setLocation(e)}>
-                    {data.batchInfo.locations.map((item, index) => (
-                      <Option key={index} value={item.value}>
+                    {data.batchInfo.locations.map((item) => (
+                      <Option key={shortid.generate()} value={item.value}>
                         {item.label}
                       </Option>
                     ))}

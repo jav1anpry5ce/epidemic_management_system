@@ -1,7 +1,8 @@
+from datetime import timedelta
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
-from rest_framework import permissions
 from location_management.models import Location
+from django.utils import timezone
 
 class UserAccountManager(BaseUserManager):
     def create_user(self, email, password, **extra_fields):
@@ -84,6 +85,10 @@ class ResetAccount(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     token = models.CharField(max_length=16, unique=True, default=tokenGenerator)
     created = models.DateTimeField(blank=True, null=True, auto_now_add=True)
+    expires = models.DateTimeField(blank=True, null=True, default=timezone.now() + timedelta(minutes=60))
+
+    class Meta:
+        verbose_name = 'Reset Token'
 
     def __str__(self):
         return self.user.email

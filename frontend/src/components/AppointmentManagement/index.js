@@ -24,6 +24,7 @@ import {
 import { open } from "../../functions/Notifications";
 import PatientCard from "../PatientCard";
 import Loading from "../Loading";
+import shortid from "shortid";
 const moment = require("moment");
 
 const { Title } = Typography;
@@ -223,8 +224,8 @@ export default function AppointmentManagement({ match }) {
                       >
                         {appointment.appointments.type === "Testing" ? (
                           location.data &&
-                          location.data.Test.map((item, index) => (
-                            <Option value={item.value} key={index}>
+                          location.data.Test.map((item) => (
+                            <Option value={item.value} key={shortid.generate()}>
                               {item.label}
                             </Option>
                           ))
@@ -235,8 +236,8 @@ export default function AppointmentManagement({ match }) {
                             {appointment.appointments.patient_choice}
                           </Option>
                         ) : (
-                          location.data.Vaccine.map((item, index) => (
-                            <Option value={item.value} key={index}>
+                          location.data.Vaccine.map((item) => (
+                            <Option value={item.value} key={shortid.generate()}>
                               {item.label}
                             </Option>
                           ))

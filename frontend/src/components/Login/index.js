@@ -29,8 +29,7 @@ export default function Login() {
   useEffect(() => {
     if (auth.is_auth && auth.is_moh_staff) {
       history.push("/moh/home");
-    }
-    if (auth.is_auth) {
+    } else if (auth.is_auth) {
       history.push(`/${auth.location}/home`);
     }
     // eslint-disable-next-line

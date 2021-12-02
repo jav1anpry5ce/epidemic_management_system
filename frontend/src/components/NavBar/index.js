@@ -133,7 +133,7 @@ export default function NavBar({ hide, setHide }) {
                 >
                   <div className="flex">
                     {<BiCurrentLocation className="flex text-lg mr-1" />}
-                    Locations
+                    Sites
                   </div>
                 </Nav.Item>
                 {auth.is_moh_admin && (
@@ -153,7 +153,6 @@ export default function NavBar({ hide, setHide }) {
                   icon={<Icon icon="sign-out" />}
                   onClick={() => {
                     dispatch(logout());
-                    history.push("account/login");
                   }}
                 >
                   Sign Out

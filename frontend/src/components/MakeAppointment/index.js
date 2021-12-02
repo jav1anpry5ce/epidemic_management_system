@@ -35,6 +35,7 @@ import formatDate from "../../functions/formatDate";
 import { open } from "../../functions/Notifications";
 import { setActiveKey } from "../../store/navbarSlice";
 import Loading from "../Loading";
+import shortid from "shortid";
 const moment = require("moment");
 
 const { Option } = Select;
@@ -110,7 +111,6 @@ export default function MakeAppointment() {
 
   useEffect(() => {
     dispatch(setActiveKey("4"));
-    dispatch(getLocationByParish(parish));
     form.setFieldsValue({ country: "Jamaica" });
     return () => {
       dispatch(clearState());
@@ -397,7 +397,7 @@ export default function MakeAppointment() {
               >
                 <Select value={title} onChange={(e) => setTitle(e)}>
                   {titledata.map((item, index) => (
-                    <Option vlaue={item.value} key={index}>
+                    <Option key={index} vlaue={item.value}>
                       {item.label}
                     </Option>
                   ))}
@@ -504,8 +504,8 @@ export default function MakeAppointment() {
                   onChange={(e) => setGender(e)}
                   value={gender}
                 >
-                  {genderData.map((item, index) => (
-                    <Option value={item.value} key={index}>
+                  {genderData.map((item) => (
+                    <Option value={item.value} key={shortid.generate()}>
                       {item.value}
                     </Option>
                   ))}
@@ -558,8 +558,8 @@ export default function MakeAppointment() {
                 ]}
               >
                 <Select value={parish} onChange={(e) => setParish(e)}>
-                  {parishData.map((item, index) => (
-                    <Option value={item.value} key={index}>
+                  {parishData.map((item) => (
+                    <Option value={item.value} key={shortid.generate()}>
                       {item.label}
                     </Option>
                   ))}
@@ -720,7 +720,9 @@ export default function MakeAppointment() {
                 >
                   {location.locations &&
                     location.locations.map((item) => (
-                      <Option value={item.value}>{item.label}</Option>
+                      <Option value={item.value} key={shortid.generate()}>
+                        {item.label}
+                      </Option>
                     ))}
                 </Select>
               </Form.Item>
@@ -793,8 +795,8 @@ export default function MakeAppointment() {
                   searchable={false}
                 >
                   {location.data &&
-                    location.data.Offer.map((item, index) => (
-                      <Option value={item.value} key={index}>
+                    location.data.Offer.map((item) => (
+                      <Option value={item.value} key={shortid.generate()}>
                         {item.label}
                       </Option>
                     ))}
@@ -819,8 +821,8 @@ export default function MakeAppointment() {
                     onChange={(e) => setPChoice(e)}
                   >
                     {location.data &&
-                      location.data.Test.map((item, index) => (
-                        <Option value={item.value} key={index}>
+                      location.data.Test.map((item) => (
+                        <Option value={item.value} key={shortid.generate()}>
                           {item.label}
                         </Option>
                       ))}
@@ -851,8 +853,8 @@ export default function MakeAppointment() {
                         {patient.previousVaccine[0].value}
                       </Option>
                     ) : (
-                      location.data.Vaccine.map((item, index) => (
-                        <Option value={item.value} key={index}>
+                      location.data.Vaccine.map((item) => (
+                        <Option value={item.value} key={shortid.generate()}>
                           {item.label}
                         </Option>
                       ))
@@ -960,8 +962,8 @@ export default function MakeAppointment() {
           </Grid>
         </Form>
       </Card>
-      {appointment.loading ? <Loading /> : null}
-      {patient.loading ? <Loading /> : null}
+      {appointment.loading && <Loading />}
+      {patient.loading && <Loading />}
     </Container>
   );
 }

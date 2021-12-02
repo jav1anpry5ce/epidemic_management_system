@@ -10,7 +10,8 @@ class UserAccountConfig(UserAdmin):
     readonly_fields = ('date_joined', 'last_login')
     fieldsets = (
         ('Personal Information', {'fields': ('email', 'first_name', 'last_name',)}),
-    ('Permissions', {'fields': ('is_active', 'is_staff', 'is_moh_staff', 'is_moh_admin', 'is_location_admin', 'can_update_test', 'can_update_vaccine', 'can_check_in', 'can_receive_location_batch', 'is_superuser', 'groups',)}),
+    ('Permissions', {'fields': ('is_active', 'is_staff', 'is_moh_staff', 'is_moh_admin', 
+    'is_location_admin', 'can_update_test', 'can_update_vaccine', 'can_check_in', 'can_receive_location_batch', 'is_superuser', 'groups',)}),
     ('Staff Information', {'fields': ('date_joined', 'last_login', 'location',)}),
     )
     add_fieldsets = (
@@ -21,10 +22,10 @@ class UserAccountConfig(UserAdmin):
 
 class ResetAccountConfig(admin.ModelAdmin):
     fields = ('user',)
-    list_display = ('token', 'user', 'created')
+    list_display = ('token', 'user', 'created', 'expires')
     readonly_fields = ('token',)
 
 
 admin.site.register(UserAccount, UserAccountConfig)
+admin.site.register(ResetAccount, ResetAccountConfig)
 
-# Register your models here.

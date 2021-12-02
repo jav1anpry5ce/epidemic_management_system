@@ -6,6 +6,7 @@ import { setActiveKey } from "../../store/navbarSlice";
 import Container from "@mui/material/Container";
 import { Card, Input, Form, Button, Typography, Select, Checkbox } from "antd";
 import { open } from "../../functions/Notifications";
+import shortid from "shortid";
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -118,7 +119,7 @@ export default function AddLocation() {
         headStyle={{ backgroundColor: "#1F2937", border: "none" }}
         title={
           <Title level={3} style={{ color: "white" }} align="center">
-            Add Location
+            Add Site
           </Title>
         }
         bordered={false}
@@ -126,13 +127,13 @@ export default function AddLocation() {
       >
         <Form layout="vertical" form={form} onFinish={onSubmit}>
           <Form.Item
-            label="Location Name"
+            label="Site Name"
             name="loaction_name"
             style={{ marginBottom: 2 }}
             rules={[
               {
                 required: true,
-                message: "Please enter location name!",
+                message: "Please enter site name!",
               },
             ]}
           >
@@ -145,7 +146,7 @@ export default function AddLocation() {
             rules={[
               {
                 required: true,
-                message: "Please enter location street address!",
+                message: "Please enter site street address!",
               },
             ]}
           >
@@ -158,7 +159,7 @@ export default function AddLocation() {
             rules={[
               {
                 required: true,
-                message: "Please enter location city!",
+                message: "Please enter site city!",
               },
             ]}
           >
@@ -172,13 +173,13 @@ export default function AddLocation() {
             rules={[
               {
                 required: true,
-                message: "Please enter location parish!",
+                message: "Please enter site parish!",
               },
             ]}
           >
             <Select onChange={(e) => setParish(e)}>
-              {parishData.map((item, index) => (
-                <Option key={index} value={item.value}>
+              {parishData.map((item) => (
+                <Option key={shortid.generate()} value={item.value}>
                   {item.label}
                 </Option>
               ))}

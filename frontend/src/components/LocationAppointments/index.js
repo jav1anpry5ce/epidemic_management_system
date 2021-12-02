@@ -27,6 +27,7 @@ import {
   Input,
   Spin,
 } from "antd";
+import shortid from "shortid";
 const { Title } = Typography;
 const { Option } = Select;
 
@@ -363,8 +364,8 @@ export default function LocationAppointments() {
             onChange={(e) => setStatus(e)}
             className="w-56 mb-6"
           >
-            {fdata.map((item, index) => (
-              <Option value={item.value} key={index}>
+            {fdata.map((item) => (
+              <Option value={item.value} key={shortid.generate()}>
                 {item.label}
               </Option>
             ))}

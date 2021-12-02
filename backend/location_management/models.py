@@ -3,6 +3,8 @@ import uuid
 from patient_management.models import Patient
 import string    
 import random
+from django.dispatch import receiver
+from django.db.models.signals import post_save
 
 def codeGenerator():
     S = 8
@@ -61,3 +63,8 @@ class Appointment(models.Model):
     def __str__(self):
         return str(self.id)
         
+
+@receiver(post_save, sender=Appointment)
+def appointment_created_handler(sender, instance, created, *args, **kwargs):
+    if created:
+        print(instance.patient.email)

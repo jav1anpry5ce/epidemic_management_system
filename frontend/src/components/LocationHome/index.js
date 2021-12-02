@@ -7,6 +7,7 @@ import { setActiveKey } from "../../store/navbarSlice";
 import { Card } from "../Moh/MohElements";
 import Loading from "../Loading";
 import { Typography } from "antd";
+import shortid from "shortid";
 
 const { Title } = Typography;
 
@@ -67,43 +68,43 @@ export default function LocationHome() {
     ];
     return (
       <Container maxWidth="xl" align="center">
-        <Grid
-          container
-          spacing={6}
-          style={{
-            marginTop: "6%",
-            marginBottom: "3%",
-            justifyContent: "center",
-          }}
+        <div
+          className="flex justify-center items-center py-4 w-full mx-auto"
+          style={{ minHeight: "85.5vh" }}
         >
-          {cardData.map(
-            (data, index) =>
-              data.visible && (
-                <Grid item sm={6} md={6} lg={4} key={index}>
-                  <Card backgroundcolour={data.backgroundcolour} color="white">
-                    <CardContent>
-                      <Grid container spacing={3}>
-                        <Grid item xs={12}>
-                          <Title
-                            level={3}
-                            align="center"
-                            style={{ color: "#fff" }}
-                          >
-                            {data.name}
-                          </Title>
+          <Grid container spacing={5} style={{ justifyContent: "center" }}>
+            {cardData.map(
+              (data) =>
+                data.visible && (
+                  <Grid item sm={6} md={6} lg={4} key={shortid.generate()}>
+                    <Card
+                      backgroundcolour={data.backgroundcolour}
+                      color="white"
+                    >
+                      <CardContent>
+                        <Grid container spacing={3}>
+                          <Grid item xs={12}>
+                            <Title
+                              level={3}
+                              align="center"
+                              style={{ color: "#fff" }}
+                            >
+                              {data.name}
+                            </Title>
+                          </Grid>
+                          <Grid item xs={12}>
+                            <Title level={4} style={{ color: "#fff" }}>
+                              {data.data}
+                            </Title>
+                          </Grid>
                         </Grid>
-                        <Grid item xs={12}>
-                          <Title level={4} style={{ color: "#fff" }}>
-                            {data.data}
-                          </Title>
-                        </Grid>
-                      </Grid>
-                    </CardContent>
-                  </Card>
-                </Grid>
-              )
-          )}
-        </Grid>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                )
+            )}
+          </Grid>
+        </div>
       </Container>
     );
   }

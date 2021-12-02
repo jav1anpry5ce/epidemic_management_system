@@ -1,7 +1,14 @@
 from django.db import models
+from django.dispatch import receiver
+from django.core.mail import EmailMultiAlternatives
+from sms import send_sms
+from django.contrib.sites.models import Site
+from django.db.models.signals import post_save
 from patient_management.models import Patient
 import uuid
 from location_management.models import Location, Appointment
+from functions import convertTime
+site = Site.objects.get_current()
 
 class Vaccination(models.Model):
     id = models.UUIDField(default=uuid.uuid4, primary_key=True)
@@ -18,3 +25,30 @@ class Vaccination(models.Model):
     
     def __str__(self):
         return str(self.id)
+
+@receiver(post_save, sender=Vaccination)
+def vaccination_post_save(sender, instance, created, *args, **kwargs):
+    if created:
+        subject, from_email, to = 'Appointment for COVID-19 Vaccine', 'donotreply@localhost', instance.patient.email
+        html_content = f'''
+        <html>
+            <body>
+                <p>Your appointment for your {instance.manufacture} vaccine was successfully made for {instance.appointment.date.strftime('%d %B, %Y')} at {convertTime(instance.appointment.time)}.</p>
+                <p>You can manage your appointment at <a href="{site}appointment/management/{instance.appointment.id}">{site}appointment/management/{instance.appointment.id}</a></p>
+                <p>You can search for your appointment using the following code: {instance.appointment.shorten_id}</p>
+            </body>
+        </html>
+        '''
+        text_content = ""
+        msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+        msg.attach_alternative(html_content, "text/html")
+        msg.content_subtype = "html"
+        msg.send()
+        text = f'''Your appointment for your COVID-19 test was successfully made for {instance.appointment.date.strftime('%d %B, %Y')} at {convertTime(instance.appointment.time)}.\nYou can manage your appointmnet at {site}appointment/management/{instance.appointment.id}\nYou can search for your appointment using the following code: {instance.appointment.shorten_id}\n
+        '''
+        send_sms(
+        text.strip(),
+        '+12065550100',
+        [f'{instance.patient.phone},'],
+        fail_silently=True
+        )

@@ -6,6 +6,7 @@ import { Container, CardContent, Grid, Typography } from "@mui/material";
 import { setActiveKey } from "../../store/navbarSlice";
 import { Card } from "./MohElements";
 import Loading from "../Loading";
+import shortid from "shortid";
 
 export default function MOHHOME() {
   const data = useSelector((state) => state.moh);
@@ -87,44 +88,41 @@ export default function MOHHOME() {
     ];
     return (
       <Container maxWidth="xl" align="center">
-        <Grid
-          container
-          spacing={3}
-          style={{
-            marginTop: "6%",
-            marginBottom: "2%",
-            justifyContent: "center",
-          }}
+        <div
+          className="flex justify-center items-center py-4 w-full mx-auto"
+          style={{ minHeight: "85.5vh" }}
         >
-          {cardData.map((data, index) => (
-            <Grid item sm={6} md={4} lg={3} key={index}>
-              <Card backgroundcolour={data.backgroundcolour} color="white">
-                <CardContent>
-                  <Grid container spacing={3}>
-                    <Grid item xs={12}>
-                      <Typography
-                        variant="h5"
-                        align="center"
-                        style={{ color: "white" }}
-                      >
-                        {data.name}
-                      </Typography>
+          <Grid container spacing={3} style={{ justifyContent: "center" }}>
+            {cardData.map((data) => (
+              <Grid item sm={6} md={4} lg={3} key={shortid.generate()}>
+                <Card backgroundcolour={data.backgroundcolour} color="white">
+                  <CardContent>
+                    <Grid container spacing={3}>
+                      <Grid item xs={12}>
+                        <Typography
+                          variant="h5"
+                          align="center"
+                          style={{ color: "white" }}
+                        >
+                          {data.name}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Typography
+                          variant="h5"
+                          align="center"
+                          style={{ color: "white" }}
+                        >
+                          {data.data}
+                        </Typography>
+                      </Grid>
                     </Grid>
-                    <Grid item xs={12}>
-                      <Typography
-                        variant="h5"
-                        align="center"
-                        style={{ color: "white" }}
-                      >
-                        {data.data}
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        </div>
       </Container>
     );
   }

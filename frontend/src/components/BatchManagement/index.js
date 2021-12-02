@@ -17,7 +17,7 @@ export default function BatchManagement() {
   const dispatch = useDispatch();
   const history = useHistory();
   const [data, setData] = useState();
-  const [order, setOrder] = useState("");
+  const [order, setOrder] = useState(null);
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 20,
@@ -54,8 +54,8 @@ export default function BatchManagement() {
     axios
       .get(
         `/api/get-location-batchs/?page=${page}&pageSize=${pageSize}${
-          q && `&search=${q}`
-        }`,
+          order !== null ? `&ordering=${order}vaccine` : ""
+        }${q && `&search=${q}`}`,
         config
       )
       .then((data) => {
@@ -80,7 +80,7 @@ export default function BatchManagement() {
   const handleTableChange = (pagination, a, sorter) => {
     if (sorter.order === "ascend") setOrder("");
     else if (sorter.order === "descend") setOrder("-");
-    else setOrder("");
+    else setOrder(null);
     setPage(pagination.current);
     setPageSize(pagination.pageSize);
   };
@@ -99,9 +99,8 @@ export default function BatchManagement() {
       },
     },
     {
-      title: "Location",
+      title: "Site",
       dataIndex: "location",
-      sorter: (a, b) => a.location.value.length - b.location.value.length,
       render: (location) => (
         <Tooltip placement="topLeft" title={location.value}>
           {location.value}
@@ -114,7 +113,7 @@ export default function BatchManagement() {
     {
       title: "Vaccine",
       dataIndex: "vaccine",
-      sorter: (a, b) => a.vaccine.value.length - b.vaccine.value.length,
+      sorter: true,
       render: (vaccine) => (
         <Tooltip placement="topLeft" title={vaccine.value}>
           {vaccine.value}

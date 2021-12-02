@@ -25,6 +25,7 @@ import {
   Select,
   Button,
 } from "antd";
+import shortid from "shortid";
 import toLocaldate from "../../functions/toLocalDate";
 import { open } from "../../functions/Notifications";
 import axios from "axios";
@@ -493,8 +494,8 @@ export default function PositiveCases() {
                   style={{ marginBottom: 0 }}
                 >
                   <Select onChange={(e) => setStatus(e)}>
-                    {recoveringData.map((item, index) => (
-                      <Option key={index} value={item.value}>
+                    {recoveringData.map((item) => (
+                      <Option key={shortid.generate()} value={item.value}>
                         {item.label}
                       </Option>
                     ))}

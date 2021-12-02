@@ -32,6 +32,7 @@
     "recharts": "^2.1.6",
     "redux-toolkit": "^1.1.2",
     "rsuite": "^4.10.2",
+    "shortid": "^2.2.16",
     "spinners-react": "^1.0.4",
     "styled-components": "^5.3.1",
     "web-vitals": "^1.1.2"

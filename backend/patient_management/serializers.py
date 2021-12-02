@@ -75,6 +75,10 @@ class RepresentativeSerializer(serializers.ModelSerializer):
             'rep_phone',
         )
 
+    def create(self, validated_data):
+        rep = Representative.objects.update_or_create(patient=validated_data.get('patient', None), defaults=validated_data)
+        return rep
+
 class UpdatePatientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Patient

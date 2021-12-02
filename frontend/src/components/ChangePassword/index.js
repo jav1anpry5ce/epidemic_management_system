@@ -42,9 +42,13 @@ export default function ChangePassword() {
       history.push("/account/login");
       dispatch(clearState());
     }
-    return () => dispatch(clearState());
     // eslint-disable-next-line
   }, [auth.success, auth.is_auth]);
+
+  useEffect(() => {
+    return () => dispatch(clearState());
+    // eslint-disable-next-line
+  }, []);
 
   return (
     <Container maxWidth="sm" style={{ marginTop: "3%" }}>

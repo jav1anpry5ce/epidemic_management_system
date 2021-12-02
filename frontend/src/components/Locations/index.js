@@ -148,7 +148,7 @@ export default function Locations() {
         headStyle={{ backgroundColor: "#1F2937", border: "none" }}
         title={
           <Title level={3} style={{ color: "white" }} align="center">
-            Locations
+            Sites
           </Title>
         }
         bordered={false}
@@ -160,7 +160,7 @@ export default function Locations() {
           style={{ marginBottom: 2, marginTop: -8, border: "none" }}
           className="rounded-sm bg-gray-700 text-white hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white transition duration-300"
         >
-          Add Location
+          Add Site
         </Button>
         <Table
           columns={columns}

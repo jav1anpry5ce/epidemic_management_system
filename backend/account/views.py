@@ -171,22 +171,24 @@ def resetRequest(request):
             return Response({'Message': 'email provided does not match any in our records!'}, status=status.HTTP_404_NOT_FOUND)
         if request.user.is_location_admin or request.user.is_moh_admin:
             if request.user.location == user.location and user.is_active or request.user.is_moh_admin:
-                if ResetAccount.objects.get(user=user).delete():
-                    reset = ResetAccount.objects.create(user=user)
-                    subject, from_email, to = 'Reset Request', 'donotreply@localhost', user.email
-                    text_content = 'This is an important message.'
-                    html_content = f'''
-                    <html>
-                        <body>
-                            <p>We have received your reset request. attached you will find the reset link.</p>
-                            <a href="{site}password/reset/{reset.token}">{site}password/reset/{reset.token}</a>
-                        </body>
-                    </html>
-                    '''
-                    msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
-                    msg.attach_alternative(html_content, "text/html")
-                    msg.send()
-                    return Response(status=status.HTTP_204_NO_CONTENT)
+                if ResetAccount.objects.filter(user=user).exists():
+                    if ResetAccount.objects.get(user=user).delete():
+                        reset = ResetAccount.objects.create(user=user)
+                        subject, from_email, to = 'Reset Request', 'donotreply@localhost', user.email
+                        text_content = 'This is an important message.'
+                        html_content = f'''
+                        <html>
+                            <body>
+                                <p>We have received your reset request. attached you will find the reset link.</p>
+                                <a href="{site}password/reset/{reset.token}">{site}password/reset/{reset.token}</a>
+                                <p><b>This link expires in 1 hour.</b></p>
+                            </body>
+                        </html>
+                        '''
+                        msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+                        msg.attach_alternative(html_content, "text/html")
+                        msg.send()
+                        return Response(status=status.HTTP_204_NO_CONTENT)
                 else:
                     reset = ResetAccount.objects.create(user=user)
                     subject, from_email, to = 'Reset Request', 'donotreply@localhost', user.email
@@ -196,6 +198,7 @@ def resetRequest(request):
                         <body>
                             <p>We have received your reset request. attached you will find the reset link.</p>
                             <a href="{site}password/reset/{reset.token}">{site}password/reset/{reset.token}</a>
+                            <p><b>This link expires in 1 hour.</b></p>
                         </body>
                     </html>
                     '''
@@ -232,15 +235,18 @@ def resetRequest(request):
 @api_view(['POST'])
 def resetPassword(request):
     try:
-        user = ResetAccount.objects.get(token=request.data.get('reset_token')).user
-        if request.data.get('new_password') == request.data.get('con_password'):
-            if validate_password_strength(request.data.get('new_password')):
-                user.set_password(request.data.get('new_password'))
-                user.save()
-                ResetAccount.objects.get(token=request.data.get('reset_token')).delete()
-                return Response(status=status.HTTP_202_ACCEPTED)
-            return Response({'Message': 'Password must be at lease 8 character in length, contain at least one digit,\nat least one special character and\nat least one upper case letter.'} ,status=status.HTTP_400_BAD_REQUEST)
-        return Response({'Message': 'Confirm password must match password!'}, status=status.HTTP_400_BAD_REQUEST)
+        reset = ResetAccount.objects.get(token=request.data.get('reset_token'))
+        user = reset.user
+        if reset.expires > timezone.now():
+            if request.data.get('new_password') == request.data.get('con_password'):
+                if validate_password_strength(request.data.get('new_password')):
+                    user.set_password(request.data.get('new_password'))
+                    user.save()
+                    ResetAccount.objects.get(token=request.data.get('reset_token')).delete()
+                    return Response(status=status.HTTP_202_ACCEPTED)
+                return Response({'Message': 'Password must be at lease 8 character in length, contain at least one digit,\nat least one special character and\nat least one upper case letter.'} ,status=status.HTTP_400_BAD_REQUEST)
+            return Response({'Message': 'Confirm password must match password!'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'Message': 'Reset token has expired please submit a new reset request.'}, status=status.HTTP_400_BAD_REQUEST)
     except:
         return Response({'Message': 'Invalid Token!'}, status=status.HTTP_400_BAD_REQUEST)
 

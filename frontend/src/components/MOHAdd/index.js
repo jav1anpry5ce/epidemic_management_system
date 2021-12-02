@@ -7,6 +7,7 @@ import { register, clearState as CS } from "../../store/authSlice";
 import Container from "@mui/material/Container";
 import { Card, Input, Form, Button, Typography, Select, Checkbox } from "antd";
 import { open } from "../../functions/Notifications";
+import shortid from "shortid";
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -161,8 +162,8 @@ export default function MohAdd() {
             >
               <Select onChange={(e) => setLocation(e)}>
                 {data.locations &&
-                  data.locations.map((item, index) => (
-                    <Option key={index} value={item.value}>
+                  data.locations.map((item) => (
+                    <Option key={shortid.generate()} value={item.value}>
                       {item.label}
                     </Option>
                   ))}

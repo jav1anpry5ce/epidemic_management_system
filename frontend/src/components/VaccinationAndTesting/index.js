@@ -29,6 +29,7 @@ import { EyeOutlined } from "@ant-design/icons";
 import Loading from "../Loading";
 import moment from "moment";
 import axios from "axios";
+import shortid from "shortid";
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -439,8 +440,8 @@ export default function VaccinationAndTesting() {
                     ]}
                   >
                     <Select onChange={(e) => setArm(e)}>
-                      {armData.map((item, index) => (
-                        <Option key={index} value={item.value}>
+                      {armData.map((item) => (
+                        <Option key={shortid.generate()} value={item.value}>
                           {item.label}
                         </Option>
                       ))}

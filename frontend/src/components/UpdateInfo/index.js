@@ -22,6 +22,7 @@ import {
   clearState,
   updateSuccess,
 } from "../../store/patientSlice";
+import shortid from "shortid";
 import { setActiveKey } from "../../store/navbarSlice";
 
 const { Title } = Typography;
@@ -296,8 +297,8 @@ export default function UpdateInfo() {
             </Form.Item>
             <Form.Item label="Parish" name="parish" style={{ marginBottom: 2 }}>
               <Select onChange={(e) => setParish(e)}>
-                {parishData.map((item, index) => (
-                  <Option key={index} value={item.value}>
+                {parishData.map((item) => (
+                  <Option key={shortid.generate()} value={item.value}>
                     {item.label}
                   </Option>
                 ))}
