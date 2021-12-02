@@ -30,7 +30,7 @@ export default function ReceiveBatch({ match }) {
   const handelSubmit = () => {
     const data = {
       batch_id: match.params.uuid,
-      authorization_code: authorizationCode,
+      authorization_code: authorizationCode.trim(),
     };
     dispatch(receiveBatch(data));
   };

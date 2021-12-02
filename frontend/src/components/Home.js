@@ -12,10 +12,10 @@ import {
   Legend,
   CartesianGrid,
   ResponsiveContainer,
-  Label,
 } from "recharts";
 import { DatePicker } from "antd";
 import Loading from "./Loading";
+import moment from "moment";
 
 export default function Home() {
   const graph = useSelector((state) => state.graph);
@@ -113,22 +113,21 @@ export default function Home() {
                     setMonth(parseInt(new Date(e._d).getMonth()) + 1);
                     setYear(parseInt(new Date(e._d).getFullYear()));
                   }}
+                  defaultValue={moment(new Date())}
                 />
                 <h1 className="text-center font-semibold text-2xl">
                   Death Vs Recovered Vs Hospitalized
                 </h1>
               </div>
-              <div style={{ width: "100%", height: 400 }}>
+              <div style={{ width: "100%", height: 400 }} className="px-8">
                 <ResponsiveContainer>
                   <LineChart
                     data={graph.data.drl}
-                    margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
+                    margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
                   >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name">
-                      <Label value="" offset={0} position="top" />
-                    </XAxis>
-                    <YAxis></YAxis>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#ccc" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
                     <Tooltip />
                     <Legend />
                     <Line type="monotone" dataKey="death" stroke="#e83b2e" />
@@ -150,17 +149,15 @@ export default function Home() {
               <h1 className="text-center font-semibold text-2xl">
                 Male Vs Female
               </h1>
-              <div style={{ width: "100%", height: 400 }}>
+              <div style={{ width: "100%", height: 400 }} className="px-8">
                 <ResponsiveContainer>
                   <LineChart
                     data={graph.data.mvf}
-                    margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
+                    margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
                   >
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name">
-                      <Label value="" offset={0} position="top" />
-                    </XAxis>
-                    <YAxis></YAxis>
+                    <XAxis dataKey="name" />
+                    <YAxis />
                     <Tooltip />
                     <Legend />
                     <Line type="monotone" dataKey="male" stroke="#355ce8" />
@@ -173,17 +170,15 @@ export default function Home() {
               <h1 className="text-center font-semibold text-2xl">
                 Vaccination
               </h1>
-              <div style={{ width: "100%", height: 400 }}>
+              <div style={{ width: "100%", height: 400 }} className="px-8">
                 <ResponsiveContainer>
                   <LineChart
                     data={graph.data.vaccinations}
-                    margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
+                    margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
                   >
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name">
-                      <Label value="" offset={0} position="top" />
-                    </XAxis>
-                    <YAxis></YAxis>
+                    <XAxis dataKey="name" />
+                    <YAxis />
                     <Tooltip />
                     <Legend />
                     <Line

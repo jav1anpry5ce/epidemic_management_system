@@ -105,8 +105,8 @@ export default function UpdateInfo() {
       const data = {
         code: sessionStorage.getItem("code"),
         phone,
-        street_address: streetAddress,
-        city,
+        street_address: streetAddress.trim(),
+        city: city.trim(),
         parish,
         country,
         image,
@@ -189,6 +189,8 @@ export default function UpdateInfo() {
                   htmlType="submit"
                   appearance="primary"
                   loading={patient.loading}
+                  style={{ border: "none" }}
+                  className="rounded-sm bg-gray-700 text-white hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white transition duration-300"
                 >
                   Submit
                 </Button>
@@ -242,6 +244,8 @@ export default function UpdateInfo() {
                   htmlType="submit"
                   appearance="primary"
                   loading={patient.loading}
+                  style={{ border: "none" }}
+                  className="rounded-sm bg-gray-700 text-white hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white transition duration-300"
                 >
                   Submit
                 </Button>
@@ -318,6 +322,8 @@ export default function UpdateInfo() {
                 htmlType="submit"
                 appearance="primary"
                 loading={patient.loading}
+                style={{ border: "none" }}
+                className="rounded-sm bg-gray-700 text-white hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white transition duration-300"
               >
                 Submit
               </Button>

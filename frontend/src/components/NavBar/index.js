@@ -151,7 +151,10 @@ export default function NavBar({ hide, setHide }) {
               <Nav pullRight>
                 <Nav.Item
                   icon={<Icon icon="sign-out" />}
-                  onClick={() => dispatch(logout())}
+                  onClick={() => {
+                    dispatch(logout());
+                    history.push("account/login");
+                  }}
                 >
                   Sign Out
                 </Nav.Item>
@@ -222,7 +225,10 @@ export default function NavBar({ hide, setHide }) {
               <Nav pullRight>
                 <Nav.Item
                   icon={<Icon icon="sign-out" />}
-                  onClick={() => dispatch(logout())}
+                  onClick={() => {
+                    dispatch(logout());
+                    history.push("/account/login");
+                  }}
                 >
                   Sign Out
                 </Nav.Item>

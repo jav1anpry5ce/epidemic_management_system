@@ -73,9 +73,9 @@ export default function AddLocation() {
 
   const onSubmit = () => {
     const data = {
-      location_name: location,
-      street_address: streetAddress,
-      city,
+      location_name: location.trim(),
+      street_address: streetAddress.trim(),
+      city: city.trim(),
       parish,
       offer: {
         vaccination: vaccination,

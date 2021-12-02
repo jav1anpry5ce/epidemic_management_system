@@ -37,8 +37,8 @@ export default function LocationAppointments() {
   const dispatch = useDispatch();
   const [show, setShow] = useState(false);
   const [order, setOrder] = useState("");
-  const [q, setQ] = useState();
-  const [loading, setLoading] = useState();
+  const [q, setQ] = useState("");
+  const [loading, setLoading] = useState(false);
   const [data, setdata] = useState([]);
   const [pagination, setPagination] = useState({
     current: 1,
@@ -63,8 +63,13 @@ export default function LocationAppointments() {
     if (!auth.is_auth) {
       history.push("/account/login");
     }
+    // eslint-disable-next-line
+  }, [auth.is_auth]);
+
+  useEffect(() => {
     return () => dispatch(clearState());
-  }, [auth.is_auth, dispatch, history]);
+    // eslint-disable-next-line
+  }, []);
 
   useEffect(() => {
     setLoading(appointments.loading);

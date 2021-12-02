@@ -12,13 +12,13 @@ export default function Login() {
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
   const history = useHistory();
-  const [username, setUsername] = useState();
+  const [email, setEmail] = useState();
   const [password, setPassword] = useState();
 
   const accountLogin = () => {
     const data = {
-      username: username,
-      password: password,
+      email,
+      password,
     };
     dispatch(login(data));
   };
@@ -29,7 +29,8 @@ export default function Login() {
   useEffect(() => {
     if (auth.is_auth && auth.is_moh_staff) {
       history.push("/moh/home");
-    } else if (auth.is_auth) {
+    }
+    if (auth.is_auth) {
       history.push(`/${auth.location}/home`);
     }
     // eslint-disable-next-line
@@ -53,17 +54,17 @@ export default function Login() {
         {auth.message && <Alert type="error" message={auth.message} />}
         <Form layout="vertical" onFinish={accountLogin}>
           <Form.Item
-            label="Username"
-            name="username"
+            label="Email"
+            name="email"
             rules={[
               {
                 required: true,
-                message: "Please enter your username!",
+                message: "Please enter your email!",
               },
             ]}
             style={{ marginBottom: 2 }}
           >
-            <Input onChange={(e) => setUsername(e.target.value)} />
+            <Input onChange={(e) => setEmail(e.target.value)} type="email" />
           </Form.Item>
           <Form.Item
             label="Password"

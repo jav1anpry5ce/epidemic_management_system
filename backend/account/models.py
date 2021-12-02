@@ -4,21 +4,21 @@ from rest_framework import permissions
 from location_management.models import Location
 
 class UserAccountManager(BaseUserManager):
-    def create_user(self, email, username, password, **extra_fields):
+    def create_user(self, email, password, **extra_fields):
         if not email:
             raise ValueError('Users must have an email address')
         email = self.normalize_email(email)
-        user = self.model(username=username, email=email, **extra_fields)
+        user = self.model(email=email, **extra_fields)
 
         user.set_password(password)
         user.save()
         return user
 
-    def create_superuser(self, email, username, password, **extra_fields):
+    def create_superuser(self, email, password, **extra_fields):
         if not email:
             raise ValueError('Users must have an email address')
         email = self.normalize_email(email)
-        user = self.model(username=username, email=email, ** extra_fields)
+        user = self.model(email=email, ** extra_fields)
         user.is_staff = True
         user.is_superuser = True
         user.is_active = True
@@ -29,7 +29,6 @@ class UserAccountManager(BaseUserManager):
 
 class UserAccount(AbstractBaseUser, PermissionsMixin):
     location = models.ForeignKey(Location, on_delete=models.CASCADE, blank=True, null=True)
-    username = models.CharField(max_length=255, unique=True)
     email = models.EmailField(max_length=255, unique=True)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
@@ -53,8 +52,8 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
 
     objects = UserAccountManager()
 
-    USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['email', 'first_name', 'last_name']
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['first_name', 'last_name']
 
     def get_full_name(self):
         return self.first_name + " " + self.last_name
@@ -68,7 +67,7 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
         return ''
 
     def __str__(self):
-        return self.username
+        return self.email
 
 
 import string    
@@ -87,7 +86,7 @@ class ResetAccount(models.Model):
     created = models.DateTimeField(blank=True, null=True, auto_now_add=True)
 
     def __str__(self):
-        return self.user.username
+        return self.user.email
 
 class ActivateAccount(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
@@ -96,6 +95,6 @@ class ActivateAccount(models.Model):
     created = models.DateTimeField(blank=True, null=True, auto_now_add=True)
 
     def __str__(self):
-        return self.user.username
+        return self.user.email
 
     

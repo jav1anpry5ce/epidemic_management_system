@@ -17,7 +17,6 @@ export default function MohAdd() {
   const dispatch = useDispatch();
   const history = useHistory();
   const [email, setEmail] = useState();
-  const [username, setUsername] = useState();
   const [firstName, setFirstName] = useState();
   const [lastName, setLastName] = useState();
   const [location, setLocation] = useState();
@@ -56,9 +55,8 @@ export default function MohAdd() {
     if (accountType === "Location Admin") {
       data = {
         email,
-        username,
-        first_name: firstName,
-        last_name: lastName,
+        first_name: firstName.trim(),
+        last_name: lastName.trim(),
         location,
         is_location_admin: true,
         can_receive_location_batch: true,
@@ -66,7 +64,6 @@ export default function MohAdd() {
     } else {
       data = {
         email,
-        username,
         first_name: firstName,
         last_name: lastName,
         is_moh_staff: true,
@@ -122,20 +119,7 @@ export default function MohAdd() {
             ]}
             style={{ marginBottom: 2 }}
           >
-            <Input onChange={(e) => setEmail(e.target.value)} />
-          </Form.Item>
-          <Form.Item
-            label="Username"
-            name="username"
-            rules={[
-              {
-                required: true,
-                message: "Please enter staff username!",
-              },
-            ]}
-            style={{ marginBottom: 2 }}
-          >
-            <Input onChange={(e) => setUsername(e.target.value)} />
+            <Input onChange={(e) => setEmail(e.target.value)} type="email" />
           </Form.Item>
           <Form.Item
             label="First Name"

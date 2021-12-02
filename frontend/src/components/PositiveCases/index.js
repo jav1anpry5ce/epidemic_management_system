@@ -270,7 +270,7 @@ export default function PositiveCases() {
   ];
 
   return (
-    <Container maxWidth="lg" style={{ marginTop: "2%" }}>
+    <Container maxWidth="lg" style={{ marginTop: "2%", marginBottom: "1%" }}>
       <Modal
         style={{ top: 0 }}
         width={720}

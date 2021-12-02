@@ -14,7 +14,7 @@ export default function ResetPasswordRequest() {
   const dispatch = useDispatch();
   const history = useHistory();
   const [form] = Form.useForm();
-  const [username, setUsername] = useState();
+  const [email, setEmail] = useState();
 
   useEffect(() => {
     if (auth.is_moh_admin) {
@@ -28,17 +28,21 @@ export default function ResetPasswordRequest() {
     }
     if (auth.success) {
       open("success", "Success", "An email with a reset link has been sent!");
-      form.setFieldsValue({ username: "" });
+      form.setFieldsValue({ email: "" });
       dispatch(clearState());
-      setUsername(null);
+      setEmail(null);
     }
-    return () => dispatch(clearState());
     // eslint-disable-next-line
   }, [auth.is_auth, auth.success, auth.is_moh_admin]);
 
+  useEffect(() => {
+    return () => dispatch(clearState());
+    // eslint-disable-next-line
+  }, []);
+
   const handelSubmit = () => {
     const data = {
-      username,
+      email,
     };
     dispatch(resetRequest(data));
   };
@@ -57,16 +61,16 @@ export default function ResetPasswordRequest() {
         {auth.message && <Alert type="error" message={auth.message} />}
         <Form layout="vertical" onFinish={handelSubmit} form={form}>
           <Form.Item
-            label="Username"
-            name="username"
+            label="Email"
+            name="email"
             rules={[
               {
                 required: true,
-                message: "Please enter username!",
+                message: "Please enter email!",
               },
             ]}
           >
-            <Input onChange={(e) => setUsername(e.target.value)} />
+            <Input onChange={(e) => setEmail(e.target.value)} type="email" />
           </Form.Item>
           <Form.Item style={{ marginBottom: 2 }}>
             <Button

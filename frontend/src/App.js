@@ -29,7 +29,6 @@ import {
   ReceiveBatch,
   ResetPassword,
   ResetPasswordRequest,
-  TestingInfo,
   UpdateInfo,
   VaccinationAndTesting,
   Home,
@@ -131,7 +130,6 @@ function App() {
               component={ResetPassword}
             />
             <Route exact path="/update/patient/info" component={UpdateInfo} />
-            <Route exact path="/testing-information" component={TestingInfo} />
             <Route exact path="/moh/patients" component={Patients} />
             <Route exact path="/moh/home" component={Moh} />
             <Route

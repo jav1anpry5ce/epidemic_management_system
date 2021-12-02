@@ -128,7 +128,7 @@ export default function VaccinationAndTesting() {
         date_given: date,
         manufacture,
         vile_number,
-        admister_person,
+        admister_person: admister_person.trim(),
         arm,
         dose_number,
       };

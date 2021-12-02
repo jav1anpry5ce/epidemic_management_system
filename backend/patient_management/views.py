@@ -257,7 +257,7 @@ def graph(request, year, month):
         recovered = len(PositiveCase.objects.filter(status='Recovered', last_updated=date))
         hospitalized = len(PositiveCase.objects.filter(status='Hospitalized', last_updated=date))
         data = {
-            'name': date,
+            'name': date.strftime('%d-%h'),
             'death': death,
             'recovered': recovered,
             'hospitalized':hospitalized,
@@ -266,14 +266,14 @@ def graph(request, year, month):
         male = len(PositiveCase.objects.filter(date_tested=date, patient__gender='Male').exclude(status__in=exclude_list))
         female = len(PositiveCase.objects.filter(date_tested=date, patient__gender='Female').exclude(status__in=exclude_list))
         positive_data = {
-            'name': date,
+            'name': date.strftime('%d-%h'),
             'male': male,
             'female': female,
         }
         p_dict.append(positive_data)
         vaccinations = len(Vaccination.objects.filter(date_given=date, status='Completed'))
         v_data = {
-            'name':date, 
+            'name': date.strftime('%d-%h'), 
             'vaccinations': vaccinations,
             }
         v_dict.append(v_data)

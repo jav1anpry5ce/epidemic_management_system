@@ -20,7 +20,6 @@ export default function AddStaff() {
   const [canUpdateVaccine, setCanUpdateVaccine] = useState(false);
   const [canReceiveLocationBatch, setCanReceiveLocationBatch] = useState(false);
   const [email, setEmail] = useState();
-  const [username, setUsername] = useState();
   const [firstName, setFirstName] = useState();
   const [lastName, setLastName] = useState();
 
@@ -42,7 +41,6 @@ export default function AddStaff() {
         "A new staff member was successfully created! An email with the link to activate their account was sent."
       );
       setEmail(null);
-      setUsername(null);
       setFirstName(null);
       setLastName(null);
       dispatch(clearState());
@@ -71,9 +69,8 @@ export default function AddStaff() {
   const handelSubmit = () => {
     const data = {
       email,
-      username,
-      first_name: firstName,
-      last_name: lastName,
+      first_name: firstName.trim(),
+      last_name: lastName.trim(),
       is_location_admin: isAdmin,
       can_update_test: canUpdateTest,
       can_update_vaccine: canUpdateVaccine,
@@ -109,19 +106,6 @@ export default function AddStaff() {
             style={{ marginBottom: 2 }}
           >
             <Input onChange={(e) => setEmail(e.target.value)} />
-          </Form.Item>
-          <Form.Item
-            label="Username"
-            name="username"
-            rules={[
-              {
-                required: true,
-                message: "Please enter staff username!",
-              },
-            ]}
-            style={{ marginBottom: 2 }}
-          >
-            <Input onChange={(e) => setUsername(e.target.value)} />
           </Form.Item>
           <Form.Item
             label="First Name"

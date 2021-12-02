@@ -80,7 +80,7 @@ export default function Appointments() {
       <Card
         headStyle={{ backgroundColor: "#1F2937", border: "none" }}
         title={
-          <Typography variant="h4" style={{ color: "white" }} align="center">
+          <Typography variant="h5" style={{ color: "white" }} align="center">
             Appointment Finder
           </Typography>
         }

@@ -20,7 +20,6 @@ export { default as PositiveCases } from "./PositiveCases";
 export { default as ReceiveBatch } from "./ReceiveBatch";
 export { default as ResetPassword } from "./ResetPassword";
 export { default as ResetPasswordRequest } from "./ResetPasswordRequest";
-export { default as TestingInfo } from "./TestingInfo";
 export { default as UpdateInfo } from "./UpdateInfo";
 export { default as VaccinationAndTesting } from "./VaccinationAndTesting";
 export { default as Home } from "./Home";
