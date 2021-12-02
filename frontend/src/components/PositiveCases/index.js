@@ -67,7 +67,7 @@ export default function PositiveCases() {
     pageSize: 20,
   });
   const [pageSize, setPageSize] = useState(20);
-  const [q, setQ] = useState();
+  const [q, setQ] = useState("");
   const [page, setPage] = useState(1);
   const [form] = Form.useForm();
   const scroll = { y: 470 };
@@ -85,7 +85,7 @@ export default function PositiveCases() {
     // eslint-disable-next-line
   }, []);
 
-  const fetch = (q) => {
+  const fetch = () => {
     setLoading(true);
     const config = {
       headers: {
@@ -525,7 +525,7 @@ export default function PositiveCases() {
           className="w-2/5 mb-4"
           onChange={(e) => setQ(e.target.value)}
           placeholder="Search using last name or TRN"
-          onSearch={() => fetch(q)}
+          onSearch={() => fetch()}
         />
         <Table
           columns={columns}

@@ -7,26 +7,27 @@ import {
   updateState,
 } from "../../store/appointmentSlice";
 import { useDispatch, useSelector } from "react-redux";
-import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import CardHeader from "@mui/material/CardHeader";
 import { getType, clearState as CS } from "../../store/locationSlice";
 import formatDate from "../../functions/formatDate";
 import { setActiveKey } from "../../store/navbarSlice";
 import {
   Form,
-  FormGroup,
-  FormControl,
-  ControlLabel,
+  Input,
+  Button,
   DatePicker,
-  SelectPicker,
-} from "rsuite";
-import { Button } from "./AMElemets";
+  Select,
+  TimePicker,
+  Card,
+  Typography,
+} from "antd";
 import { open } from "../../functions/Notifications";
 import PatientCard from "../PatientCard";
 import Loading from "../Loading";
+const moment = require("moment");
+
+const { Title } = Typography;
+const { Option } = Select;
 
 export default function AppointmentManagement({ match }) {
   const dispatch = useDispatch();
@@ -35,7 +36,7 @@ export default function AppointmentManagement({ match }) {
   const [date, setDate] = useState();
   const [time, setTime] = useState();
   const [patient_choice, setPatientChoice] = useState();
-  const [disabledList, setDisabledList] = useState([]);
+  const [form] = Form.useForm();
   const dateFns = require("date-fns");
 
   useEffect(() => {
@@ -85,33 +86,26 @@ export default function AppointmentManagement({ match }) {
   };
 
   useEffect(() => {
-    if (location.data)
-      if (location.data.Vaccine && appointment.appointments) {
-        if (appointment.secondDose) {
-          if (appointment.appointments.patient_choice) {
-            const result = location.data.Vaccine.filter(
-              (vaccine) =>
-                vaccine.value !== appointment.appointments.patient_choice
-            );
-            if (result) {
-              var array = [];
-              result.map((result) => {
-                array.push(result.value);
-                return array;
-              });
-              setDisabledList(array);
-            }
-          }
-        }
-      }
-    if (!appointment.secondDose) {
-      setDisabledList([]);
-    }
+    if (appointment.appointments)
+      form.setFieldsValue({
+        id: appointment.appointments.id,
+        location: appointment.appointments.location.value,
+        date: moment(moment(appointment.appointments.date)),
+        time: moment(
+          moment(
+            `${appointment.appointments.date} ${appointment.appointments.time}`
+          )
+        ),
+        type: appointment.appointments.type,
+        choice: appointment.appointments.patient_choice,
+        status: appointment.appointments.status,
+      });
+    // eslint-disable-next-line
   }, [location.data, appointment.appointments, appointment.secondDose]);
 
   return (
     <Container maxWidth="lg" style={{ marginTop: "2%" }}>
-      {appointment.loading ? <Loading /> : null}
+      {appointment.loading && <Loading />}
       {appointment.appointments ? (
         <Grid
           container
@@ -141,177 +135,164 @@ export default function AppointmentManagement({ match }) {
             }}
           >
             <Card
-              style={{
-                backgroundColor: "rgba(255,255,255, 1)",
-                color: "black",
-              }}
+              headStyle={{ backgroundColor: "#374151", border: "none" }}
+              title={
+                <Title level={4} style={{ color: "white" }} align="center">
+                  Appointment Information
+                </Title>
+              }
+              bordered={false}
+              style={{ width: "100%", marginBottom: "3%" }}
             >
-              <CardHeader
-                className="bg-gray-700"
-                title={
-                  <Typography
-                    align="center"
-                    variant="h5"
-                    style={{ color: "white" }}
-                  >
-                    Appointment Information
-                  </Typography>
-                }
-              />
-              <CardContent>
-                <Form fluid>
-                  <Grid container spacing={2}>
-                    <Grid item xs={12}>
-                      <FormGroup>
-                        <ControlLabel>Appointment ID</ControlLabel>
-                        <FormControl
-                          value={appointment.appointments.id}
-                          readonly
-                        ></FormControl>
-                      </FormGroup>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <FormGroup>
-                        <ControlLabel>Appointment Location</ControlLabel>
-                        <FormControl
-                          value={appointment.appointments.location.value}
-                          readonly
-                        ></FormControl>
-                      </FormGroup>
-                    </Grid>
-                    <Grid item xs={6}>
-                      <FormGroup>
-                        <ControlLabel>Appointment Date</ControlLabel>
-                        <DatePicker
-                          ranges={[]}
-                          oneTap
-                          block
-                          defaultValue={appointment.appointments.date}
-                          onChange={(e) => setDate(formatDate(e))}
-                          cleanable={false}
-                          disabledDate={(date) =>
-                            dateFns.isBefore(date, new Date())
-                          }
-                        />
-                      </FormGroup>
-                    </Grid>
-                    <Grid item xs={6}>
-                      <FormGroup>
-                        <ControlLabel>Appointment Time</ControlLabel>
-                        <DatePicker
-                          disabledMinutes={(minute) => minute % 15 !== 0}
-                          hideMinutes={(minute) => minute % 15 !== 0}
-                          hideHours={(hour) => hour < 8 || hour > 16}
-                          disabled={location.loading}
-                          ranges={[]}
-                          format="HH:mm"
-                          //showMeridian
-                          block
-                          onSelect={(e) =>
-                            setTime(e.toLocaleTimeString("it-IT"))
-                          }
-                          defaultValue={
-                            new Date(
-                              "2021-11-11 " + appointment.appointments.time
-                            )
-                          }
-                        />
-                      </FormGroup>
-                    </Grid>
-                    <Grid item xs={6}>
-                      <FormGroup>
-                        <ControlLabel>Type</ControlLabel>
-                        <FormControl
-                          value={appointment.appointments.type}
-                          readonly
-                        ></FormControl>
-                      </FormGroup>
-                    </Grid>
-                    <Grid item xs={6}>
-                      <FormGroup>
-                        {appointment.appointments.type === "Testing" ? (
-                          <div>
-                            <ControlLabel>Test Type</ControlLabel>
-                            <SelectPicker
-                              block
-                              defaultValue={
-                                appointment.appointments.patient_choice
-                              }
-                              data={location.data ? location.data.Test : []}
-                              onChange={(e) => setPatientChoice(e)}
-                              cleanable={false}
-                              searchable={false}
-                            />
-                          </div>
-                        ) : (
-                          <div>
-                            <ControlLabel>Vaccine Choice</ControlLabel>
-                            <SelectPicker
-                              block
-                              defaultValue={
-                                appointment.appointments.patient_choice
-                              }
-                              data={location.data ? location.data.Vaccine : []}
-                              disabledItemValues={disabledList}
-                              onChange={(e) => setPatientChoice(e)}
-                              cleanable={false}
-                              searchable={false}
-                            />
-                          </div>
-                        )}
-                      </FormGroup>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <FormGroup>
-                        <ControlLabel>Status</ControlLabel>
-                        <FormControl
-                          value={appointment.appointments.status}
-                          readonly
-                        ></FormControl>
-                      </FormGroup>
-                    </Grid>
-                    {appointment.appointments.status === "Pending" ? (
-                      <Grid item xs={6}>
-                        <Button
-                          block
-                          color="red"
-                          onClick={() => handelClick("Cancel")}
-                        >
-                          Cancel Appointment
-                        </Button>
-                      </Grid>
-                    ) : null}
-                    {appointment.appointments.status === "Pending" ? (
-                      <Grid item xs={6}>
-                        <Button
-                          block
-                          color="green"
-                          onClick={() => handelClick("Update")}
-                        >
-                          Update
-                        </Button>
-                      </Grid>
-                    ) : null}
+              <Form layout="vertical" form={form}>
+                <Grid container spacing={2}>
+                  <Grid item xs={12}>
+                    <Form.Item
+                      label="Appointment Id"
+                      name="id"
+                      className="mb-0"
+                    >
+                      <Input readOnly />
+                    </Form.Item>
                   </Grid>
-                </Form>
-              </CardContent>
+                  <Grid item xs={12}>
+                    <Form.Item
+                      label="Appointment Location"
+                      name="location"
+                      className="mb-0"
+                    >
+                      <Input readOnly />
+                    </Form.Item>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <Form.Item
+                      label="Appointment Date"
+                      name="date"
+                      className="mb-0"
+                    >
+                      <DatePicker
+                        className="w-full"
+                        disabledDate={(date) =>
+                          dateFns.isBefore(date, new Date())
+                        }
+                        format="DD/MM/YYYY"
+                        onChange={(e) => setDate(formatDate(e))}
+                      />
+                    </Form.Item>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <Form.Item
+                      label="Appointment Time"
+                      name="time"
+                      className="mb-0"
+                    >
+                      <TimePicker
+                        className="w-full"
+                        disabledHours={() => [
+                          0, 1, 2, 3, 4, 5, 6, 7, 17, 18, 19, 20, 21, 22, 23,
+                          24,
+                        ]}
+                        minuteStep={15}
+                        format="HH:mm"
+                        hideDisabledOptions
+                        showNow={false}
+                        onSelect={(e) =>
+                          setTime(e._d.toLocaleTimeString("it-IT"))
+                        }
+                      />
+                    </Form.Item>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <Form.Item label="Type" name="type" className="mb-0">
+                      <Input readOnly />
+                    </Form.Item>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <Form.Item
+                      label={
+                        appointment.appointments.type === "Testing"
+                          ? "Test Type"
+                          : "Vaccine Choice"
+                      }
+                      name="choice"
+                      className="mb-0"
+                    >
+                      <Select
+                        value={appointment.appointments.patient_choice}
+                        onChange={(e) => setPatientChoice(e)}
+                      >
+                        {appointment.appointments.type === "Testing" ? (
+                          location.data &&
+                          location.data.Test.map((item, index) => (
+                            <Option value={item.value} key={index}>
+                              {item.label}
+                            </Option>
+                          ))
+                        ) : location.data && appointment.secondDose ? (
+                          <Option
+                            value={appointment.appointments.patient_choice}
+                          >
+                            {appointment.appointments.patient_choice}
+                          </Option>
+                        ) : (
+                          location.data.Vaccine.map((item, index) => (
+                            <Option value={item.value} key={index}>
+                              {item.label}
+                            </Option>
+                          ))
+                        )}
+                      </Select>
+                    </Form.Item>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Form.Item label="Status" name="status" className="mb-0">
+                      <Input readOnly />
+                    </Form.Item>
+                  </Grid>
+                  {appointment.appointments.status !== "Completed" && (
+                    <Grid item xs={12}>
+                      <Form.Item className="mb-0">
+                        <div className="flex justify-between">
+                          <Button
+                            style={{ border: "none" }}
+                            className="rounded-md bg-red-600 text-white hover:bg-red-700 hover:text-white focus:bg-red-700 focus:text-white transition duration-300"
+                            onClick={() => handelClick("Cancel")}
+                          >
+                            Cancel Appointment
+                          </Button>
+                          <Button
+                            style={{ border: "none" }}
+                            className="rounded-md bg-green-600 text-white hover:bg-green-700 hover:text-white focus:bg-green-700 focus:text-white transition duration-300"
+                            onClick={() => handelClick("Update")}
+                          >
+                            Update
+                          </Button>
+                        </div>
+                      </Form.Item>
+                    </Grid>
+                  )}
+                </Grid>
+              </Form>
             </Card>
           </Grid>
         </Grid>
-      ) : !appointment.loading && !appointment.appointments ? (
-        <Grid container spacing={0}>
-          <Grid item xs={12}>
-            <Typography
-              variant="h4"
-              align="center"
-              style={{ marginTop: "25%" }}
-              color="white"
-            >
-              This appointment does not exist in our records.
-            </Typography>
+      ) : (
+        !appointment.loading &&
+        !appointment.appointments && (
+          <Grid container spacing={0}>
+            <Grid item xs={12}>
+              <Typography
+                variant="h4"
+                align="center"
+                style={{ marginTop: "25%" }}
+                color="white"
+              >
+                This appointment does not exist in our records.
+              </Typography>
+            </Grid>
           </Grid>
-        </Grid>
-      ) : null}
+        )
+      )}
     </Container>
   );
 }

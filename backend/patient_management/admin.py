@@ -38,6 +38,7 @@ class PositiveCaseConfig(admin.ModelAdmin):
         'date_tested',
         'recovering_location',
         'status',
+        'last_updated',
     )
 
 admin.site.register(Patient, PatientConfig)

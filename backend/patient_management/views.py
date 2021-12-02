@@ -1,3 +1,5 @@
+import calendar
+import datetime
 from rest_framework import status, permissions
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView
@@ -239,3 +241,45 @@ def update_case(request, case_id):
             return Response({'Message': 'Recovering loacation or status must be different in order to update.'}, status=status.HTTP_400_BAD_REQUEST)
     except:
         return Response({'Message': 'Something went wrong'}, status=status.HTTP_400_BAD_REQUEST)
+
+def date_iter(year, month):
+    for i in range(1, calendar.monthrange(year, month)[1] + 1):
+        yield datetime.date(year, month, i)
+
+@api_view(['GET'])
+def graph(request, year, month):
+    drl_dict = []
+    p_dict = []
+    v_dict = []
+    exclude_list = ['Dead', 'Recovered']
+    for date in date_iter(year, month):
+        death = len(PositiveCase.objects.filter(status='Dead', last_updated=date))
+        recovered = len(PositiveCase.objects.filter(status='Recovered', last_updated=date))
+        hospitalized = len(PositiveCase.objects.filter(status='Hospitalized', last_updated=date))
+        data = {
+            'name': date,
+            'death': death,
+            'recovered': recovered,
+            'hospitalized':hospitalized,
+        }
+        drl_dict.append(data)
+        male = len(PositiveCase.objects.filter(date_tested=date, patient__gender='Male').exclude(status__in=exclude_list))
+        female = len(PositiveCase.objects.filter(date_tested=date, patient__gender='Female').exclude(status__in=exclude_list))
+        positive_data = {
+            'name': date,
+            'male': male,
+            'female': female,
+        }
+        p_dict.append(positive_data)
+        vaccinations = len(Vaccination.objects.filter(date_given=date, status='Completed'))
+        v_data = {
+            'name':date, 
+            'vaccinations': vaccinations,
+            }
+        v_dict.append(v_data)
+    res = {
+        'drl': drl_dict,
+        'mvf': p_dict,
+        'vaccinations': v_dict,
+    }
+    return Response(res, status=status.HTTP_200_OK)

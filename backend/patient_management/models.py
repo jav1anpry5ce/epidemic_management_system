@@ -53,6 +53,7 @@ class PositiveCase(models.Model):
     date_tested = models.DateField(blank=True, null=True)
     recovering_location = models.CharField(max_length=255, null=True, blank=True)
     status = models.CharField(max_length=255, default='Recovering')
+    last_updated = models.DateField(auto_now_add=True)
 
     def __str__(self):
         return '{} {}'.format(self.patient.tax_number, self.status)

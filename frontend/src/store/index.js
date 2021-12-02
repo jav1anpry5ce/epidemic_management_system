@@ -6,6 +6,7 @@ import locationReducer from "./locationSlice";
 import authReducer from "./authSlice";
 import navbarReducer from "./navbarSlice";
 import mohReducer from "./mohSlice";
+import graphReducer from "./graphSlice";
 
 export default configureStore({
   reducer: {
@@ -16,6 +17,7 @@ export default configureStore({
     auth: authReducer,
     navbar: navbarReducer,
     moh: mohReducer,
+    graph: graphReducer,
   },
   devTools: true,
 });

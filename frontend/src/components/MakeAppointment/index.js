@@ -845,11 +845,18 @@ export default function MakeAppointment() {
                     onChange={(e) => setPChoice(e)}
                   >
                     {location.data &&
+                    location.data &&
+                    patient.previousVaccine[0] ? (
+                      <Option value={patient.previousVaccine[0].value}>
+                        {patient.previousVaccine[0].value}
+                      </Option>
+                    ) : (
                       location.data.Vaccine.map((item, index) => (
                         <Option value={item.value} key={index}>
                           {item.label}
                         </Option>
-                      ))}
+                      ))
+                    )}
                   </Select>
                 </Form.Item>
               </Grid>

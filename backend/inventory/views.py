@@ -149,7 +149,6 @@ def get_locations(request):
 @api_view(['GET'])
 @permission_classes([permissions.IsAuthenticated])
 def get_batch(request, batch_id):
-    print(request)
     try:
         if request.user.is_moh_staff:
             batch = LocationBatch.objects.get(batch_id=batch_id)

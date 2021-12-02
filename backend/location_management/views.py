@@ -644,14 +644,28 @@ def get_breakdown(request):
 @permission_classes([permissions.IsAuthenticated])
 def location_breakdown(request):
     try:
+        pfizer_in_stock = None
+        moderna_in_stock = None
+        jj_in_stock = None
+        vaccines_administer = None
         location = request.user.location
         number_of_tests = len(Testing.objects.filter(location=location, status='Completed'))
-        vaccines_administer = len(Vaccination.objects.filter(location=location, status='Completed'))
         pending_appointments = len(Appointment.objects.filter(location=location, status='pending'))
+        if Offer.objects.filter(location=location, value='Vaccination').exists():
+            vaccines_administer = len(Vaccination.objects.filter(location=location, status='Completed'))
+            if LocationVaccine.objects.filter(location=location, value='Pfizer').exists():
+                pfizer_in_stock = LocationVaccine.objects.get(location=location, value='Pfizer').number_of_dose
+            if LocationVaccine.objects.filter(location=location, value='Moderna').exists():
+                moderna_in_stock = LocationVaccine.objects.get(location=location, value='Moderna').number_of_dose
+            if LocationVaccine.objects.filter(location=location, value='Johnson & Johnson').exists():
+                jj_in_stock = LocationVaccine.objects.get(location=location, value='Johnson & Johnson').number_of_dose
         res = {
             'number_of_tests': number_of_tests,
             'vaccines_administer': vaccines_administer,
             'pending_appointments': pending_appointments,
+            'pfizer_in_stock': pfizer_in_stock,
+            'moderna_in_stock':moderna_in_stock,
+            'jj_in_stock': jj_in_stock,
         }
         return Response(res, status=status.HTTP_200_OK)
     except:

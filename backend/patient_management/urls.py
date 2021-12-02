@@ -16,4 +16,5 @@ urlpatterns = [
     path('get-positive-cases/', views.GetPositiveCases.as_view()),
     path('get-case/<case_id>', views.get_case),
     path('update-case/<case_id>', views.update_case),
+    path('graph/<int:year>/<int:month>', views.graph),
 ]
