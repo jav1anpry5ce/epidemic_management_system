@@ -6,6 +6,7 @@ import { setActiveKey } from "../../store/navbarSlice";
 import Container from "@mui/material/Container";
 import { Table, Tooltip, Typography, Card, Button } from "antd";
 import axios from "axios";
+import shortid from "shortid";
 
 const { Title } = Typography;
 
@@ -165,6 +166,7 @@ export default function Locations() {
         <Table
           columns={columns}
           dataSource={data}
+          rowKey={() => shortid.generate()}
           pagination={pagination}
           loading={loading}
           onChange={handleTableChange}

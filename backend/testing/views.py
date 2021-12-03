@@ -1,7 +1,3 @@
-from django.core.mail import EmailMultiAlternatives
-import pyqrcode
-from functions import removeFile
-
 from rest_framework import status, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -9,7 +5,7 @@ from django.contrib.sites.models import Site
 
 from .models import Testing
 from .serializers import TestingSerializer, UpdateTestingSerializer
-from patient_management.models import Patient, PositiveCase
+from patient_management.models import Patient
 
 site = Site.objects.get_current()
 
@@ -48,49 +44,8 @@ class TestingView(APIView):
                             test.result = request.data.get('result')
                             test.type = request.data.get('type')
                             test.date = request.data.get('date')
-                            test.status = 'Completed'
-                            test.save()
-                            test.appointment.status = 'Completed'
-                            test.appointment.save()
+                            test.save(update_fields=['result', 'type', 'date', 'status'])
                             serializer = TestingSerializer(test)
-                            qr = pyqrcode.create(f'{site}patient-info/{test.patient.unique_id}')
-                            qr.png(f'qr_codes/{test.patient.unique_id}.png', scale = 8)
-                            src = f'qr_codes/{test.patient.unique_id}.png'
-                            subject, from_email, to = '💅', 'donotreply@localhost', test.patient.email
-                            if test.result == 'Positive':
-                                PositiveCase.objects.create(patient=test.patient, recovering_location='Home', date_tested=test.date)
-                                html_content = f'''
-                                <html>
-                                    <body>
-                                        <p>Your COVID-19 {test.type} test result is here!</p>
-                                        <p>Unfortunately you have tested postive for COVID-19. You will be contacted soon with instructions on how to proceed.</p>
-                                        <p>You can view this record along with your vaccination record at <a href="{site}patient-info/{test.patient.unique_id}">{site}patient-info/{test.patient.unique_id}</a></p>
-                                        <p>You may present the attached qr code to any business that requires proof of vaccination or latest test results.</p>
-                                    </body>
-                                </html>
-                                '''
-                            else:
-                                html_content = f'''
-                                <html>
-                                    <body>
-                                        <p>Your COVID-19 {test.type} test results is here!</p>
-                                        <p>You can view this record along with your vaccination record at <a href="{site}patient-info/{test.patient.unique_id}">{site}patient-info/{test.patient.unique_id}</a></p>
-                                        <p>You may present the attached qr code to any business that requires proof of vaccination or latest test results.</p>
-                                    </body>
-                                </html>
-                                '''
-                            text_content = ""
-                            msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
-                            msg.attach_alternative(html_content, "text/html")
-                            msg.content_subtype = "html"
-                            msg.attach_file(src)
-                            msg.send()
-                            try:
-                                removeFile(src)
-                                src = f'qr_codes/{test.appointment.id}.png'
-                                removeFile(src)
-                            except:
-                                pass
                             return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
                         return Response({'Message': 'This patient is not checked in.'}, status=status.HTTP_400_BAD_REQUEST)
                     return Response({'Message': 'Please select a result!'}, status=status.HTTP_400_BAD_REQUEST)

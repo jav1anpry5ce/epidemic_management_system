@@ -250,7 +250,7 @@ export default function AppointmentManagement({ match }) {
                       <Input readOnly />
                     </Form.Item>
                   </Grid>
-                  {appointment.appointments.status !== "Completed" && (
+                  {appointment.appointments.status === "Pending" && (
                     <Grid item xs={12}>
                       <Form.Item className="mb-0">
                         <div className="flex justify-between">

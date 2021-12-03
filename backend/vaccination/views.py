@@ -1,10 +1,7 @@
 from rest_framework import status, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from django.core.mail import EmailMultiAlternatives
 from django.contrib.sites.models import Site
-import pyqrcode
-from functions import removeFile
 
 from .models import Vaccination
 from .serializers import VaccinationSerializer, UpdateVaccinationSerializer
@@ -55,33 +52,6 @@ class VaccinationView(APIView):
                                 record.dose_number = request.data.get('dose_number')
                                 record.status = "Completed"
                                 record.save()
-                                record.appointment.status = "Completed"
-                                record.appointment.save()
-                                qr = pyqrcode.create(f'{site}patient-info/{record.patient.unique_id}')
-                                qr.png(f'qr_codes/{record.patient.unique_id}.png', scale = 8)
-                                src = f'qr_codes/{record.patient.unique_id}.png'
-                                subject, from_email, to = 'Woot! Woot!', 'donotreply@localhost', record.patient.email
-                                html_content = f'''
-                                <html>
-                                    <body>
-                                        <p>Congratulations on receiving your {record.dose_number} dose of the covid vaccine.</p>
-                                        <p>You can view this record along with your testing record at <a href="{site}patient-info/{record.patient.unique_id}">{site}patient-info/{record.patient.unique_id}</a></p>
-                                        <p>You may present the attached qr code to any business that requires proof of vaccination of results of latest testing.</p>
-                                    </body>
-                                </html>
-                                '''
-                                text_content = ""
-                                msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
-                                msg.attach_alternative(html_content, "text/html")
-                                msg.content_subtype = "html"
-                                msg.attach_file(src)
-                                msg.send()
-                                try:
-                                    removeFile(src)
-                                    src = f'qr_codes/{record.appointment.id}.png'
-                                    removeFile(src)
-                                except:
-                                    pass
                                 return Response(status=status.HTTP_202_ACCEPTED)
                             return Response({'Message': 'This patient is not checked in!'}, status=status.HTTP_403_FORBIDDEN)
                         return Response({'Message': 'You must select a dose!'}, status=status.HTTP_400_BAD_REQUEST)
@@ -89,7 +59,7 @@ class VaccinationView(APIView):
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             return Response({"Message": "You are not authorized to update this record."}, status=status.HTTP_401_UNAUTHORIZED)
         except:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response({'Message': 'Something went wrong!'}, status=status.HTTP_400_BAD_REQUEST)
 
     def put(self, request):
         try:

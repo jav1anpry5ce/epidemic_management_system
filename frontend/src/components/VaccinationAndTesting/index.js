@@ -331,7 +331,9 @@ export default function VaccinationAndTesting() {
                   >
                     <Select onChange={(e) => setResult(e)}>
                       {resultData.map((item) => (
-                        <Option value={item.value}>{item.label}</Option>
+                        <Option value={item.value} key={shortid.generate()}>
+                          {item.label}
+                        </Option>
                       ))}
                     </Select>
                   </Form.Item>

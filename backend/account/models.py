@@ -87,11 +87,14 @@ def tokenGenerator():
     ran = ''.join(random.choices(string.ascii_uppercase + string.digits, k = S))
     return ran
 
+def expire_gen():
+    return timezone.now() + timedelta(minutes=60)
+
 class ResetAccount(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     token = models.CharField(max_length=16, unique=True, default=tokenGenerator)
     created = models.DateTimeField(blank=True, null=True, auto_now_add=True)
-    expires = models.DateTimeField(blank=True, null=True, default=timezone.now() + timedelta(minutes=60))
+    expires = models.DateTimeField(blank=True, null=True, default=expire_gen)
 
     class Meta:
         verbose_name = 'Reset Token'

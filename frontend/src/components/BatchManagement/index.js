@@ -9,6 +9,7 @@ import axios from "axios";
 import { EyeOutlined } from "@ant-design/icons";
 import PrintView from "./PrintView";
 import { useReactToPrint } from "react-to-print";
+import shortid from "shortid";
 const { Title } = Typography;
 
 export default function BatchManagement() {
@@ -185,11 +186,14 @@ export default function BatchManagement() {
         visible={show}
         onCancel={() => setShow(false)}
         footer={[
-          <Button onClick={() => setShow(false)}>Cancel</Button>,
+          <Button onClick={() => setShow(false)} key={shortid.generate()}>
+            Cancel
+          </Button>,
           <Button
             style={{ border: "none" }}
             className="rounded-sm bg-gray-700 text-white hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white transition duration-300"
             onClick={handlePrint}
+            key={shortid.generate()}
           >
             Print
           </Button>,
@@ -232,6 +236,7 @@ export default function BatchManagement() {
         <Table
           columns={columns}
           dataSource={data}
+          rowKey={(data) => data.batch_id}
           pagination={pagination}
           loading={loading}
           onChange={handleTableChange}

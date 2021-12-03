@@ -172,14 +172,14 @@ export default function NavBar({ hide, setHide }) {
                   >
                     Change Password
                   </Dropdown.Item>
-                  {auth.is_moh_admin ? (
+                  {auth.is_moh_admin && (
                     <Dropdown.Item
                       eventKey="9"
                       onClick={() => nagivate("/reset/password/request")}
                     >
                       Reset employee password
                     </Dropdown.Item>
-                  ) : null}
+                  )}
                 </Dropdown>
               </Nav>
             </Container>
@@ -209,7 +209,7 @@ export default function NavBar({ hide, setHide }) {
                 >
                   Appointments{" "}
                 </Nav.Item>
-                {auth.is_location_admin ? (
+                {auth.is_location_admin && (
                   <Nav.Item
                     eventKey="4"
                     onClick={() => nagivate("/admin/add-staff")}
@@ -219,7 +219,7 @@ export default function NavBar({ hide, setHide }) {
                       Add Staff
                     </div>
                   </Nav.Item>
-                ) : null}
+                )}
               </Nav>
               <Nav pullRight>
                 <Nav.Item
@@ -241,14 +241,14 @@ export default function NavBar({ hide, setHide }) {
                   >
                     Change Password
                   </Dropdown.Item>
-                  {auth.is_location_admin ? (
+                  {auth.is_location_admin && (
                     <Dropdown.Item
                       eventKey="7"
                       onClick={() => nagivate("/reset/password/request")}
                     >
                       Reset employee password
                     </Dropdown.Item>
-                  ) : null}
+                  )}
                 </Dropdown>
               </Nav>
             </Container>
@@ -418,88 +418,6 @@ export default function NavBar({ hide, setHide }) {
                     </Dropdown>
                   </div>
                 </Nav>
-                // <Grid
-                //   align="center"
-                //   container
-                //   spacing={2}
-                //   style={{
-                //     animation: expand ? "fadeIn ease 2s" : "fadeOut ease 2s",
-                //   }}
-                // >
-                //   <Nav onSelect={handelSelect} activeKey={nav.activeKey}>
-                //     <Grid
-                //       item
-                //       xs={12}
-                //       style={{ marginTop: "7%" }}
-                //       align="center"
-                //     >
-                //       <Nav.Item
-                //         onClick={() => {
-                //           nagivate("/");
-                //           setExpand(!expand);
-                //         }}
-                //         eventKey="1"
-                //       >
-                //         <div className="flex">
-                //           {<AiFillHome className="flex text-lg mr-1" />}
-                //           Home
-                //         </div>
-                //       </Nav.Item>
-                //       <Nav.Item
-                //         eventKey="2"
-                //         onClick={() =>
-                //           window.open(
-                //             "https://www.cdc.gov/coronavirus/2019-ncov/symptoms-testing/testing.html",
-                //             "_self"
-                //           )
-                //         }
-                //       >
-                //         <div className="flex">
-                //           {<BiTestTube className="flex text-lg mr-1" />}
-                //           Testing Information
-                //         </div>
-                //       </Nav.Item>
-                //       <Dropdown title="Settings" icon={<Icon icon="cog" />}>
-                //         <Dropdown.Item
-                //           eventKey="5"
-                //           onClick={() => {
-                //             nagivate("/update/patient/info");
-                //             setExpand(!expand);
-                //           }}
-                //         >
-                //           Update Information
-                //         </Dropdown.Item>
-                //       </Dropdown>
-                //     </Grid>
-                //     <Grid item xs={12} align="center">
-                //       <Nav.Item
-                //         eventKey="3"
-                //         onClick={() =>
-                //           window.open(
-                //             "https://www.cdc.gov/coronavirus/2019-ncov/vaccines/facts.html",
-                //             "_self"
-                //           )
-                //         }
-                //       >
-                //         <div className="flex">
-                //           {<GiHypodermicTest className="flex text-lg mr-1" />}
-                //           Vaccine Information
-                //         </div>
-                //       </Nav.Item>
-
-                //       <Nav.Item
-                //         onClick={() => {
-                //           nagivate("/appointments");
-                //           setExpand(!expand);
-                //         }}
-                //         eventKey="4"
-                //         icon={<Icon icon="calendar" />}
-                //       >
-                //         Appoinments
-                //       </Nav.Item>
-                //     </Grid>
-                //   </Nav>
-                // </Grid>
               )}
             </Container>
           )}

@@ -4,16 +4,20 @@ from patient_management.models import Patient
 import string    
 import random
 from django.dispatch import receiver
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_save
 
 def codeGenerator():
     S = 8
     ran = ''.join(random.choices(string.ascii_uppercase + string.digits, k = S))
     return ran
 
+def shorten_id_generator():
+    S = 6
+    ran = ''.join(random.choices(string.ascii_uppercase + string.digits, k = S))
+    return ran
 class Location(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, unique=True)
-    authorization_code = models.CharField(max_length=8, default=codeGenerator)
+    authorization_code = models.CharField(max_length=8, default=codeGenerator, unique=True)
     label = models.CharField(max_length=50, null=True, blank=True)
     value = models.CharField(max_length=50, null=True, blank=True)
     street_address = models.CharField(max_length=50, null=True, blank=True)
@@ -34,7 +38,6 @@ class Offer(models.Model):
     def __str__(self):
         return self.location.value
 
-
 class Test(models.Model):
     location = models.ForeignKey(Location, on_delete=models.CASCADE, blank=True, null=True)
     label = models.CharField(max_length=50, null=True, blank=True)
@@ -44,14 +47,10 @@ class Test(models.Model):
     def __str__(self):
         return self.value
 
-def shorten_id_generator():
-    S = 6
-    ran = ''.join(random.choices(string.ascii_uppercase + string.digits, k = S))
-    return ran
 
 class Appointment(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
-    shorten_id = models.CharField(max_length=6, null=True, blank=True, default=shorten_id_generator, unique=True)
+    shorten_id = models.CharField(max_length=10, null=True, default=None, blank=True, unique=True)
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, null=True)
     location = models.ForeignKey(Location, on_delete=models.CASCADE, blank=True, null=True)
     date = models.DateField(blank=True, null=True)
@@ -64,7 +63,9 @@ class Appointment(models.Model):
         return str(self.id)
         
 
-@receiver(post_save, sender=Appointment)
-def appointment_created_handler(sender, instance, created, *args, **kwargs):
-    if created:
-        print('appointment created')
+@receiver(pre_save, sender=Appointment)
+def create_short_id_pre_save(sender, instance, *args, **kwargs):
+    from_id = str(instance.id).replace('-', '')
+    shorten_id = ''.join(random.choices(from_id, k=10))
+    if not instance.shorten_id:
+        instance.shorten_id = shorten_id

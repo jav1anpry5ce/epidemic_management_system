@@ -8,6 +8,7 @@ import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import toLocalDate from "../functions/toLocalDate";
+import shortid from "shortid";
 
 export default function CollapseCard({ Title, Data, expand, setExpand }) {
   return (
@@ -36,16 +37,11 @@ export default function CollapseCard({ Title, Data, expand, setExpand }) {
           <Grid container spacing={1}>
             {Data.map((record) => {
               return (
-                <Grid item xs={12}>
+                <Grid item xs={12} key={shortid.generate()}>
                   <Card>
                     <CardContent>
                       {record.type ? (
                         <Grid container spacing={2}>
-                          <Grid item xs={12}>
-                            <Typography variant="body2">
-                              Testing ID: {record.id}
-                            </Typography>
-                          </Grid>
                           <Grid item xs={12}>
                             <Typography variant="body2">
                               Date: {toLocalDate(record.date)}

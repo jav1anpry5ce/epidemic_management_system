@@ -21,6 +21,7 @@ import {
   Button,
 } from "antd";
 import axios from "axios";
+import shortid from "shortid";
 const { Title } = Typography;
 
 export default function Patients() {
@@ -37,7 +38,7 @@ export default function Patients() {
   const [pageSize, setPageSize] = useState(20);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
-  const [q, setQ] = useState();
+  const [q, setQ] = useState("");
   const [show, setShow] = useState(false);
   const [vaccinedExpaned, setVaccinedExpanded] = useState(false);
   const [testingExpaned, setTestingExpanded] = useState(false);
@@ -58,7 +59,7 @@ export default function Patients() {
     setLoading(moh.loading);
   }, [moh.loading]);
 
-  const fetch = (q) => {
+  const fetch = () => {
     setLoading(true);
     const config = {
       headers: {
@@ -238,6 +239,7 @@ export default function Patients() {
         title={<Title level={4}>Patient Information</Title>}
         footer={[
           <Button
+            key={shortid.generate()}
             type="primary"
             onClick={() => {
               setShow(false);
@@ -392,6 +394,7 @@ export default function Patients() {
         <Table
           columns={columns}
           dataSource={data}
+          rowKey={() => shortid.generate()}
           pagination={pagination}
           loading={loading}
           onChange={handleTableChange}

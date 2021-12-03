@@ -253,9 +253,9 @@ def graph(request, year, month):
     v_dict = []
     exclude_list = ['Dead', 'Recovered']
     for date in date_iter(year, month):
-        death = len(PositiveCase.objects.filter(status='Dead', last_updated=date))
-        recovered = len(PositiveCase.objects.filter(status='Recovered', last_updated=date))
-        hospitalized = len(PositiveCase.objects.filter(status='Hospitalized', last_updated=date))
+        death = PositiveCase.objects.filter(status='Dead', last_updated=date).count()
+        recovered = PositiveCase.objects.filter(status='Recovered', last_updated=date).count()
+        hospitalized = PositiveCase.objects.filter(status='Hospitalized', last_updated=date).count()
         data = {
             'name': date.strftime('%d-%h'),
             'death': death,
@@ -263,15 +263,15 @@ def graph(request, year, month):
             'hospitalized':hospitalized,
         }
         drl_dict.append(data)
-        male = len(PositiveCase.objects.filter(date_tested=date, patient__gender='Male').exclude(status__in=exclude_list))
-        female = len(PositiveCase.objects.filter(date_tested=date, patient__gender='Female').exclude(status__in=exclude_list))
+        male = PositiveCase.objects.filter(date_tested=date, patient__gender='Male').exclude(status__in=exclude_list).count()
+        female = PositiveCase.objects.filter(date_tested=date, patient__gender='Female').exclude(status__in=exclude_list).count()
         positive_data = {
             'name': date.strftime('%d-%h'),
             'male': male,
             'female': female,
         }
         p_dict.append(positive_data)
-        vaccinations = len(Vaccination.objects.filter(date_given=date, status='Completed'))
+        vaccinations = Vaccination.objects.filter(date_given=date, status='Completed').count()
         v_data = {
             'name': date.strftime('%d-%h'), 
             'vaccinations': vaccinations,

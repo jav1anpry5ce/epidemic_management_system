@@ -280,6 +280,7 @@ export default function PositiveCases() {
         onOk={() => setShow(false)}
         footer={[
           <Button
+            key={shortid.generate()}
             type="primary"
             onClick={onSubmit}
             loading={moh.updating}
@@ -288,7 +289,11 @@ export default function PositiveCases() {
           >
             Submit
           </Button>,
-          <Button onClick={onHide} disabled={moh.updating}>
+          <Button
+            onClick={onHide}
+            disabled={moh.updating}
+            key={shortid.generate()}
+          >
             Cancel
           </Button>,
         ]}
@@ -531,6 +536,7 @@ export default function PositiveCases() {
         <Table
           columns={columns}
           dataSource={data}
+          rowKey={() => shortid.generate()}
           pagination={pagination}
           loading={loading}
           onChange={handleTableChange}

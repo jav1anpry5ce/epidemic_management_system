@@ -114,6 +114,7 @@ export default function Home() {
                     setYear(parseInt(new Date(e._d).getFullYear()));
                   }}
                   defaultValue={moment(new Date())}
+                  allowClear={false}
                 />
                 <h1 className="text-center font-semibold text-2xl">
                   Death Vs Recovered Vs Hospitalized

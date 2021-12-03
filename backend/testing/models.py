@@ -4,10 +4,13 @@ from django.dispatch import receiver
 from django.core.mail import EmailMultiAlternatives
 from sms import send_sms
 from django.contrib.sites.models import Site
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_save
 from patient_management.models import Patient
 from location_management.models import Location, Appointment
 from functions import convertTime
+from patient_management.models import PositiveCase
+import pyqrcode
+from functions import removeFile
 
 site = Site.objects.get_current()
 
@@ -52,3 +55,46 @@ def testing_post_save(sender, instance, created, *args, **kwargs):
         [f'{instance.patient.phone},'],
         fail_silently=True
         )
+
+@receiver(pre_save, sender=Testing)
+def testing_pre_save(sender, instance, *args, **kwargs):
+    print(kwargs)
+    if instance.appointment.status == 'Checked In':
+        if instance.result:
+            instance.appointment.status = 'Completed'
+            instance.appointment.save()
+            instance.status = 'Completed'
+            qr = pyqrcode.create(f'{site}patient-info/{instance.patient.unique_id}')
+            qr.png(f'qr_codes/{instance.patient.unique_id}.png', scale = 8)
+            src = f'qr_codes/{instance.patient.unique_id}.png'
+            subject, from_email, to = '💅', 'donotreply@localhost', instance.patient.email
+            if instance.result == 'Postive':
+                PositiveCase.objects.create(patient=instance.patient, recovering_location='Home', date_tested=instance.date)
+            html_content = f'''
+            <html>
+                <body>
+                    <p>Your COVID-19 {instance.type} test result is here!</p>
+                    {f"{'<p>Unfortunately you have tested postive for COVID-19. You will be contacted soon with instructions on how to proceed.</p>' if instance.result == 'Postive' else ''}"}
+                    <p>You can view this record along with your vaccination record at <a href="{site}patient-info/{instance.patient.unique_id}">{site}patient-info/{instance.patient.unique_id}</a></p>
+                    <p>You may present the attached qr code to any business that requires proof of vaccination or latest test results.</p>
+                </body>
+            </html>
+            '''
+            text_content = ""
+            msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+            msg.attach_alternative(html_content, "text/html")
+            msg.content_subtype = "html"
+            msg.attach_file(src)
+            msg.send()
+            removeFile(src)
+            text = f'''Your COVID-19 {instance.type} test result is here!
+{f"{'Unfortunately you have tested postive for COVID-19. You will be contacted soon with instructions on how to proceed.' if instance.result == 'Postive' else ''}"}
+You can view this record along with your vaccination record at {site}patient-info/{instance.patient.unique_id}
+            '''
+            send_sms(
+            text.strip(),
+            '+12065550100',
+            [f'{instance.patient.phone},'],
+            fail_silently=True
+            )
+    

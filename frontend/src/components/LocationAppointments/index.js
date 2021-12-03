@@ -250,7 +250,7 @@ export default function LocationAppointments() {
   ];
 
   return (
-    <Container maxWidth="lg" style={{ marginTop: "2%" }}>
+    <Container maxWidth="lg" style={{ marginTop: "2%", marginBottom: "1%" }}>
       <Modal
         size="lg"
         width={720}
@@ -259,17 +259,21 @@ export default function LocationAppointments() {
         title={<Title level={4}>Appointment Information</Title>}
         footer={[
           <Button
+            key={shortid.generate()}
             loading={appointments.aLoading}
             onClick={handleCheckIn}
             type="primary"
             appearance="primary"
-            key="submit"
             style={{ border: "none" }}
             className="rounded-sm bg-gray-700 text-white hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white transition duration-300"
           >
             Check Patient In
           </Button>,
-          <Button onClick={() => setShow(false)} appearance="subtle">
+          <Button
+            onClick={() => setShow(false)}
+            appearance="subtle"
+            key={shortid.generate()}
+          >
             Cancel
           </Button>,
         ]}

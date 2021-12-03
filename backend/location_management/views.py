@@ -8,9 +8,11 @@ from django.core.mail import EmailMultiAlternatives
 from django.contrib.sites.models import Site
 from django.db.models import Case, When
 from functions import convertTime
+from sms import send_sms
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import filters
 from django_filters import rest_framework as filterss
+import datetime
 
 from .models import Location, Offer, Test, Appointment
 from .serializers import LocationSerializer, OfferSerializer, TestSerializer, AppointmentSerializer, CreateAppointmentSerializer
@@ -95,9 +97,9 @@ class AppointmentView(APIView):
                         return Response({'Message': 'There was an error. Please try again later.'}, status=status.HTTP_400_BAD_REQUEST)
                     return Response(status=status.HTTP_201_CREATED)
                 else:
-                    if not len(Appointment.objects.filter(patient=patient, status='Completed', type='Vaccination')) >= 2 and not len(Vaccination.objects.filter(patient=patient, status='Completed')) >= 2:
-                        if not len(Vaccination.objects.filter(patient=patient, manufacture='Johnson & Johnson')) > 0:
-                            if not len(Appointment.objects.filter(patient=patient, status='Pending', type='Vaccination')) > 0:
+                    if not Appointment.objects.filter(patient=patient, status='Completed', type='Vaccination').count() >= 2 and not Vaccination.objects.filter(patient=patient, status='Completed').count() >= 2:
+                        if not Vaccination.objects.filter(patient=patient, manufacture='Johnson & Johnson').count() > 0:
+                            if not Appointment.objects.filter(patient=patient, status='Pending', type='Vaccination').count() > 0:
                                 if Vaccination.objects.filter(patient=patient, status='Completed'):
                                     if Vaccination.objects.get(patient=patient, status='Completed').manufacture == request.data.get('patient_choice'):
                                         try:
@@ -222,6 +224,13 @@ class AppointmentManagementView(APIView):
                     msg.attach_alternative(html_content, "text/html")
                     msg.content_subtype = "html"
                     msg.send()
+                    text = f'''This is to notify that your appoinntment for {appointment.date.strftime('%d %B, %Y')} at {convertTime(appointment.time)} was successfully cancelled!'''
+                    send_sms(
+                    text.strip(),
+                    '+12065550100',
+                    [f'{appointment.patient.phone},'],
+                    fail_silently=True
+                    )
                     return Response(seraializer.data, status=status.HTTP_202_ACCEPTED)
                 except:
                     return Response({'Message': "It's not you It's us!"}, status=status.HTTP_400_BAD_REQUEST)
@@ -235,30 +244,41 @@ class AppointmentManagementView(APIView):
                         appointment.time = request.data.get('time')
                         appointment.patient_choice = request.data.get('patient_choice')
                         appointment.save()
-                        src = f'qr_codes/{appointment.id}.png'
                         seraializer = AppointmentSerializer(appointment)
                         subject, from_email, to = 'Appointment Updated', 'donotreply@localhost', appointment.patient.email
                         html_content = f'''
                         <html>
                             <body>
                                 <p>This is to notify that your appointment was successfully updated.</p>
-                                <p>Appointment Date: {appointment.date.strftime('%d %B, %Y')} <br />Appointment Time: {convertTime(appointment.time)} <br />Appointment Type: {appointment.type}</p>
+                                <p>Appointment Date: {datetime.datetime.strptime(appointment.date, '%Y-%m-%d').strftime("%d %B, %Y")} <br />Appointment Time: {convertTime(appointment.time)} <br />Appointment Type: {appointment.type}</p>
                                 <p>You can manage your appointment at <a href="{site}appointment/management/{appointment.id}">{site}appointment/management/{appointment.id}</a></p>
+                                <p>You can search for your appointment using the following code: {appointment.shorten_id}</p>
                             </body>
                         </html>
                         '''
                         text_content = ""
                         msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
                         msg.attach_alternative(html_content, "text/html")
-                        msg.attach_file(src)
                         msg.content_subtype = "html"
                         msg.send()
+                        text = f'''This is to notify that your appointment was successfully updated.
+Appointment Date: {datetime.datetime.strptime(appointment.date, '%Y-%m-%d').strftime("%d %B, %Y")}
+Appointment Time: {convertTime(appointment.time)}
+Appointment Type: {appointment.type}
+You can manage your appointment at {site}appointment/management/{appointment.id}
+You can search for your appointment using the following code: {appointment.shorten_id}'''
+                        send_sms(
+                        text.strip(),
+                        '+12065550100',
+                        [f'{appointment.patient.phone},'],
+                        fail_silently=True
+                        )
                         return Response(seraializer.data,status=status.HTTP_202_ACCEPTED)
                     except:
                         return Response({'Message': "It's not you It's us!"}, status=status.HTTP_400_BAD_REQUEST)
                 return Response({'Message': 'Appointment date or time must be different to rescheduled.'}, status=status.HTTP_400_BAD_REQUEST)
         except:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response({'Message': 'Something went wrong!'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class CustomPageNumberPagination(PageNumberPagination):
@@ -325,9 +345,9 @@ def breakdown(request):
             location_list = []
             for location in locations:
                 vaccines = LocationVaccine.objects.filter(location=location)
-                number_of_tests = len(Testing.objects.filter(location=location, status='Completed'))
-                vaccines_administer = len(Vaccination.objects.filter(location=location, status='Completed'))
-                pending_appointments = len(Appointment.objects.filter(location=location, status='pending'))
+                number_of_tests = Testing.objects.filter(location=location, status='Completed').count()
+                vaccines_administer = Vaccination.objects.filter(location=location, status='Completed').count()
+                pending_appointments = Appointment.objects.filter(location=location, status='pending').count()
                 number_of_vaccine = 0
                 for vaccine in vaccines:
                     number_of_vaccine += vaccine.number_of_dose
@@ -391,13 +411,13 @@ def get_breakdown(request):
             number_of_pfizer = Vaccine.objects.get(value='Pfizer').number_of_dose
             number_of_moderna = Vaccine.objects.get(value='Moderna').number_of_dose
             number_of_JJ = Vaccine.objects.get(value='Johnson & Johnson').number_of_dose
-            positive_cases = len(PositiveCase.objects.exclude(status__in=excludes))
-            hospitalized = len(PositiveCase.objects.filter(status='Hospitalized'))
-            death = len(PositiveCase.objects.filter(status='Dead'))
-            recovered = len(PositiveCase.objects.filter(status='Recovered'))
-            number_of_locations = len(locations)
-            test_count = len(Testing.objects.filter(status='Completed'))
-            vaccines_administer = len(Vaccination.objects.filter(status='Completed'))
+            positive_cases = PositiveCase.objects.exclude(status__in=excludes).count()
+            hospitalized = PositiveCase.objects.filter(status='Hospitalized').count()
+            death = PositiveCase.objects.filter(status='Dead').count()
+            recovered = PositiveCase.objects.filter(status='Recovered').count()
+            number_of_locations = locations.count()
+            test_count = Testing.objects.filter(status='Completed').count()
+            vaccines_administer = Vaccination.objects.filter(status='Completed').count()
             pfizer_to_disb = Vaccine.objects.get(value='Pfizer').number_of_dose
             moderna_to_disb = Vaccine.objects.get(value='Moderna').number_of_dose
             JJ_to_disb = Vaccine.objects.get(value='Johnson & Johnson').number_of_dose
@@ -442,10 +462,10 @@ def location_breakdown(request):
         jj_in_stock = None
         vaccines_administer = None
         location = request.user.location
-        number_of_tests = len(Testing.objects.filter(location=location, status='Completed'))
-        pending_appointments = len(Appointment.objects.filter(location=location, status='pending'))
+        number_of_tests = Testing.objects.filter(location=location, status='Completed').count()
+        pending_appointments = Appointment.objects.filter(location=location, status='pending').count()
         if Offer.objects.filter(location=location, value='Vaccination').exists():
-            vaccines_administer = len(Vaccination.objects.filter(location=location, status='Completed'))
+            vaccines_administer = Vaccination.objects.filter(location=location, status='Completed').count()
             if LocationVaccine.objects.filter(location=location, value='Pfizer').exists():
                 pfizer_in_stock = LocationVaccine.objects.get(location=location, value='Pfizer').number_of_dose
             if LocationVaccine.objects.filter(location=location, value='Moderna').exists():

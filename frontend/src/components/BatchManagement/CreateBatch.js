@@ -190,6 +190,7 @@ export default function CreateBatch() {
                   <Input
                     type="number"
                     onChange={(e) => setDose(e.target.value)}
+                    min={10}
                   />
                 </Form.Item>
                 <Form.Item style={{ marginBottom: 2 }}>
