@@ -12,6 +12,7 @@ from sms import send_sms
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import filters
 from django_filters import rest_framework as filterss
+from django.utils import timezone
 import datetime
 
 from .models import Location, Offer, Test, Appointment
@@ -150,7 +151,7 @@ class AppointmentView(APIView):
                     return Response({'Message': 'You are all vaxxed up!'}, status=status.HTTP_400_BAD_REQUEST)
             return Response(seraializer.errors, status=status.HTTP_400_BAD_REQUEST)      
         except:
-            return Response({'Message': 'There was an error! Please try again later.'}, status=status.HTTP_400_HTTP_400_BAD_REQUEST)
+            return Response({'Message': 'There was an error! Please try again later.'}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
 def search_appointments(request, shorten_id):
@@ -290,7 +291,6 @@ class UserFiltering(filters.BaseFilterBackend):
                 return queryset.filter(location=request.user.location)
 
 class LocationAppointments(ListAPIView):
-    queryset = Appointment.objects.all()
     serializer_class = AppointmentSerializer
     filter_backends = [UserFiltering, filterss.DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
     filter_fields = {
@@ -299,6 +299,14 @@ class LocationAppointments(ListAPIView):
     pagination_class = CustomPageNumberPagination
     ordering = ['patient__tax_number']
     search_fields = ['patient__last_name', 'patient__tax_number']
+    def get_queryset(self):
+        status = self.request.GET.get('status')
+        if status == None or status == 'Completed':
+            return Appointment.objects.all()
+        else:
+            return Appointment.objects.filter(date=timezone.now())
+
+        
 
 @api_view(['PATCH'])
 @permission_classes([permissions.IsAuthenticated])
@@ -307,9 +315,11 @@ def check_in_patient(request, patient_id):
         appointment = Appointment.objects.get(id=patient_id)
         if request.user.location == appointment.location and request.user.can_check_in:
             if appointment.status == 'Pending':
-                appointment.status = 'Checked In'
-                appointment.save()
-                return Response(status=status.HTTP_200_OK)
+                if appointment.date == timezone.now():
+                    appointment.status = 'Checked In'
+                    appointment.save()
+                    return Response(status=status.HTTP_200_OK)
+                return Response({'Message': 'This patient can not be checked in. Check the appointment date.'}, status=status.HTTP_403_FORBIDDEN)
             return Response({'Message': 'This appointment can not be updated!'}, status=status.HTTP_403_FORBIDDEN)
         return Response({'Message': 'You are not authorized to check this patient in!'}, status=status.HTTP_401_UNAUTHORIZED)
     except:

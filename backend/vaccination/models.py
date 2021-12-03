@@ -86,7 +86,9 @@ def vaccination_post_save(sender, instance, created, *args, **kwargs):
         msg.attach_alternative(html_content, "text/html")
         msg.content_subtype = "html"
         msg.send()
-        text = f'''Your appointment for your COVID-19 test was successfully made for {instance.appointment.date.strftime('%d %B, %Y')} at {convertTime(instance.appointment.time)}.\nYou can manage your appointmnet at {site}appointment/management/{instance.appointment.id}\nYou can search for your appointment using the following code: {instance.appointment.shorten_id}\n
+        text = f'''Your appointment for your {instance.manufacture} vaccine was successfully made for {instance.appointment.date.strftime('%d %B, %Y')} at {convertTime(instance.appointment.time)}.
+You can manage your appointmnet at {site}appointment/management/{instance.appointment.id}
+You can search for your appointment using the following code: {instance.appointment.shorten_id}
         '''
         send_sms(
         text.strip(),

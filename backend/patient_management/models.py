@@ -12,7 +12,7 @@ class Patient(models.Model):
     title = models.CharField(max_length=15, null=True)
     first_name = models.CharField(max_length=50, null=True)
     last_name = models.CharField(max_length=50, null=True)
-    email = models.EmailField(max_length=75, unique=True, null=True, blank=True)
+    email = models.EmailField(max_length=75, null=True, blank=True)
     phone = models.CharField(max_length=20, null=True)
     date_of_birth = models.DateField(null=True)
     gender = models.CharField(max_length=50, null=True)
