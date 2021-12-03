@@ -15,13 +15,13 @@ class Vaccination(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, blank=True, null=True)
     location = models.ForeignKey(Location, on_delete=models.CASCADE, blank=True, null=True)
     appointment = models.ForeignKey(Appointment, on_delete=models.CASCADE, blank=True, null=True)
-    manufacture = models.CharField(max_length=255, blank=True, null=True)
+    manufacture = models.CharField(max_length=50, blank=True, null=True)
     vile_number = models.IntegerField(unique=True, blank=True, null=True)
     date_given = models.DateField(blank=True, null=True)
-    admister_person = models.CharField(max_length=255, blank=True, null=True)
-    arm = models.CharField(max_length=255, blank=True, null=True)
-    dose_number = models.CharField(max_length=255, blank=True, null=True)
-    status = models.CharField(max_length=255, blank=True, null=True, default='Pending')
+    admister_person = models.CharField(max_length=50, blank=True, null=True)
+    arm = models.CharField(max_length=5, blank=True, null=True)
+    dose_number = models.CharField(max_length=10, blank=True, null=True)
+    status = models.CharField(max_length=50, blank=True, null=True, default='Pending')
     
     def __str__(self):
         return str(self.id)

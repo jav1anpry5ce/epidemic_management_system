@@ -17,7 +17,7 @@ class LocationBatch(models.Model):
     location = models.ForeignKey(Location, on_delete=models.CASCADE)
     vaccine = models.ForeignKey(Vaccine, on_delete=models.CASCADE, blank=True, null=True)
     number_of_dose = models.IntegerField()
-    status = models.CharField(max_length=255, default='Dispatched')
+    status = models.CharField(max_length=50, default='Dispatched')
     qr_image = models.ImageField(upload_to='batch_qr/', blank=True, null=True)
     date_created = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)

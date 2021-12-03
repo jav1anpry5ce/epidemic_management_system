@@ -14,11 +14,11 @@ def codeGenerator():
 class Location(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, unique=True)
     authorization_code = models.CharField(max_length=8, default=codeGenerator)
-    label = models.CharField(max_length=255, null=True, blank=True)
-    value = models.CharField(max_length=255, null=True, blank=True)
-    street_address = models.CharField(max_length=255, null=True, blank=True)
-    city = models.CharField(max_length=255, null=True, blank=True)
-    parish = models.CharField(max_length=255, null=True, blank=True)
+    label = models.CharField(max_length=50, null=True, blank=True)
+    value = models.CharField(max_length=50, null=True, blank=True)
+    street_address = models.CharField(max_length=50, null=True, blank=True)
+    city = models.CharField(max_length=50, null=True, blank=True)
+    parish = models.CharField(max_length=50, null=True, blank=True)
 
     def __str__(self):
         return self.value
@@ -28,8 +28,8 @@ class Location(models.Model):
 
 class Offer(models.Model):
     location = models.ForeignKey(Location, on_delete=models.CASCADE, blank=True, null=True)
-    label = models.CharField(max_length=255, null=True, blank=True)
-    value = models.CharField(max_length=255, null=True, blank=True)
+    label = models.CharField(max_length=50, null=True, blank=True)
+    value = models.CharField(max_length=50, null=True, blank=True)
 
     def __str__(self):
         return self.location.value
@@ -37,9 +37,9 @@ class Offer(models.Model):
 
 class Test(models.Model):
     location = models.ForeignKey(Location, on_delete=models.CASCADE, blank=True, null=True)
-    label = models.CharField(max_length=255, null=True, blank=True)
-    value = models.CharField(max_length=255, null=True, blank=True)
-    type = models.CharField(max_length=255, blank=True, null=True)
+    label = models.CharField(max_length=50, null=True, blank=True)
+    value = models.CharField(max_length=50, null=True, blank=True)
+    type = models.CharField(max_length=50, blank=True, null=True)
 
     def __str__(self):
         return self.value
@@ -56,9 +56,9 @@ class Appointment(models.Model):
     location = models.ForeignKey(Location, on_delete=models.CASCADE, blank=True, null=True)
     date = models.DateField(blank=True, null=True)
     time = models.TimeField(blank=True, null=True)
-    type = models.CharField(max_length=255, blank=True, null=True)
-    patient_choice = models.CharField(max_length=255, null=True, blank=True)
-    status = models.CharField(default="Pending" ,max_length=255, blank=True, null=True)
+    type = models.CharField(max_length=60, blank=True, null=True)
+    patient_choice = models.CharField(max_length=50, null=True, blank=True)
+    status = models.CharField(default="Pending" ,max_length=50, blank=True, null=True)
 
     def __str__(self):
         return str(self.id)
@@ -67,4 +67,4 @@ class Appointment(models.Model):
 @receiver(post_save, sender=Appointment)
 def appointment_created_handler(sender, instance, created, *args, **kwargs):
     if created:
-        print(instance.patient.email)
+        print('appointment created')
