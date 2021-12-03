@@ -3,6 +3,12 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from location_management.models import Location
 from django.utils import timezone
+from django.dispatch import receiver
+from django.core.mail import EmailMultiAlternatives
+from django.contrib.sites.models import Site
+from django.db.models.signals import post_save, post_delete
+
+site = Site.objects.get_current()
 
 class UserAccountManager(BaseUserManager):
     def create_user(self, email, password, **extra_fields):
@@ -102,4 +108,56 @@ class ActivateAccount(models.Model):
     def __str__(self):
         return self.user.email
 
-    
+
+@receiver(post_save, sender=ActivateAccount)
+def account_post_save(sender, instance, created, *args, **kwargs):
+    if created:
+        subject, from_email, to = 'Account Activation!', 'donotreply@localhost', instance.user.email
+        html_content = f'''
+        <html>
+            <body>
+                <p>Hello {instance.user.first_name}, welcome to our system!</p>
+                <p>Please go to the following link to activate your account.</p>
+                <p><a href="{site}account/activation/{instance.activate}/{instance.token}">{site}account/activation/{instance.activate}/{instance.token}</a></p>
+            </body>
+        </html>
+        '''
+        text_content = ""
+        msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+        msg.attach_alternative(html_content, "text/html")
+        msg.content_subtype = "html"
+        msg.send()
+
+@receiver(post_delete, sender=ActivateAccount)
+def account_activated(sender, instance, *args, **kwargs):
+    subject, from_email, to = 'Account Activated!', 'donotreply@localhost', instance.user.email
+    html_content = f'''
+    <html>
+        <body>
+            <p>Hello {instance.user.first_name} your account has been sucessfully activated!</p>
+            <p>{f"Use the following authorization code to receive your site vaccination batches.</p> <p>Authorization Code: {instance.user.location.authorization_code}" if instance.user.can_receive_location_batch else ""}</p>
+        </body>
+    </html>
+    '''
+    text_content = ""
+    msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+    msg.attach_alternative(html_content, "text/html")
+    msg.content_subtype = "html"
+    msg.send()
+
+@receiver(post_save, sender=ResetAccount)
+def reset_token_post_save(sender, instance, created, *args, **kwargs):
+    subject, from_email, to = 'Reset Request', 'donotreply@localhost', instance.user.email
+    text_content = 'This is an important message.'
+    html_content = f'''
+    <html>
+        <body>
+            <p>We have received your reset request. attached you will find the reset link.</p>
+            <a href="{site}password/reset/{instance.token}">{site}password/reset/{instance.token}</a>
+            <p><b>This link expires in 1 hour.</b></p>
+        </body>
+    </html>
+    '''
+    msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+    msg.attach_alternative(html_content, "text/html")
+    msg.send()

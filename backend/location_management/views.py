@@ -7,7 +7,6 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from django.core.mail import EmailMultiAlternatives
 from django.contrib.sites.models import Site
 from django.db.models import Case, When
-from functions import removeFile
 from functions import convertTime
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import filters
@@ -105,13 +104,15 @@ class AppointmentView(APIView):
                                             try:
                                                 old_location = Vaccination.objects.get(patient=patient, status='Completed').location
                                                 if old_location != location:
-                                                    vaccines = LocationVaccine.objects.get(location=old_location, value=request.data.get('patient_choice'))
-                                                    vaccines.number_of_dose += 1
-                                                    vaccines.save()
-                                                    vaccines = LocationVaccine.objects.get(location=location, value=request.data.get('patient_choice'))
-                                                    vaccines.number_of_dose -= 1
-                                                    vaccines.save()
+                                                    old_vaccines = LocationVaccine.objects.get(location=old_location, value=request.data.get('patient_choice'))
+                                                    old_vaccines.number_of_dose += 1
+                                                    old_vaccines.save()
+                                                    new_vaccines = LocationVaccine.objects.get(location=location, value=request.data.get('patient_choice'))
+                                                    new_vaccines.number_of_dose -= 1
+                                                    new_vaccines.save()
                                             except:
+                                                old_vaccines -= 1
+                                                old_vaccines.save()
                                                 return Response({'Message': 'Something went wrong! Try again later'}, status=status.HTTP_400_BAD_REQUEST)
                                             seraializer.save(patient=patient, location=location)
                                             aid = seraializer.data['id']
@@ -132,6 +133,7 @@ class AppointmentView(APIView):
                                                 vaccines.number_of_dose -= 2
                                             vaccines.save()
                                         except:
+
                                             return Response({'Message': 'Something went wrong! Try again later.'}, status=status.HTTP_400_BAD_REQUEST)
                                         seraializer.save(patient=patient, location=location)
                                         aid = seraializer.data['id']
@@ -206,13 +208,12 @@ class AppointmentManagementView(APIView):
                                     vaccines.save()
                     except:
                         return Response({'Message': 'Something went wrong! Try again later'}, status=status.HTTP_400_BAD_REQUEST)
-                    src = f'qr_codes/{appointment.id}.png'
                     seraializer = AppointmentSerializer(appointment)
                     subject, from_email, to = 'Cancelled Appointment', 'donotreply@localhost', appointment.patient.email
                     html_content = f'''
                     <html>
                         <body>
-                            <p>This is to notify that your appoinntment for {appointment.date} at {convertTime(appointment.time)} was successfully cancelled!</p>
+                            <p>This is to notify that your appoinntment for {appointment.date.strftime('%d %B, %Y')} at {convertTime(appointment.time)} was successfully cancelled!</p>
                         </body>
                     </html>
                     '''
@@ -221,10 +222,6 @@ class AppointmentManagementView(APIView):
                     msg.attach_alternative(html_content, "text/html")
                     msg.content_subtype = "html"
                     msg.send()
-                    try:
-                        removeFile(src)
-                    except:
-                        pass
                     return Response(seraializer.data, status=status.HTTP_202_ACCEPTED)
                 except:
                     return Response({'Message': "It's not you It's us!"}, status=status.HTTP_400_BAD_REQUEST)
@@ -245,7 +242,7 @@ class AppointmentManagementView(APIView):
                         <html>
                             <body>
                                 <p>This is to notify that your appointment was successfully updated.</p>
-                                <p>Appointment Date: {appointment.date} <br />Appointment Time: {convertTime(appointment.time)} <br />Appointment Type: {appointment.type}</p>
+                                <p>Appointment Date: {appointment.date.strftime('%d %B, %Y')} <br />Appointment Time: {convertTime(appointment.time)} <br />Appointment Type: {appointment.type}</p>
                                 <p>You can manage your appointment at <a href="{site}appointment/management/{appointment.id}">{site}appointment/management/{appointment.id}</a></p>
                             </body>
                         </html>

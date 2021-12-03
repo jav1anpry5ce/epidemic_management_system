@@ -848,17 +848,20 @@ export default function MakeAppointment() {
                   >
                     {location.data &&
                     location.data &&
-                    patient.previousVaccine[0] ? (
-                      <Option value={patient.previousVaccine[0].value}>
-                        {patient.previousVaccine[0].value}
-                      </Option>
-                    ) : (
-                      location.data.Vaccine.map((item) => (
-                        <Option value={item.value} key={shortid.generate()}>
-                          {item.label}
-                        </Option>
-                      ))
-                    )}
+                    patient.previousVaccine[0]
+                      ? location.data.Vaccine.find(
+                          (item) =>
+                            item.value === patient.previousVaccine[0].value
+                        ) && (
+                          <Option value={patient.previousVaccine[0].value}>
+                            {patient.previousVaccine[0].value}
+                          </Option>
+                        )
+                      : location.data.Vaccine.map((item) => (
+                          <Option value={item.value} key={shortid.generate()}>
+                            {item.label}
+                          </Option>
+                        ))}
                   </Select>
                 </Form.Item>
               </Grid>

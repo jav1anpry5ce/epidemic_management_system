@@ -5,8 +5,6 @@ from django.contrib.auth import get_user_model
 from location_management.models import Location
 from rest_framework.authtoken.models import Token
 from .models import ResetAccount, ActivateAccount
-from django.core.mail import EmailMultiAlternatives
-from django.contrib.sites.models import Site
 from django.utils import timezone
 import random
 import string
@@ -14,7 +12,6 @@ from validate_email import validate_email
 from functions import validate_password_strength
 
 User = get_user_model()
-site = Site.objects.get_current()
 
 @api_view(['POST'])
 def create(request):
@@ -47,22 +44,7 @@ def create(request):
                     if request.data.get('is_moh_admin') == 1:
                         user.is_moh_admin = True
                     user.save()
-                    activatToken = ActivateAccount.objects.create(user=user)
-                    subject, from_email, to = 'Account Activation!', 'donotreply@localhost', user.email
-                    html_content = f'''
-                    <html>
-                        <body>
-                            <p>Hello {user.first_name}, welcome to our system!</p>
-                            <p>Please go to the following link to activate your account.</p>
-                            <p><a href="{site}account/activation/{activatToken.activate}/{activatToken.token}">{site}account/activation/{activatToken.activate}/{activatToken.token}</a></p>
-                        </body>
-                    </html>
-                    '''
-                    text_content = ""
-                    msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
-                    msg.attach_alternative(html_content, "text/html")
-                    msg.content_subtype = "html"
-                    msg.send()
+                    ActivateAccount.objects.create(user=user)
                     return Response({"Message": "Account successfully created!"})
                 return Response({"Message": "This email is already registered!"}, status=status.HTTP_400_BAD_REQUEST)
             return Response({"Message": "Email is not valid"}, status=status.HTTP_400_BAD_REQUEST)
@@ -83,20 +65,6 @@ def activate(request):
                     user.set_password(request.data.get('password'))
                     user.save()
                     ActivateAccount.objects.get(user=user).delete()
-                    subject, from_email, to = 'Account Activated!', 'donotreply@localhost', user.email
-                    html_content = f'''
-                    <html>
-                        <body>
-                            <p>Hello {user.first_name} your account has been sucessfully activated!</p>
-                            <p>{f"Authorization Code: {user.location.authorization_code}" if user.can_receive_location_batch else ""}</p>
-                        </body>
-                    </html>
-                    '''
-                    text_content = ""
-                    msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
-                    msg.attach_alternative(html_content, "text/html")
-                    msg.content_subtype = "html"
-                    msg.send()
                     return Response(status=status.HTTP_202_ACCEPTED)
                 return Response({'Message': 'Password must be at lease 8 character in length, contain at least one digit,\nat least one special character and\nat least one upper case letter.'} ,status=status.HTTP_400_BAD_REQUEST)
             return Response({'Message': 'Password and confirm password must be the same!'}, status=status.HTTP_400_BAD_REQUEST)
@@ -173,64 +141,16 @@ def resetRequest(request):
             if request.user.location == user.location and user.is_active or request.user.is_moh_admin:
                 if ResetAccount.objects.filter(user=user).exists():
                     if ResetAccount.objects.get(user=user).delete():
-                        reset = ResetAccount.objects.create(user=user)
-                        subject, from_email, to = 'Reset Request', 'donotreply@localhost', user.email
-                        text_content = 'This is an important message.'
-                        html_content = f'''
-                        <html>
-                            <body>
-                                <p>We have received your reset request. attached you will find the reset link.</p>
-                                <a href="{site}password/reset/{reset.token}">{site}password/reset/{reset.token}</a>
-                                <p><b>This link expires in 1 hour.</b></p>
-                            </body>
-                        </html>
-                        '''
-                        msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
-                        msg.attach_alternative(html_content, "text/html")
-                        msg.send()
+                        ResetAccount.objects.create(user=user)
                         return Response(status=status.HTTP_204_NO_CONTENT)
                 else:
-                    reset = ResetAccount.objects.create(user=user)
-                    subject, from_email, to = 'Reset Request', 'donotreply@localhost', user.email
-                    text_content = 'This is an important message.'
-                    html_content = f'''
-                    <html>
-                        <body>
-                            <p>We have received your reset request. attached you will find the reset link.</p>
-                            <a href="{site}password/reset/{reset.token}">{site}password/reset/{reset.token}</a>
-                            <p><b>This link expires in 1 hour.</b></p>
-                        </body>
-                    </html>
-                    '''
-                    msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
-                    msg.attach_alternative(html_content, "text/html")
-                    msg.send()
+                    ResetAccount.objects.create(user=user)
                     return Response(status=status.HTTP_204_NO_CONTENT)
             return Response({'Message': f'You are not authorized to make this request for {request.data.get("email")}'} , status=status.HTTP_401_UNAUTHORIZED)
         return Response({'Message': 'You are not authorized to make this request'}, status=status.HTTP_401_UNAUTHORIZED)
     except:
-        try:
-            if request.user.is_location_admin or request.user.is_moh_admin:
-                if request.user.location == user.location or request.user.is_moh_admin:
-                    reset = ResetAccount.objects.create(user=user)
-                    subject, from_email, to = 'Reset Request', 'donotreply@localhost', user.email
-                    text_content = 'This is an important message.'
-                    html_content = f'''
-                    <html>
-                        <body>
-                            <p>We have received your reset request. attached you will find the reset link.</p>
-                            <a href="{site}password/reset/{reset.token}">{site}password/reset/{reset.token}</a>
-                        </body>
-                    </html>
-                    '''
-                    msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
-                    msg.attach_alternative(html_content, "text/html")
-                    msg.send()
-                    return Response(status=status.HTTP_204_NO_CONTENT)
-                return Response({'Message': f'You are not authorized to make this request for {request.data.get("email")}'}, status=status.HTTP_401_UNAUTHORIZED)
-            return Response({'Message': 'You are not authorized to make this request'}, status=status.HTTP_401_UNAUTHORIZED)
-        except:
-            return Response({'Message': 'You must be logged in to send this request'}, status=status.HTTP_401_UNAUTHORIZED)
+        return Response({'Message': 'You must be logged in to send this request'}, status=status.HTTP_401_UNAUTHORIZED)
+            
 
 @api_view(['POST'])
 def resetPassword(request):

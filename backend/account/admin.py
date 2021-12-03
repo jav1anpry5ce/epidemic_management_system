@@ -25,7 +25,11 @@ class ResetAccountConfig(admin.ModelAdmin):
     list_display = ('token', 'user', 'created', 'expires')
     readonly_fields = ('token',)
 
+class ActivateAccountConfig(admin.ModelAdmin):
+    list_display = ('user', 'created')
+
 
 admin.site.register(UserAccount, UserAccountConfig)
 admin.site.register(ResetAccount, ResetAccountConfig)
+admin.site.register(ActivateAccount, ActivateAccountConfig)
 
