@@ -38,7 +38,7 @@ import {
 
 import IdleTimer from "./functions/IdleTimer";
 
-import background from "./images/background2.jpg";
+import background from "./asset/images/background2.jpg";
 
 axios.defaults.baseURL = "http://192.168.0.200:8000/";
 

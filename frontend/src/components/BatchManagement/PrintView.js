@@ -1,7 +1,7 @@
 import React from "react";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
-import logo from "../../images/logo.png";
+import logo from "../../asset/images/logo.png";
 
 export default function PrintView({ componenetRef, data }) {
   return (
