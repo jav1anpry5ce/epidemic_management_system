@@ -58,7 +58,6 @@ def testing_post_save(sender, instance, created, *args, **kwargs):
 
 @receiver(pre_save, sender=Testing)
 def testing_pre_save(sender, instance, *args, **kwargs):
-    print(kwargs)
     if instance.appointment.status == 'Checked In':
         if instance.result:
             instance.appointment.status = 'Completed'
@@ -68,13 +67,13 @@ def testing_pre_save(sender, instance, *args, **kwargs):
             qr.png(f'qr_codes/{instance.patient.unique_id}.png', scale = 8)
             src = f'qr_codes/{instance.patient.unique_id}.png'
             subject, from_email, to = '💅', 'donotreply@localhost', instance.patient.email
-            if instance.result == 'Postive':
+            if instance.result == 'Positive':
                 PositiveCase.objects.create(patient=instance.patient, recovering_location='Home', date_tested=instance.date)
             html_content = f'''
             <html>
                 <body>
                     <p>Your COVID-19 {instance.type} test result is here!</p>
-                    {f"{'<p>Unfortunately you have tested postive for COVID-19. You will be contacted soon with instructions on how to proceed.</p>' if instance.result == 'Postive' else ''}"}
+                    {f"{'<p>Unfortunately you have tested positive for COVID-19. You will be contacted soon with instructions on how to proceed.</p>' if instance.result == 'Positive' else ''}"}
                     <p>You can view this record along with your vaccination record at <a href="{site}patient-info/{instance.patient.unique_id}">{site}patient-info/{instance.patient.unique_id}</a></p>
                     <p>You may present the attached qr code to any business that requires proof of vaccination or latest test results.</p>
                 </body>
@@ -88,7 +87,7 @@ def testing_pre_save(sender, instance, *args, **kwargs):
             msg.send()
             removeFile(src)
             text = f'''Your COVID-19 {instance.type} test result is here!
-{f"{'Unfortunately you have tested postive for COVID-19. You will be contacted soon with instructions on how to proceed.' if instance.result == 'Postive' else ''}"}
+{f"{'Unfortunately you have tested positive for COVID-19. You will be contacted soon with instructions on how to proceed.' if instance.result == 'Positive' else ''}"}
 You can view this record along with your vaccination record at {site}patient-info/{instance.patient.unique_id}
             '''
             send_sms(

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Patient, NextOfKin, PositiveCase, Representative
+from .models import Patient, NextOfKin, PositiveCase, Representative, DeathCase, RecoveredCase, HospitalizedCase
 
 class PatientSerializer(serializers.ModelSerializer):
     class Meta:
@@ -96,9 +96,39 @@ class PositiveCaseSerializer(serializers.ModelSerializer):
     class Meta:
         model = PositiveCase
         fields = (
-            'case_id',
+            'id',
             'patient',
             'date_tested',
             'recovering_location',
             'status',
+        )
+
+class DeathCaseSerializer(serializers.ModelSerializer):
+    patient = GetDetailedPatient()
+    class Meta:
+        model = DeathCase
+        fields = (
+            'id',
+            'patient',
+            'death_date',
+        )
+
+class RecoveredCaseSerializer(serializers.ModelSerializer):
+    patient = GetDetailedPatient()
+    class Meta:
+        model = RecoveredCase
+        fields = (
+            'id',
+            'patient',
+            'recovery_date',
+        )
+
+class HospitalizedCaseSerializer(serializers.ModelSerializer):
+    patient = GetDetailedPatient()
+    class Meta:
+        model = HospitalizedCase
+        fields = (
+            'id',
+            'patient',
+            'hospitalized_date',
         )

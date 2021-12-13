@@ -112,14 +112,17 @@ export const getPositiveCases = createAsyncThunk(
   }
 );
 
-export const getCase = createAsyncThunk("get/case", async (case_id) => {
+export const getCase = createAsyncThunk("get/case", async (data) => {
   const config = {
     headers: {
       "Content-Type": "application/json",
       Authorization: "Token " + sessionStorage.getItem("token"),
     },
   };
-  const response = await axios.get(`api/get-case/${case_id}`, config);
+  const response = await axios.get(
+    `api/get-case/${data.type}/${data.id}`,
+    config
+  );
   if (response.status === 200) {
     const data = response.data;
     return { data };
@@ -177,6 +180,23 @@ export const getBatch = createAsyncThunk(
   }
 );
 
+export const generateCsv = createAsyncThunk("generate/csv", async (data) => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Token " + sessionStorage.getItem("token"),
+    },
+  };
+  const response = await axios.get(
+    `api/generate-csv/${data.date}/${data.type}`,
+    config
+  );
+  if (response.status === 200) {
+    const data = response.data;
+    return { data };
+  }
+});
+
 export const mohSlice = createSlice({
   name: "MOH",
   initialState: {
@@ -199,6 +219,9 @@ export const mohSlice = createSlice({
     updating: false,
     bLoading: false,
     batch: null,
+    generating: false,
+    link: null,
+    genSuccess: false,
   },
   reducers: {
     clearPatient: (state) => {
@@ -221,11 +244,18 @@ export const mohSlice = createSlice({
       state.locations = null;
       state.bLoading = false;
       state.batch = null;
+      state.generating = false;
+      state.link = null;
+      state.genSuccess = false;
     },
     updateSuccess: (state) => {
       state.success = false;
       state.batchData = null;
       state.bLoading = false;
+    },
+    resetLink: (state) => {
+      state.link = null;
+      state.genSuccess = false;
     },
   },
   extraReducers: {
@@ -359,8 +389,20 @@ export const mohSlice = createSlice({
     [getBatch.rejected]: (state) => {
       state.bLoading = false;
     },
+    [generateCsv.pending]: (state) => {
+      state.generating = true;
+    },
+    [generateCsv.fulfilled]: (state, { payload }) => {
+      state.generating = false;
+      state.link = payload.data.link;
+      state.genSuccess = true;
+    },
+    [generateCsv.rejected]: (state) => {
+      state.generating = false;
+    },
   },
 });
 
-export const { clearPatient, clearState, updateSuccess } = mohSlice.actions;
+export const { clearPatient, clearState, updateSuccess, resetLink } =
+  mohSlice.actions;
 export default mohSlice.reducer;

@@ -134,6 +134,32 @@ export const receiveBatch = createAsyncThunk(
   }
 );
 
+export const addAvailability = createAsyncThunk(
+  "add/availability",
+  async (data) => {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Token " + sessionStorage.getItem("token"),
+      },
+    };
+    await axios.post("/api/add-availability/", data, config);
+  }
+);
+
+export const deleteAvailability = createAsyncThunk(
+  "delete/availability",
+  async (id) => {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Token " + sessionStorage.getItem("token"),
+      },
+    };
+    await axios.delete(`/api/delete-availability/${id}`, config);
+  }
+);
+
 export const locationSlice = createSlice({
   name: "location",
   initialState: {
@@ -269,6 +295,28 @@ export const locationSlice = createSlice({
       } catch (err) {
         state.message = "Something went wrong!";
       }
+    },
+    [addAvailability.pending]: (state) => {
+      state.loading = true;
+    },
+    [addAvailability.fulfilled]: (state) => {
+      state.loading = false;
+      state.success = true;
+      state.message = "Date added!";
+    },
+    [addAvailability.rejected]: (state) => {
+      state.loading = false;
+    },
+    [deleteAvailability.pending]: (state) => {
+      state.loading = true;
+    },
+    [deleteAvailability.fulfilled]: (state) => {
+      state.loading = false;
+      state.success = true;
+      state.message = "Date deleted!";
+    },
+    [deleteAvailability.rejected]: (state) => {
+      state.loading = false;
     },
   },
 });

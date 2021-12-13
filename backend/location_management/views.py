@@ -15,8 +15,8 @@ from django_filters import rest_framework as filterss
 from django.utils import timezone
 import datetime
 
-from .models import Location, Offer, Test, Appointment
-from .serializers import LocationSerializer, OfferSerializer, TestSerializer, AppointmentSerializer, CreateAppointmentSerializer
+from .models import Availability, Location, Offer, Test, Appointment
+from .serializers import LocationSerializer, OfferSerializer, TestSerializer, AppointmentSerializer, CreateAppointmentSerializer, AvailabilitySerializer
 from patient_management.serializers import CreatePatientSerializer, NextOfKinSerializer, RepresentativeSerializer
 from patient_management.models import Patient, PositiveCase
 from testing.models import Testing
@@ -45,7 +45,8 @@ class LocationView(APIView):
             offerSerializer = OfferSerializer(offer, many=True)
             testSerializer = TestSerializer(test, many=True)
             vaccineSerializer = LocationVaccineSerializer(vaccine, many=True)
-            res = {"Test": testSerializer.data, "Offer": offerSerializer.data, "Vaccine": vaccineSerializer.data}
+            availability = AvailabilitySerializer(location.availability, many=True)
+            res = {"Test": testSerializer.data, "Offer": offerSerializer.data, "Vaccine": vaccineSerializer.data, 'availability': availability.data}
             return Response(res, status=status.HTTP_200_OK)
         except:
             return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -74,8 +75,7 @@ class AppointmentView(APIView):
                     if patient_seraializer.is_valid():
                         kinSerializer = NextOfKinSerializer(data=request.data)
                         if kinSerializer.is_valid():
-                            patient_seraializer.save()
-                            patient = Patient.objects.get(tax_number=request.data.get('tax_number'))
+                            patient = patient_seraializer.save()
                             kinSerializer.save(patient=patient)
                         else:
                             return Response(kinSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -84,18 +84,16 @@ class AppointmentView(APIView):
                 rep_serializer = RepresentativeSerializer(data=request.data)
                 if rep_serializer.is_valid():
                     if Patient.objects.filter(tax_number=request.data.get('tax_number')).exists():
-                        patient = Patient.objects.get(tax_number=request.data.get('tax_number'))
                         rep_serializer.save(patient=patient)
                 location = Location.objects.get(value=request.data.get('location'))
                 if request.data.get('type') == "Testing":
                     try:
-                        seraializer.save(patient=patient, location=location)
-                        aid = seraializer.data['id']
-                        appointment = Appointment.objects.get(id=aid)
+                        appointment = seraializer.save(patient=patient, location=location)
                         Testing.objects.create(patient=patient, location=location, type=request.data.get('patient_choice'), appointment=appointment)
                     except:
-                        appointment = Appointment.objects.get(id=aid).delete()
+                        appointment.delete()
                         return Response({'Message': 'There was an error. Please try again later.'}, status=status.HTTP_400_BAD_REQUEST)
+                    appointment.location.availability.get(date=appointment.date, time=appointment.time).delete()
                     return Response(status=status.HTTP_201_CREATED)
                 else:
                     if not Appointment.objects.filter(patient=patient, status='Completed', type='Vaccination').count() >= 2 and not Vaccination.objects.filter(patient=patient, status='Completed').count() >= 2:
@@ -117,13 +115,12 @@ class AppointmentView(APIView):
                                                 old_vaccines -= 1
                                                 old_vaccines.save()
                                                 return Response({'Message': 'Something went wrong! Try again later'}, status=status.HTTP_400_BAD_REQUEST)
-                                            seraializer.save(patient=patient, location=location)
-                                            aid = seraializer.data['id']
-                                            appointment = Appointment.objects.get(id=aid)
+                                            appointment = seraializer.save(patient=patient, location=location)
                                             Vaccination.objects.create(patient=patient, location=location, manufacture=request.data.get('patient_choice'), appointment=appointment)
+                                            appointment.location.availability.get(date=appointment.date, time=appointment.time).delete()
                                             return Response(status=status.HTTP_201_CREATED)
                                         except:
-                                            appointment = Appointment.objects.get(id=aid).delete()
+                                            appointment.delete()
                                             return Response({'Message': 'There was an error. Please try again later.'}, status=status.HTTP_400_BAD_REQUEST)
                                     return Response({'Message': f'Having two different type of vaccines has not been tested. Please select {Vaccination.objects.filter(patient=patient, status="Completed")[0].manufacture} as your vaccine choice.'}, status=status.HTTP_400_BAD_REQUEST)
                                 else:
@@ -136,15 +133,13 @@ class AppointmentView(APIView):
                                                 vaccines.number_of_dose -= 2
                                             vaccines.save()
                                         except:
-
                                             return Response({'Message': 'Something went wrong! Try again later.'}, status=status.HTTP_400_BAD_REQUEST)
-                                        seraializer.save(patient=patient, location=location)
-                                        aid = seraializer.data['id']
-                                        appointment = Appointment.objects.get(id=aid)
+                                        appointment = seraializer.save(patient=patient, location=location)
                                         Vaccination.objects.create(patient=patient, location=location, manufacture=request.data.get('patient_choice'), appointment=appointment)
+                                        appointment.location.availability.get(date=appointment.date, time=appointment.time).delete()
                                         return Response(status=status.HTTP_201_CREATED)
                                     except:
-                                        appointment = Appointment.objects.get(id=aid).delete()
+                                        appointment.delete()
                                         return Response({'Message': 'There was an error. Please try again later.'}, status=status.HTTP_400_BAD_REQUEST)
                             return Response({'Message': 'You already have an pending vaccination appointment!'}, status=status.HTTP_400_BAD_REQUEST)
                         return Response({'Message': 'You are all vaxxed up!'}, status=status.HTTP_400_BAD_REQUEST)
@@ -274,6 +269,7 @@ You can search for your appointment using the following code: {appointment.short
                         [f'{appointment.patient.phone},'],
                         fail_silently=True
                         )
+                        appointment.location.availability.get(date=appointment.date, time=appointment.time).delete()
                         return Response(seraializer.data,status=status.HTTP_202_ACCEPTED)
                     except:
                         return Response({'Message': "It's not you It's us!"}, status=status.HTTP_400_BAD_REQUEST)
@@ -315,7 +311,7 @@ def check_in_patient(request, patient_id):
         appointment = Appointment.objects.get(id=patient_id)
         if request.user.location == appointment.location and request.user.can_check_in:
             if appointment.status == 'Pending':
-                if appointment.date == timezone.now():
+                if appointment.date.strftime('%Y-%m-%d') == datetime.datetime.today().strftime('%Y-%m-%d'):
                     appointment.status = 'Checked In'
                     appointment.save()
                     return Response(status=status.HTTP_200_OK)
@@ -514,3 +510,33 @@ class CheckedIn(ListAPIView):
             return Vaccination.objects.all()
         else:
             return None
+
+
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def add_availability(request):
+    serializer = AvailabilitySerializer(data=request.data)
+    if serializer.is_valid():
+        availability = serializer.save()
+        request.user.location.availability.add(availability)
+        return Response({'Message': 'Date added!'}, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class GetAvailability(ListAPIView):
+    serializer_class = AvailabilitySerializer
+    filter_backends = [filterss.DjangoFilterBackend, filters.OrderingFilter,]
+    permission_classes = [permissions.IsAuthenticated]
+    ordering = ['date']
+
+    def get_queryset(self):
+        return self.request.user.location.availability.all()
+
+@api_view(['DELETE'])
+@permission_classes([permissions.IsAuthenticated])
+def delete_availability(request, id):
+    try:
+        request.user.location.availability.get(id=id).delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    except:
+        return Response({'Message': 'Something went wrong!'}, status=status.HTTP_400_BAD_REQUEST)

@@ -17,7 +17,6 @@ import {
   Button,
   DatePicker,
   Select,
-  TimePicker,
   Card,
   Typography,
 } from "antd";
@@ -38,6 +37,7 @@ export default function AppointmentManagement({ match }) {
   const [time, setTime] = useState();
   const [patient_choice, setPatientChoice] = useState();
   const [form] = Form.useForm();
+  const [availableDates, setAvailableDates] = useState([]);
   const dateFns = require("date-fns");
 
   useEffect(() => {
@@ -92,17 +92,27 @@ export default function AppointmentManagement({ match }) {
         id: appointment.appointments.id,
         location: appointment.appointments.location.value,
         date: moment(moment(appointment.appointments.date)),
-        time: moment(
-          moment(
-            `${appointment.appointments.date} ${appointment.appointments.time}`
-          )
-        ),
+        time: new Date(
+          `2020-12-12 ${appointment.appointments.time}`
+        ).toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
         type: appointment.appointments.type,
         choice: appointment.appointments.patient_choice,
         status: appointment.appointments.status,
       });
     // eslint-disable-next-line
   }, [location.data, appointment.appointments, appointment.secondDose]);
+
+  useEffect(() => {
+    if (location.data) {
+      let dates = location.data.availability.filter(
+        (item) => formatDate(item.date) === formatDate(date)
+      );
+      setAvailableDates(dates);
+    }
+  }, [location.data, date]);
 
   return (
     <Container maxWidth="lg" style={{ marginTop: "2%" }}>
@@ -187,20 +197,27 @@ export default function AppointmentManagement({ match }) {
                       name="time"
                       className="mb-0"
                     >
-                      <TimePicker
-                        className="w-full"
-                        disabledHours={() => [
-                          0, 1, 2, 3, 4, 5, 6, 7, 17, 18, 19, 20, 21, 22, 23,
-                          24,
-                        ]}
-                        minuteStep={15}
-                        format="HH:mm"
-                        hideDisabledOptions
-                        showNow={false}
-                        onSelect={(e) =>
-                          setTime(e._d.toLocaleTimeString("it-IT"))
+                      <Select
+                        vlaue={time}
+                        onChange={(e) =>
+                          setTime(
+                            new Date(`2021-12-12 ${e}`).toLocaleTimeString(
+                              "it-IT"
+                            )
+                          )
                         }
-                      />
+                      >
+                        {availableDates.map((item) => (
+                          <Option value={item.time} key={shortid.generate()}>
+                            {new Date(
+                              `$2021-12-12 ${item.time}`
+                            ).toLocaleTimeString([], {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })}
+                          </Option>
+                        ))}
+                      </Select>
                     </Form.Item>
                   </Grid>
                   <Grid item xs={12} sm={6}>

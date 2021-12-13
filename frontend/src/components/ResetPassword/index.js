@@ -58,7 +58,7 @@ export default function ResetPassword({ match }) {
             ]}
             style={{ marginBottom: 2 }}
           >
-            <Input onChange={(e) => setNewPassword(e.target.value)} />
+            <Input.Password onChange={(e) => setNewPassword(e.target.value)} />
           </Form.Item>
           <Form.Item
             label="Confirm Password"
@@ -71,7 +71,7 @@ export default function ResetPassword({ match }) {
             ]}
             style={{ marginBottom: 12 }}
           >
-            <Input onChange={(e) => setConPassword(e.target.value)} />
+            <Input.Password onChange={(e) => setConPassword(e.target.value)} />
           </Form.Item>
           <Form.Item style={{ marginBottom: 2 }}>
             <Button

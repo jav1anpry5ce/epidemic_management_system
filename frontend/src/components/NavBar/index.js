@@ -11,6 +11,7 @@ import { GiHypodermicTest, GiCardboardBox } from "react-icons/gi";
 import { BsPersonFill, BsPersonPlusFill } from "react-icons/bs";
 import { RiVirusLine } from "react-icons/ri";
 import { AiFillHome } from "react-icons/ai";
+import { MdEventAvailable } from "react-icons/md";
 
 export default function NavBar({ hide, setHide }) {
   const auth = useSelector((state) => state.auth);
@@ -220,6 +221,15 @@ export default function NavBar({ hide, setHide }) {
                     </div>
                   </Nav.Item>
                 )}
+                <Nav.Item
+                  eventKey="5"
+                  onClick={() => nagivate("/add/availability")}
+                >
+                  <div className="flex">
+                    {<MdEventAvailable className="flex text-lg mr-1" />}Add
+                    Availability
+                  </div>
+                </Nav.Item>
               </Nav>
               <Nav pullRight>
                 <Nav.Item

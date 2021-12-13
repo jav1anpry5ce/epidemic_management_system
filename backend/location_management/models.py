@@ -15,11 +15,22 @@ def shorten_id_generator():
     S = 6
     ran = ''.join(random.choices(string.ascii_uppercase + string.digits, k = S))
     return ran
+
+class Availability(models.Model):
+    date = models.DateField(blank=True, null=True)
+    time = models.TimeField(blank=True, null=True)
+
+    def __str__(self):
+        return '{0} {1}'.format(self.date, self.time)
+
+    class Meta:
+        verbose_name_plural = 'Availabilities'
 class Location(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, unique=True)
     authorization_code = models.CharField(max_length=8, default=codeGenerator, unique=True)
     label = models.CharField(max_length=50, null=True, blank=True)
     value = models.CharField(max_length=50, null=True, blank=True)
+    availability = models.ManyToManyField(Availability)
     street_address = models.CharField(max_length=50, null=True, blank=True)
     city = models.CharField(max_length=50, null=True, blank=True)
     parish = models.CharField(max_length=50, null=True, blank=True)
@@ -61,7 +72,8 @@ class Appointment(models.Model):
 
     def __str__(self):
         return str(self.id)
-        
+
+
 
 @receiver(pre_save, sender=Appointment)
 def create_short_id_pre_save(sender, instance, *args, **kwargs):

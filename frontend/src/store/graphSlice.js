@@ -10,7 +10,7 @@ export const getGraphicalData = createAsyncThunk(
       },
     };
     const response = await axios.get(
-      `/api/graph/${data.year}/${data.month}`,
+      `/api/graph/${data.year}/${data.month}/${data.parish}`,
       config
     );
     if (response.status === 200) {

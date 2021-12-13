@@ -29,7 +29,6 @@ const { Title } = Typography;
 const { Option } = Select;
 
 const parishData = [
-  { label: "Kingston", value: "Kingston" },
   { label: "St. Andrew", value: "St. Andrew" },
   { label: "Portland ", value: "Portland " },
   { label: "St. Thomas", value: "St. Thomas" },

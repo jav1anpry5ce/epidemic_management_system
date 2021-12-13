@@ -1,6 +1,11 @@
 from rest_framework import serializers
 from patient_management.serializers import PatientSerializer
-from .models import Location, Offer, Test, Appointment
+from .models import Location, Offer, Test, Appointment, Availability
+
+class AvailabilitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Availability
+        fields = ('id', 'date', 'time',)
 
 class LocationSerializer(serializers.ModelSerializer):
     class Meta:

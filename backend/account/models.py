@@ -150,17 +150,18 @@ def account_activated(sender, instance, *args, **kwargs):
 
 @receiver(post_save, sender=ResetAccount)
 def reset_token_post_save(sender, instance, created, *args, **kwargs):
-    subject, from_email, to = 'Reset Request', 'donotreply@localhost', instance.user.email
-    text_content = 'This is an important message.'
-    html_content = f'''
-    <html>
-        <body>
-            <p>We have received your reset request. attached you will find the reset link.</p>
-            <a href="{site}password/reset/{instance.token}">{site}password/reset/{instance.token}</a>
-            <p><b>This link expires in 1 hour.</b></p>
-        </body>
-    </html>
-    '''
-    msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
-    msg.attach_alternative(html_content, "text/html")
-    msg.send()
+    if created:
+        subject, from_email, to = 'Reset Request', 'donotreply@localhost', instance.user.email
+        text_content = 'This is an important message.'
+        html_content = f'''
+        <html>
+            <body>
+                <p>We have received your reset request. attached you will find the reset link.</p>
+                <a href="{site}password/reset/{instance.token}">{site}password/reset/{instance.token}</a>
+                <p><b>This link expires in 1 hour.</b></p>
+            </body>
+        </html>
+        '''
+        msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+        msg.attach_alternative(html_content, "text/html")
+        msg.send()

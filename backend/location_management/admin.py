@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Location, Offer, Test, Appointment
+from .models import Location, Offer, Test, Appointment, Availability
 
 class LocationConfig(admin.ModelAdmin):
     list_display = (
@@ -35,7 +35,11 @@ class TestConfig(admin.ModelAdmin):
         'value',
     )
 
+class AvailabilityConfig(admin.ModelAdmin):
+    list_display = ('date', 'time',)
+
 admin.site.register(Location, LocationConfig)
 admin.site.register(Offer, OfferConfig)
 admin.site.register(Test, TestConfig)
 admin.site.register(Appointment, AppointmentConfig)
+admin.site.register(Availability, AvailabilityConfig)

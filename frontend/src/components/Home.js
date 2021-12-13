@@ -13,9 +13,29 @@ import {
   CartesianGrid,
   ResponsiveContainer,
 } from "recharts";
-import { DatePicker } from "antd";
+import { DatePicker, Select } from "antd";
 import Loading from "./Loading";
 import moment from "moment";
+import shortid from "shortid";
+
+const { Option } = Select;
+
+const parishData = [
+  { label: "All", value: "All" },
+  { label: "St. Andrew", value: "St. Andrew" },
+  { label: "Portland ", value: "Portland " },
+  { label: "St. Thomas", value: "St. Thomas" },
+  { label: "St. Catherine", value: "St. Catherine" },
+  { label: "St. Mary", value: "St. Mary" },
+  { label: "St. Ann", value: "St. Ann" },
+  { label: "Manchester", value: "Manchester" },
+  { label: "Clarendon", value: "Clarendon" },
+  { label: "Hanover", value: "Hanover" },
+  { label: "Westmoreland", value: "Westmoreland" },
+  { label: "St. James", value: "St. James" },
+  { label: "Trelawny", value: "Trelawny" },
+  { label: "St. Elizabeth", value: "St. Elizabeth" },
+];
 
 export default function Home() {
   const graph = useSelector((state) => state.graph);
@@ -29,6 +49,7 @@ export default function Home() {
   const [male, setMale] = useState();
   const [female, setFemale] = useState();
   const [vaccinations, setVaccinations] = useState();
+  const [parish, setParish] = useState("All");
 
   useEffect(() => {
     dispatch(setActiveKey("1"));
@@ -53,11 +74,12 @@ export default function Home() {
     const data = {
       year,
       month,
+      parish,
     };
     dispatch(getGraphicalData(data));
 
     // eslint-disable-next-line
-  }, [year, month]);
+  }, [year, month, parish]);
 
   useEffect(() => {
     return () => dispatch(clearState());
@@ -97,7 +119,7 @@ export default function Home() {
     // eslint-disable-next-line
   }, [graph.data]);
 
-  if (!graph.data) return <Loading />;
+  if (!graph.data && graph.loading) return <Loading />;
   if (graph.data) {
     if (!mobile)
       return (
@@ -105,20 +127,33 @@ export default function Home() {
           <div className="flex flex-col justify-center items-center py-2 space-y-2 w-full h-full my-2">
             <div className="bg-white rounded-md shadow-md w-full py-2">
               <div className="px-2 mb-2">
-                <DatePicker
-                  picker="month"
-                  format="MMM-YYYY"
-                  className="w-56"
-                  onChange={(e) => {
-                    setMonth(parseInt(new Date(e._d).getMonth()) + 1);
-                    setYear(parseInt(new Date(e._d).getFullYear()));
-                  }}
-                  defaultValue={moment(new Date())}
-                  allowClear={false}
-                />
-                <h1 className="text-center font-semibold text-2xl">
-                  Death Vs Recovered Vs Hospitalized
-                </h1>
+                <div className="flex justify-between items-center">
+                  <DatePicker
+                    picker="month"
+                    format="MMM-YYYY"
+                    className="w-64"
+                    onChange={(e) => {
+                      setMonth(parseInt(new Date(e._d).getMonth()) + 1);
+                      setYear(parseInt(new Date(e._d).getFullYear()));
+                    }}
+                    defaultValue={moment(new Date())}
+                    allowClear={false}
+                  />
+                  <h1 className="text-center font-semibold text-2xl">
+                    Death Vs Recovered Vs Hospitalized
+                  </h1>
+                  <Select
+                    className="w-64"
+                    value={parish}
+                    onChange={(e) => setParish(e)}
+                  >
+                    {parishData.map((item) => (
+                      <Option value={item.value} key={shortid.generate()}>
+                        {item.label}
+                      </Option>
+                    ))}
+                  </Select>
+                </div>
               </div>
               <div style={{ width: "100%", height: 400 }} className="px-8">
                 <ResponsiveContainer>
@@ -236,7 +271,7 @@ export default function Home() {
         className="flex justify-center items-center"
       >
         <h1 className="text-3xl font-semibold text-white">
-          Something went wrong!
+          There was a problem loading this page!
         </h1>
       </div>
     );

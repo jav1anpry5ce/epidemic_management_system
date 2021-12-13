@@ -18,4 +18,7 @@ urlpatterns = [
     path('location-breakdown/', views.location_breakdown),
     path('appointment-search/<shorten_id>', views.search_appointments),
     path('get-checked-in/<type>', views.CheckedIn.as_view()),
+    path('add-availability/', views.add_availability),
+    path('get-availability/', views.GetAvailability.as_view()),
+    path('delete-availability/<id>', views.delete_availability),
 ]

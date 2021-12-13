@@ -13,8 +13,9 @@ urlpatterns = [
     path('update-info/', views.update_info),
     path('all-patients/', views.MOHPatientView.as_view()),
     path('get-patient/<trn>', views.get_patient),
-    path('get-positive-cases/', views.GetPositiveCases.as_view()),
-    path('get-case/<case_id>', views.get_case),
-    path('update-case/<case_id>', views.update_case),
-    path('graph/<int:year>/<int:month>', views.graph),
+    path('get-cases/<status>', views.GetCases.as_view()),
+    path('get-case/<type>/<id>', views.get_case),
+    path('update-case/<id>', views.update_case),
+    path('graph/<int:year>/<int:month>/<str:parish>', views.graph),
+    path('generate-csv/<date>/<type>', views.generate_cvs),
 ]

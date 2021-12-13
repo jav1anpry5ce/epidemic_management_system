@@ -25,3 +25,4 @@ export { default as VaccinationAndTesting } from "./VaccinationAndTesting";
 export { default as Home } from "./Home";
 export { default as Footer } from "./Footer";
 export { default as NotFound } from "./NotFound";
+export { default as AddAvailability } from "./AddAvailability";

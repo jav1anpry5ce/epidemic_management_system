@@ -34,6 +34,7 @@ import {
   Home,
   Footer,
   NotFound,
+  AddAvailability,
 } from "./components";
 
 import IdleTimer from "./functions/IdleTimer";
@@ -148,6 +149,7 @@ function App() {
             />
             <Route exact path="/got-the-stach/:uuid" component={ReceiveBatch} />
             <Route exact path="/moh/positive-cases" component={PositiveCases} />
+            <Route exact path="/add/availability" component={AddAvailability} />
             <Route component={() => <NotFound setHide={setHide} />} />
           </Switch>
         </Content>

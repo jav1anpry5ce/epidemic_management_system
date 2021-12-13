@@ -1,5 +1,6 @@
 import calendar
 import datetime
+import csv
 from rest_framework import status, permissions
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView
@@ -7,14 +8,23 @@ from rest_framework.response import Response
 from rest_framework.decorators import parser_classes, permission_classes
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.decorators import api_view
-from django.core.mail import EmailMultiAlternatives
 from rest_framework.pagination import PageNumberPagination
-import django_filters
 from rest_framework import filters
 from django_filters import rest_framework as filterss
 
-from .models import Patient, UpdatePatientCode, PatientCode, NextOfKin, PositiveCase, Representative
-from .serializers import PatientSerializer, CreatePatientSerializer, GetDetailedPatient, UpdatePatientSerializer, NextOfKinSerializer, PositiveCaseSerializer, RepresentativeSerializer
+from .models import Patient, UpdatePatientCode, PatientCode, NextOfKin, PositiveCase, Representative, DeathCase, RecoveredCase, HospitalizedCase
+from .serializers import (
+    PatientSerializer, 
+    CreatePatientSerializer, 
+    GetDetailedPatient, 
+    UpdatePatientSerializer,
+    NextOfKinSerializer, 
+    PositiveCaseSerializer, 
+    RepresentativeSerializer, 
+    DeathCaseSerializer,
+    RecoveredCaseSerializer,
+    HospitalizedCaseSerializer,
+    )
 from testing.models import Testing
 from vaccination.models import Vaccination
 from testing.serializers import TestingSerializer
@@ -70,30 +80,11 @@ def update_info_verify(request):
                 try:
                     patient = Patient.objects.get(tax_number=request.data.get('tax_number'))
                 except:
-                    return Response({'Message': 'TRN entered does not match any in our system.'}, status=status.HTTP_404_NOT_FOUND)
+                    return Response({'Message': 'The enterd information does not match our records!'}, status=status.HTTP_404_NOT_FOUND)
                 if patient.last_name.upper() == request.data.get('last_name').upper() and str(patient.date_of_birth) == str(request.data.get('date_of_birth')):
-                    try:
+                    if UpdatePatientCode.objects.filter(patient=patient).exists():
                         UpdatePatientCode.objects.get(patient=patient).delete()
-                    except:
-                        pass
-                    code = UpdatePatientCode.objects.create(patient=patient)
-                    subject, from_email, to = 'Information update request', 'donotreply@localhost', patient.email
-                    html_content = f'''
-                    <html>
-                        <body>
-                            <p>Hello {patient.first_name},</p>
-                            <p>We have received your request to update your personal information.</p>\
-                            <p>Please enter the code provied below to verify your identity, and you will be on your way of updating your info.</p>
-                            <p>Code: {code.code}</p>
-                            <p>Do not share this code with anyone!</p>
-                        </body>
-                    </html>
-                    '''
-                    text_content = ""
-                    msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
-                    msg.attach_alternative(html_content, "text/html")
-                    msg.content_subtype = "html"
-                    msg.send()
+                    UpdatePatientCode.objects.create(patient=patient)
                     return Response(status=status.HTTP_204_NO_CONTENT)
                 return Response({'Message': 'The enterd information does not match our records!'}, status=status.HTTP_401_UNAUTHORIZED)
             return Response({'Message': 'Please enter a date of birth'}, status=status.HTTP_400_BAD_REQUEST)
@@ -190,25 +181,51 @@ def get_patient(request, trn):
         return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
-class GetPositiveCases(ListAPIView):
-    queryset = PositiveCase.objects.all()
-    serializer_class = PositiveCaseSerializer
+class GetCases(ListAPIView):
     filter_backends = [UserFiltering, filterss.DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
     pagination_class = CustomPageNumberPagination
     ordering = ['patient__tax_number']
     search_fields = ['patient__last_name', 'patient__tax_number']
 
+    def get_queryset(self):
+        ex_list = ['Dead', 'Recovered']
+        if self.kwargs.get('status') == 'Death':
+            return DeathCase.objects.all()
+        elif self.kwargs.get('status') == 'Recovered':
+            return RecoveredCase.objects.all()
+        else:
+            return PositiveCase.objects.all().exclude(status__in=ex_list)
+
+    def get_serializer_class(self):
+        if self.kwargs.get('status') == 'Death':
+            serializer_class = DeathCaseSerializer
+            return serializer_class
+        elif self.kwargs.get('status') == 'Recovered':
+            serializer_class = RecoveredCaseSerializer
+            return serializer_class
+        else:
+            serializer_class = PositiveCaseSerializer
+            return serializer_class
+
 
 
 @api_view(['GET'])
 @permission_classes([permissions.IsAuthenticated])
-def get_case(request, case_id):
+def get_case(request, type, id):
     try:
         if request.user.is_moh_staff:
-            case = PositiveCase.objects.get(case_id=case_id)
+            if type == 'Death':
+                case = DeathCase.objects.get(id=id)
+                serializer = DeathCaseSerializer(case)
+            elif type == 'Recovered':
+                case = RecoveredCase.objects.get(id=id)
+                serializer = RecoveredCaseSerializer(case)
+            else: 
+                case = PositiveCase.objects.get(id=id)
+                serializer = PositiveCaseSerializer(case)
+
             next_of_kin = NextOfKin.objects.get(patient=case.patient)
             next_of_kin_serializer = NextOfKinSerializer(next_of_kin)
-            serializer = PositiveCaseSerializer(case)
             try: 
                 rep = Representative.objects.get(patient=case.patient)
                 rep_serializer = RepresentativeSerializer(rep)
@@ -227,10 +244,10 @@ def get_case(request, case_id):
 
 @api_view(['PATCH'])
 @permission_classes([permissions.IsAuthenticated])
-def update_case(request, case_id):
+def update_case(request, id):
     try:
         if request.user.is_moh_staff:
-            case = PositiveCase.objects.get(case_id=case_id)
+            case = PositiveCase.objects.get(id=id)
             if request.data.get('recovering_location') != case.recovering_location or request.data.get('status') != case.status:
                 if request.data.get('recovering_location'):
                     case.recovering_location = request.data.get('recovering_location')
@@ -247,15 +264,25 @@ def date_iter(year, month):
         yield datetime.date(year, month, i)
 
 @api_view(['GET'])
-def graph(request, year, month):
+def graph(request, year, month, parish):
     drl_dict = []
     p_dict = []
     v_dict = []
-    exclude_list = ['Dead', 'Recovered']
     for date in date_iter(year, month):
-        death = PositiveCase.objects.filter(status='Dead', last_updated=date).count()
-        recovered = PositiveCase.objects.filter(status='Recovered', last_updated=date).count()
-        hospitalized = PositiveCase.objects.filter(status='Hospitalized', last_updated=date).count()
+        if parish == 'All':
+            death = DeathCase.objects.filter(death_date=date).count()
+            recovered = RecoveredCase.objects.filter(recovery_date=date).count()
+            hospitalized = HospitalizedCase.objects.filter(hospitalized_date=date).count()
+            male = PositiveCase.objects.filter(date_tested=date, patient__gender='Male').count()
+            female = PositiveCase.objects.filter(date_tested=date, patient__gender='Female').count()
+            vaccinations = Vaccination.objects.filter(date_given=date, status='Completed').count()
+        else:
+            death = DeathCase.objects.filter(death_date=date, patient__parish=parish).count()
+            recovered = RecoveredCase.objects.filter(recovery_date=date, patient__parish=parish).count()
+            hospitalized = HospitalizedCase.objects.filter(hospitalized_date=date, patient__parish=parish).count()
+            male = PositiveCase.objects.filter(date_tested=date, patient__gender='Male', patient__parish=parish).count()
+            female = PositiveCase.objects.filter(date_tested=date, patient__gender='Female', patient__parish=parish).count()
+            vaccinations = Vaccination.objects.filter(date_given=date, status='Completed', patient__parish=parish).count()
         data = {
             'name': date.strftime('%d-%h'),
             'death': death,
@@ -263,15 +290,12 @@ def graph(request, year, month):
             'hospitalized':hospitalized,
         }
         drl_dict.append(data)
-        male = PositiveCase.objects.filter(date_tested=date, patient__gender='Male').exclude(status__in=exclude_list).count()
-        female = PositiveCase.objects.filter(date_tested=date, patient__gender='Female').exclude(status__in=exclude_list).count()
         positive_data = {
             'name': date.strftime('%d-%h'),
             'male': male,
             'female': female,
         }
         p_dict.append(positive_data)
-        vaccinations = Vaccination.objects.filter(date_given=date, status='Completed').count()
         v_data = {
             'name': date.strftime('%d-%h'), 
             'vaccinations': vaccinations,
@@ -283,3 +307,24 @@ def graph(request, year, month):
         'vaccinations': v_dict,
     }
     return Response(res, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def generate_cvs(request, date, type):
+    try:
+        if request.user.is_moh_staff:
+            with open (f'media/csv/{type}-report-{date}-for-{str(request.user)}.csv', 'w', newline='') as f:
+                writer = csv.writer(f)
+                writer.writerow(['First Name', 'Last Name', 'Phone', 'Street Address', 'City', 'Parish', 'Date',])
+                if type == 'Positive Cases':
+                    cases = PositiveCase.objects.filter(date_tested=date).values_list('patient__first_name', 'patient__last_name', 'patient__phone', 'patient__street_address', 'patient__city', 'patient__parish', 'date_tested')
+                if type == 'Death':
+                    cases = DeathCase.objects.filter(death_date=date).values_list('patient__first_name', 'patient__last_name', 'patient__phone', 'patient__street_address', 'patient__city', 'patient__parish', 'death_date')
+                if type == 'Recovered':
+                    cases = RecoveredCase.objects.filter(recovery_date=date).values_list('patient__first_name', 'patient__last_name', 'patient__phone', 'patient__street_address', 'patient__city', 'patient__parish', 'recovery_date')
+                for case in cases:
+                    writer.writerow(case)
+            return Response({'link': f'http://192.168.0.200:8000/media/csv/{type}-report-{date}-for-{str(request.user)}.csv'})
+        return Response({'Message': 'You are not authorized to generate this report!'}, status=status.HTTP_401_UNAUTHORIZED)
+    except:
+        return Response({'Message': 'Something went wrong!'}, status=status.HTTP_400_BAD_REQUEST)

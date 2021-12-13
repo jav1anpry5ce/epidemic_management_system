@@ -4,10 +4,11 @@ import Grid from "@mui/material/Grid";
 import { useSelector, useDispatch } from "react-redux";
 import {
   clearState,
-  getPositiveCases,
   getCase,
   updateCase,
   updateSuccess,
+  resetLink,
+  generateCsv,
 } from "../../store/mohSlice";
 import { useHistory } from "react-router-dom";
 import { setActiveKey } from "../../store/navbarSlice";
@@ -24,11 +25,14 @@ import {
   Spin,
   Select,
   Button,
+  DatePicker,
 } from "antd";
 import shortid from "shortid";
 import toLocaldate from "../../functions/toLocalDate";
+import formatDate from "../../functions/formatDate";
 import { open } from "../../functions/Notifications";
 import axios from "axios";
+import moment from "moment";
 const { Title } = Typography;
 const { Option } = Select;
 
@@ -42,6 +46,12 @@ const recoveringData = [
   { label: "Hospitalized", value: "Hospitalized" },
   { label: "Recovered", value: "Recovered" },
   { label: "Dead", value: "Dead" },
+];
+
+const statusType = [
+  { label: "Death", value: "Death" },
+  { label: "Recovered", value: "Recovered" },
+  { label: "Positive Cases", value: "Positive Cases" },
 ];
 
 function calculate_age(dob) {
@@ -71,6 +81,9 @@ export default function PositiveCases() {
   const [q, setQ] = useState("");
   const [page, setPage] = useState(1);
   const [form] = Form.useForm();
+  const [genShow, setGenShow] = useState(false);
+  const [date, setDate] = useState(formatDate(new Date()));
+  const [sType, setSType] = useState("Positive Cases");
   const scroll = { y: 470 };
 
   useEffect(() => {
@@ -81,7 +94,6 @@ export default function PositiveCases() {
 
   useEffect(() => {
     dispatch(setActiveKey("3"));
-    dispatch(getPositiveCases());
     return () => dispatch(clearState());
     // eslint-disable-next-line
   }, []);
@@ -96,7 +108,7 @@ export default function PositiveCases() {
     };
     axios
       .get(
-        `/api/get-positive-cases/?page=${page}&pageSize=${pageSize}&ordering=${order}status${
+        `/api/get-cases/${sType}?page=${page}&pageSize=${pageSize}${
           q && `&search=${q}`
         }`,
         config
@@ -118,7 +130,7 @@ export default function PositiveCases() {
   useEffect(() => {
     fetch();
     // eslint-disable-next-line
-  }, [page, order, pageSize]);
+  }, [page, order, pageSize, sType]);
 
   useEffect(() => {
     if (moh.success) {
@@ -147,7 +159,12 @@ export default function PositiveCases() {
         rep_last_name: moh.caseData.rep && moh.caseData.rep.rep_last_name,
         rep_email: moh.caseData.rep && moh.caseData.rep.rep_email,
         rep_phone: moh.caseData.rep && moh.caseData.rep.rep_phone,
-        tested: toLocaldate(moh.caseData.case.date_tested),
+        tested:
+          sType === "Positive Cases"
+            ? toLocaldate(moh.caseData.case.date_tested)
+            : sType === "Death"
+            ? toLocaldate(moh.caseData.case.death_date)
+            : toLocaldate(moh.caseData.case.recovery_date),
         location: moh.caseData.case.recovering_location,
         status: moh.caseData.case.status,
       });
@@ -173,6 +190,14 @@ export default function PositiveCases() {
     if (location && status) {
       dispatch(updateCase(data));
     }
+  };
+
+  const handelGenerate = () => {
+    const data = {
+      type: sType,
+      date,
+    };
+    dispatch(generateCsv(data));
   };
 
   const handleTableChange = (pagination, a, sorter) => {
@@ -229,41 +254,41 @@ export default function PositiveCases() {
       },
     },
 
-    {
-      title: "Recovering Location",
-      dataIndex: "recovering_location",
-      render: (recovering_location) => (
-        <Tooltip placement="topLeft" title={recovering_location}>
-          {recovering_location}
-        </Tooltip>
-      ),
-      ellipsis: {
-        showTitle: false,
-      },
-    },
-    {
-      title: "Status",
-      dataIndex: "status",
-      sorter: true,
-      render: (status) => (
-        <Tooltip placement="topLeft" title={status}>
-          {status}
-        </Tooltip>
-      ),
-      ellipsis: {
-        showTitle: false,
-      },
-    },
+    // {
+    //   title: "Recovering Location",
+    //   dataIndex: "recovering_location",
+    //   render: (recovering_location) => (
+    //     <Tooltip placement="topLeft" title={recovering_location}>
+    //       {recovering_location}
+    //     </Tooltip>
+    //   ),
+    //   ellipsis: {
+    //     showTitle: false,
+    //   },
+    // },
+    // {
+    //   title: "Status",
+    //   dataIndex: "status",
+    //   sorter: true,
+    //   render: (status) => (
+    //     <Tooltip placement="topLeft" title={status}>
+    //       {status}
+    //     </Tooltip>
+    //   ),
+    //   ellipsis: {
+    //     showTitle: false,
+    //   },
+    // },
     {
       title: "Action",
-      dataIndex: "case_id",
+      dataIndex: "id",
       render: (dataIndex) => (
         <EyeOutlined
           className="hover:text-blue-400 cursor-pointer"
           onClick={() => {
             setShow(true);
             setCaseId(dataIndex);
-            dispatch(getCase(dataIndex));
+            dispatch(getCase({ type: sType, id: dataIndex }));
           }}
         />
       ),
@@ -470,43 +495,57 @@ export default function PositiveCases() {
               </Grid>
               <Grid item xs={6}>
                 <Form.Item
-                  label="Date Tested"
+                  label={
+                    sType === "Positive Cases"
+                      ? "Date Tested"
+                      : sType === "Death"
+                      ? "Death Date"
+                      : "Recovery Date"
+                  }
                   name="tested"
                   style={{ marginBottom: 0 }}
                 >
                   <Input readOnly />
                 </Form.Item>
               </Grid>
-              <Grid item xs={6}>
-                <Form.Item
-                  label="Recovering Location"
-                  name="location"
-                  style={{ marginBottom: 0 }}
+              {sType === "Positive Cases" && (
+                <Grid
+                  container
+                  spacing={2}
+                  style={{ marginLeft: 1, marginTop: 1 }}
                 >
-                  <Select onChange={(e) => setLocation(e)}>
-                    {recoveringLocationData.map((item, index) => (
-                      <Option key={index} value={item.value}>
-                        {item.label}
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-              </Grid>
-              <Grid item xs={6}>
-                <Form.Item
-                  label="Status"
-                  name="status"
-                  style={{ marginBottom: 0 }}
-                >
-                  <Select onChange={(e) => setStatus(e)}>
-                    {recoveringData.map((item) => (
-                      <Option key={shortid.generate()} value={item.value}>
-                        {item.label}
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-              </Grid>
+                  <Grid item xs={6}>
+                    <Form.Item
+                      label="Recovering Location"
+                      name="location"
+                      style={{ marginBottom: 0 }}
+                    >
+                      <Select onChange={(e) => setLocation(e)}>
+                        {recoveringLocationData.map((item, index) => (
+                          <Option key={index} value={item.value}>
+                            {item.label}
+                          </Option>
+                        ))}
+                      </Select>
+                    </Form.Item>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Form.Item
+                      label="Status"
+                      name="status"
+                      style={{ marginBottom: 0 }}
+                    >
+                      <Select onChange={(e) => setStatus(e)}>
+                        {recoveringData.map((item) => (
+                          <Option key={shortid.generate()} value={item.value}>
+                            {item.label}
+                          </Option>
+                        ))}
+                      </Select>
+                    </Form.Item>
+                  </Grid>
+                </Grid>
+              )}
             </Grid>
           </Form>
         )}
@@ -515,6 +554,45 @@ export default function PositiveCases() {
             className="flex justify-center align-center"
             indicator={<LoadingOutlined style={{ fontSize: 62 }} />}
           />
+        )}
+      </Modal>
+      <Modal
+        visible={genShow}
+        onCancel={() => {
+          setGenShow(false);
+          dispatch(resetLink());
+        }}
+        footer={[
+          <Button
+            onClick={() => {
+              setGenShow(false);
+              dispatch(resetLink());
+            }}
+          >
+            Cancel
+          </Button>,
+          <Button
+            style={{ border: "none" }}
+            className="rounded-sm bg-gray-700 text-white hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white transition duration-300"
+            onClick={handelGenerate}
+          >
+            Generate
+          </Button>,
+        ]}
+      >
+        <h3 className="text-base mb-2">Cases date</h3>
+        <DatePicker
+          className="w-full"
+          format="DD/MM/yyyy"
+          defaultValue={moment(new Date())}
+          onChange={(e) => setDate(formatDate(e._d))}
+        />
+        {moh.link && (
+          <p className="text-base mt-2">
+            <a href={moh.link} download>
+              {moh.link}
+            </a>
+          </p>
         )}
       </Modal>
       <Card
@@ -527,12 +605,26 @@ export default function PositiveCases() {
         bordered={false}
         style={{ width: "100%" }}
       >
-        <Input.Search
-          className="w-2/5 mb-4"
-          onChange={(e) => setQ(e.target.value)}
-          placeholder="Search using last name or TRN"
-          onSearch={() => fetch()}
-        />
+        <div className="flex justify-between">
+          <Select
+            className="w-80"
+            onChange={(e) => setSType(e)}
+            defaultValue={sType}
+          >
+            {statusType.map((item) => (
+              <Option key={shortid.generate()} value={item.value}>
+                {item.label}
+              </Option>
+            ))}
+          </Select>
+          <Input.Search
+            className="w-2/5 mb-4"
+            onChange={(e) => setQ(e.target.value)}
+            placeholder="Search using last name or TRN"
+            onSearch={() => fetch()}
+          />
+        </div>
+
         <Table
           columns={columns}
           dataSource={data}
@@ -542,6 +634,15 @@ export default function PositiveCases() {
           onChange={handleTableChange}
           scroll={scroll}
         />
+        <div className="flex -mt-12">
+          <Button
+            onClick={() => setGenShow(true)}
+            style={{ border: "none" }}
+            className="rounded-sm bg-gray-700 text-white hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white transition duration-300"
+          >
+            Generate Report
+          </Button>
+        </div>
       </Card>
     </Container>
   );

@@ -6,7 +6,6 @@ import {
   DatePicker,
   Select,
   Modal,
-  TimePicker,
   Card,
   Checkbox,
 } from "antd";
@@ -58,7 +57,6 @@ export default function MakeAppointment() {
     { label: "Dr.", value: "Dr." },
   ];
   const parishData = [
-    { label: "Kingston", value: "Kingston" },
     { label: "St. Andrew", value: "St. Andrew" },
     { label: "Portland ", value: "Portland " },
     { label: "St. Thomas", value: "St. Thomas" },
@@ -108,6 +106,7 @@ export default function MakeAppointment() {
   const [repEmail, setRepEmail] = useState("");
   const [repPhone, setRepPhone] = useState("");
   const [effect, setEffect] = useState("");
+  const [availableDates, setAvailableDates] = useState([]);
 
   useEffect(() => {
     dispatch(setActiveKey("4"));
@@ -214,6 +213,15 @@ export default function MakeAppointment() {
     appointment.loading,
     patient.vMessage,
   ]);
+
+  useEffect(() => {
+    if (location.data) {
+      let dates = location.data.availability.filter(
+        (item) => formatDate(item.date) === formatDate(appointmentDate)
+      );
+      setAvailableDates(dates);
+    }
+  }, [location.data, appointmentDate]);
 
   const getDetailedInfo = () => {
     const data = {
@@ -760,21 +768,26 @@ export default function MakeAppointment() {
                   },
                 ]}
               >
-                <TimePicker
-                  disabledHours={() => [
-                    0, 1, 2, 3, 4, 5, 6, 7, 17, 18, 19, 20, 21, 22, 23, 24,
-                  ]}
-                  minuteStep={15}
-                  disabled={location.loading}
-                  format="HH:mm"
-                  hideDisabledOptions
-                  showNow={false}
-                  style={{ width: "100%" }}
-                  //showMeridian
-                  onSelect={(e) =>
-                    setAppointmentTime(e._d.toLocaleTimeString("it-IT"))
+                <Select
+                  vlaue={appointmentTime}
+                  onChange={(e) =>
+                    setAppointmentTime(
+                      new Date(`2021-12-12 ${e}`).toLocaleTimeString("it-IT")
+                    )
                   }
-                />
+                >
+                  {availableDates.map((item) => (
+                    <Option value={item.time} key={shortid.generate()}>
+                      {new Date(`$2021-12-12 ${item.time}`).toLocaleTimeString(
+                        [],
+                        {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        }
+                      )}
+                    </Option>
+                  ))}
+                </Select>
               </Form.Item>
             </Grid>
             <Grid item xs={12} sm={6}>
