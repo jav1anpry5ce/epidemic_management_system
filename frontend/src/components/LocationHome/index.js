@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { locationBreakdown, clearState } from "../../store/locationSlice";
 import { useSelector, useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Container, CardContent, Grid } from "@mui/material";
 import { setActiveKey } from "../../store/navbarSlice";
 import { Card } from "../Moh/MohElements";
@@ -15,11 +15,11 @@ export default function LocationHome() {
   const data = useSelector((state) => state.location);
   const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  const history = useHistory();
+  const nagivate = useNavigate();
 
   useEffect(() => {
     if (!auth.is_auth) {
-      history.push("/account/login");
+      nagivate("/accounts/login");
     }
     dispatch(locationBreakdown());
     dispatch(setActiveKey("1"));

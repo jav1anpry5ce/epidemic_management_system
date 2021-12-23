@@ -38,7 +38,7 @@ class LocationView(APIView):
 
     def post(self, request):
         try:
-            location = Location.objects.get(value=request.data.get('value'))
+            location = Location.objects.get(slug=request.data.get('value'))
             offer = Offer.objects.filter(location=location)
             test = Test.objects.filter(location=location)
             vaccine = LocationVaccine.objects.filter(location=location, number_of_dose__gte=Case(When(value='Johnson & Johnson', then=1), default=2))
@@ -85,7 +85,7 @@ class AppointmentView(APIView):
                 if rep_serializer.is_valid():
                     if Patient.objects.filter(tax_number=request.data.get('tax_number')).exists():
                         rep_serializer.save(patient=patient)
-                location = Location.objects.get(value=request.data.get('location'))
+                location = Location.objects.get(slug=request.data.get('location'))
                 if request.data.get('type') == "Testing":
                     try:
                         appointment = seraializer.save(patient=patient, location=location)
@@ -335,8 +335,8 @@ def get_appointment(request, appointment_id):
 def patient_vaccine(request):
     try:
         patient = Patient.objects.get(tax_number=request.data.get('tax_number'))
-        vaccine = Vaccination.objects.get(patient=patient, status='Completed')
-        res = [{'value': vaccine.manufacture, 'label': vaccine.manufacture, 'role': "Master"}]
+        vaccine = Vaccination.objects.filter(patient=patient, status='Completed')
+        res = [{'value': vaccine[0].manufacture, 'label': vaccine[0].manufacture}]
         return Response(res, status=status.HTTP_200_OK)
     except:
         return Response(status=status.HTTP_404_NOT_FOUND)

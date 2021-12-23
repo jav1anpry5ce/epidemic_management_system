@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import { useSelector, useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { setActiveKey } from "../../store/navbarSlice";
 import {
   Card,
@@ -36,7 +36,7 @@ const { Option } = Select;
 
 export default function VaccinationAndTesting() {
   const dispatch = useDispatch();
-  const history = useHistory();
+  const navigate = useNavigate();
   const testVac = useSelector((state) => state.testVac);
   const auth = useSelector((state) => state.auth);
   const [date, setDate] = useState(formatDate(new Date()));
@@ -75,7 +75,7 @@ export default function VaccinationAndTesting() {
     dispatch(setActiveKey("2"));
     dispatch(clearState());
     if (!auth.is_auth) {
-      history.push("/account/login");
+      navigate("/accounts/login");
     }
     return () => dispatch(clearState());
     // eslint-disable-next-line

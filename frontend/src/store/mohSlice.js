@@ -8,7 +8,7 @@ export const getAllPatients = createAsyncThunk("all/patients", async () => {
       Authorization: "Token " + sessionStorage.getItem("token"),
     },
   };
-  const response = await axios.get("api/all-patients/", config);
+  const response = await axios.get("api/patients/", config);
   if (response.status === 200) {
     const patients = response.data;
     return { patients };
@@ -22,7 +22,7 @@ export const getPatient = createAsyncThunk("get/patient", async (trn) => {
       Authorization: "Token " + sessionStorage.getItem("token"),
     },
   };
-  const response = await axios.get(`api/get-patient/${trn}`, config);
+  const response = await axios.get(`api/patients/details/${trn}/`, config);
   if (response.status === 200) {
     const data = response.data;
     return { data };
@@ -119,10 +119,7 @@ export const getCase = createAsyncThunk("get/case", async (data) => {
       Authorization: "Token " + sessionStorage.getItem("token"),
     },
   };
-  const response = await axios.get(
-    `api/get-case/${data.type}/${data.id}`,
-    config
-  );
+  const response = await axios.get(`api/cases/${data.type}/${data.id}`, config);
   if (response.status === 200) {
     const data = response.data;
     return { data };
@@ -139,7 +136,7 @@ export const updateCase = createAsyncThunk(
       },
     };
     try {
-      await axios.patch(`api/update-case/${data.case_id}`, data, config);
+      await axios.patch(`api/cases/update/${data.case_id}`, data, config);
     } catch (err) {
       return rejectWithValue(err.response.data);
     }

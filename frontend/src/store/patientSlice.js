@@ -8,10 +8,7 @@ export const info = createAsyncThunk("info", async (id) => {
       Accept: "application/json",
     },
   };
-  const data = {
-    id: id,
-  };
-  const response = await axios.post("/api/patient-info/", data, config);
+  const response = await axios.get(`/api/patients/${id}/`, config);
   if (response.status === 200) {
     const patient = response.data;
     return { patient };
@@ -25,7 +22,7 @@ export const verify = createAsyncThunk("verify", async (data) => {
       Accept: "application/json",
     },
   };
-  const response = await axios.post("/api/verify-patient/", data, config);
+  const response = await axios.post("/api/patients/verify", data, config);
   if (response.status === 202) {
     const message = response.data;
     return { message };
@@ -42,7 +39,11 @@ export const detailedInfo = createAsyncThunk(
       },
     };
     try {
-      const response = await axios.post("/api/detailed-patient/", data, config);
+      const response = await axios.post(
+        "/api/patients/detailed/verify",
+        data,
+        config
+      );
       if (response.status === 200) {
         const data = response.data;
         return { data };
@@ -97,7 +98,7 @@ export const updateInfoVerify = createAsyncThunk(
       },
     };
     try {
-      await axios.post("api/update-info-verify/", data, config);
+      await axios.post("api/patients/update/code/", data, config);
     } catch (err) {
       return rejectWithValue(err.response.data);
     }
@@ -113,7 +114,11 @@ export const codeVerify = createAsyncThunk(
       },
     };
     try {
-      const response = await axios.post("/api/verify-code/", data, config);
+      const response = await axios.post(
+        "/api/patients/verify/code/",
+        data,
+        config
+      );
       if (response.status === 202) {
         const code = response.data;
         return { code };
@@ -150,7 +155,7 @@ export const UpdatePatientInfo = createAsyncThunk(
       formData.append("country", data.country);
     }
     try {
-      await axios.patch("api/update-info/", formData, config);
+      await axios.put("api/patients/update", formData, config);
     } catch (err) {
       return rejectWithValue(err.response.data);
     }

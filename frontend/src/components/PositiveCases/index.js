@@ -10,7 +10,7 @@ import {
   resetLink,
   generateCsv,
 } from "../../store/mohSlice";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { setActiveKey } from "../../store/navbarSlice";
 import { EyeOutlined } from "@ant-design/icons";
 import { LoadingOutlined } from "@ant-design/icons";
@@ -65,7 +65,7 @@ export default function PositiveCases() {
   const moh = useSelector((state) => state.moh);
   const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [show, setShow] = useState(false);
   const [status, setStatus] = useState("");
   const [location, setLocation] = useState("");
@@ -88,9 +88,10 @@ export default function PositiveCases() {
 
   useEffect(() => {
     if (!auth.is_auth && !auth.is_moh_staff) {
-      history.push("/account/login");
+      navigate("/accounts/login");
     }
-  }, [auth.is_moh_staff, auth.is_auth, history]);
+    // eslint-disable-next-line
+  }, [auth.is_moh_staff, auth.is_auth]);
 
   useEffect(() => {
     dispatch(setActiveKey("3"));
@@ -108,7 +109,7 @@ export default function PositiveCases() {
     };
     axios
       .get(
-        `/api/get-cases/${sType}?page=${page}&pageSize=${pageSize}${
+        `/api/cases/${sType}?page=${page}&pageSize=${pageSize}${
           q && `&search=${q}`
         }`,
         config

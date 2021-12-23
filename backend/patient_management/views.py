@@ -11,6 +11,9 @@ from rest_framework.decorators import api_view
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import filters
 from django_filters import rest_framework as filterss
+from django.contrib.sites.models import Site
+from sms import send_sms
+from django.core.mail import EmailMultiAlternatives
 
 from .models import Patient, UpdatePatientCode, PatientCode, NextOfKin, PositiveCase, Representative, DeathCase, RecoveredCase, HospitalizedCase
 from .serializers import (
@@ -30,6 +33,8 @@ from vaccination.models import Vaccination
 from testing.serializers import TestingSerializer
 from vaccination.serializers import VaccinationSerializer
 
+site = Site.objects.get_current()
+
 class PatientView(APIView):
     def post(self, request):
         try:
@@ -45,6 +50,24 @@ class PatientView(APIView):
             return Response(seraializer.data, status=status.HTTP_200_OK)
         except:
             return Response(status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def get_patient_object(request, unique_id):
+    try:
+        patient = Patient.objects.get(unique_id=unique_id)
+        seraializer = PatientSerializer(patient)
+        return Response(seraializer.data, status=status.HTTP_200_OK) 
+    except:
+        return Response(status=status.HTTP_404_NOT_FOUND) 
+
+@api_view(['GET'])
+def get_detailed_patient_object(request, trn):
+    try:
+        patient = Patient.objects.get(tax_number=trn)
+        seraializer = GetDetailedPatient(patient)
+        return Response(seraializer.data, status=status.HTTP_200_OK)
+    except:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['POST'])
@@ -77,9 +100,9 @@ def update_info_verify(request):
     try:
         try:
             if request.data.get('date_of_birth'):
-                try:
+                if Patient.objects.filter(tax_number=request.data.get('tax_number')).exists():
                     patient = Patient.objects.get(tax_number=request.data.get('tax_number'))
-                except:
+                else:
                     return Response({'Message': 'The enterd information does not match our records!'}, status=status.HTTP_404_NOT_FOUND)
                 if patient.last_name.upper() == request.data.get('last_name').upper() and str(patient.date_of_birth) == str(request.data.get('date_of_birth')):
                     if UpdatePatientCode.objects.filter(patient=patient).exists():
@@ -102,7 +125,7 @@ def verify_code(request):
     except:
         return Response({'Message': 'Invalid code entered!'}, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['PATCH'])
+@api_view(['PUT'])
 @parser_classes([MultiPartParser, FormParser])
 def update_info(request):
     try:
@@ -165,7 +188,7 @@ class MOHPatientView(ListAPIView):
 
 @api_view(['GET'])
 @permission_classes([permissions.IsAuthenticated])
-def get_patient(request, trn):
+def get_patient_details(request, trn):
     try:
         if request.user.is_moh_staff:
             patient = Patient.objects.get(tax_number=trn)
@@ -328,3 +351,70 @@ def generate_cvs(request, date, type):
         return Response({'Message': 'You are not authorized to generate this report!'}, status=status.HTTP_401_UNAUTHORIZED)
     except:
         return Response({'Message': 'Something went wrong!'}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+def get_patient_records(request):
+    if Patient.objects.filter(tax_number=request.data.get('trn')).exists():
+        patient = Patient.objects.get(tax_number=request.data.get('trn'))
+        code = PatientCode.objects.get_or_create(patient=patient)
+        subject, from_email, to = 'Verify identity', 'donotreply@localhost', patient.email
+        html_content = f'''
+        <html>
+            <body>
+                <p>Hello {patient.first_name},</p>
+                <p>We have received your request to view your records.</p>
+                <p>Please enter the code provied below to verify your identity, and you will be on your way.</p>
+                <p>Code: {code[0].code}</p>
+                <p>Do not share this code with anyone!</p>
+            </body>
+        </html>
+        '''
+        text_content = ""
+        msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+        msg.attach_alternative(html_content, "text/html")
+        msg.content_subtype = "html"
+        msg.send()
+        text = f'''Hello {patient.first_name},
+We have received your request to view your records.
+Please enter the code provied below to verify your identity, and you will be on your way.
+Code: {code[0].code}
+Do not share this code with anyone!
+'''
+        send_sms(
+        text.strip(),
+        '+12065550100',
+        [f'{patient.phone},'],
+        fail_silently=True
+        )
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    return Response({'Message': 'Patient not found'}, status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['POST'])
+def get_patient_records_link(request):
+    patient = PatientCode.objects.get(code=request.data.get('code')).patient
+    subject, from_email, to = 'Record Link', 'donotreply@localhost', patient.email
+    html_content = f'''
+    <html>
+        <body>
+            <p>Hello {patient.first_name},</p>
+            <p>Here is the link to view your records <a href="{site}patient-info/{patient.unique_id}">{site}patient-info/{patient.unique_id}</a></p>
+        </body>
+    </html>
+    '''
+    text_content = ""
+    msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+    msg.attach_alternative(html_content, "text/html")
+    msg.content_subtype = "html"
+    msg.send()
+    text = f'''Hello {patient.first_name},
+Here is the link to view your records. {site}patient-info/{patient.unique_id}
+'''
+    send_sms(
+    text.strip(),
+    '+12065550100',
+    [f'{patient.phone},'],
+    fail_silently=True
+    )
+    PatientCode.objects.get(patient=patient).delete()
+    return Response({'Link': f'patient-info/{patient.unique_id}'}, status=status.HTTP_200_OK)
+        

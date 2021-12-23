@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Icon, Navbar, Nav, Dropdown } from "rsuite";
 import { FaBars } from "react-icons/fa";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../store/authSlice";
 import { setActiveKey } from "../../store/navbarSlice";
@@ -10,22 +10,19 @@ import { BiTestTube, BiCurrentLocation } from "react-icons/bi";
 import { GiHypodermicTest, GiCardboardBox } from "react-icons/gi";
 import { BsPersonFill, BsPersonPlusFill } from "react-icons/bs";
 import { RiVirusLine } from "react-icons/ri";
-import { AiFillHome } from "react-icons/ai";
+import { AiFillHome, AiOutlineFileText } from "react-icons/ai";
 import { MdEventAvailable } from "react-icons/md";
 
 export default function NavBar({ hide, setHide }) {
   const auth = useSelector((state) => state.auth);
   const nav = useSelector((state) => state.navbar);
   const dispatch = useDispatch();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [show, setShow] = useState(true);
 
   const [expand, setExpand] = useState(false);
   const [height, setHeight] = useState(39);
 
-  function nagivate(link) {
-    history.push(link);
-  }
   const handelSelect = (eventKey) => {
     dispatch(setActiveKey(eventKey));
   };
@@ -43,10 +40,7 @@ export default function NavBar({ hide, setHide }) {
     } else {
       setHeight(39);
     }
-    if (
-      window.location.hash.includes("#/patient-info/") ||
-      window.location.hash.includes("#/got-the-stach/")
-    ) {
+    if (window.location.pathname.includes("got-the-stach/")) {
       setHide(true);
     } else {
       setHide(false);
@@ -57,7 +51,7 @@ export default function NavBar({ hide, setHide }) {
   useEffect(() => {
     if (!auth.is_auth) {
       if (window.location.hash.includes("%20")) {
-        history.push("/account/login");
+        navigate("/accounts/login");
       }
     }
     // eslint-disable-next-line
@@ -95,7 +89,7 @@ export default function NavBar({ hide, setHide }) {
           {auth.is_moh_staff ? (
             <Container maxWidth="xsl">
               <Nav onSelect={handelSelect} activeKey={nav.activeKey}>
-                <Nav.Item eventKey="1" onClick={() => nagivate("/moh/home")}>
+                <Nav.Item eventKey="1" onClick={() => navigate("/moh/home")}>
                   <div className="flex">
                     {<AiFillHome className="flex text-lg mr-1" />}
                     Home
@@ -103,7 +97,7 @@ export default function NavBar({ hide, setHide }) {
                 </Nav.Item>
                 <Nav.Item
                   eventKey="2"
-                  onClick={() => nagivate("/moh/patients")}
+                  onClick={() => navigate("/moh/patients")}
                 >
                   <div className="flex">
                     {<BsPersonFill className="flex text-lg mr-1" />}
@@ -112,17 +106,14 @@ export default function NavBar({ hide, setHide }) {
                 </Nav.Item>
                 <Nav.Item
                   eventKey="3"
-                  onClick={() => nagivate("/moh/positive-cases")}
+                  onClick={() => navigate("/moh/positive-cases")}
                 >
                   <div className="flex">
                     {<RiVirusLine className="flex text-lg mr-1" />}
                     Positive Cases
                   </div>
                 </Nav.Item>
-                <Nav.Item
-                  eventKey="4"
-                  onClick={() => nagivate("/moh/batch-management")}
-                >
+                <Nav.Item eventKey="4" onClick={() => navigate("/moh/batches")}>
                   <div className="flex">
                     {<GiCardboardBox className="flex text-lg mr-1" />}
                     Batch
@@ -130,7 +121,7 @@ export default function NavBar({ hide, setHide }) {
                 </Nav.Item>
                 <Nav.Item
                   eventKey="5"
-                  onClick={() => nagivate("/moh/locations")}
+                  onClick={() => navigate("/moh/locations")}
                 >
                   <div className="flex">
                     {<BiCurrentLocation className="flex text-lg mr-1" />}
@@ -140,7 +131,7 @@ export default function NavBar({ hide, setHide }) {
                 {auth.is_moh_admin && (
                   <Nav.Item
                     eventKey="6"
-                    onClick={() => nagivate("/moh/add-staff")}
+                    onClick={() => navigate("/moh/add-staff")}
                   >
                     <div className="flex">
                       {<BsPersonPlusFill className="flex text-lg mr-1" />}
@@ -169,14 +160,16 @@ export default function NavBar({ hide, setHide }) {
                 <Dropdown title="Settings" icon={<Icon icon="cog" />}>
                   <Dropdown.Item
                     eventKey="8"
-                    onClick={() => nagivate("/account/change-password")}
+                    onClick={() => navigate("/accounts/change-password")}
                   >
                     Change Password
                   </Dropdown.Item>
                   {auth.is_moh_admin && (
                     <Dropdown.Item
                       eventKey="9"
-                      onClick={() => nagivate("/reset/password/request")}
+                      onClick={() =>
+                        navigate("/accounts/reset/password/request")
+                      }
                     >
                       Reset employee password
                     </Dropdown.Item>
@@ -189,7 +182,7 @@ export default function NavBar({ hide, setHide }) {
               <Nav onSelect={handelSelect} activeKey={nav.activeKey}>
                 <Nav.Item
                   eventKey="1"
-                  onClick={() => nagivate(`/${auth.location}/home`)}
+                  onClick={() => navigate(`/${auth.location}/home`)}
                 >
                   <div className="flex">
                     {<AiFillHome className="flex text-lg mr-1" />}
@@ -199,21 +192,23 @@ export default function NavBar({ hide, setHide }) {
                 <Nav.Item
                   eventKey="2"
                   icon={<Icon icon="flask" />}
-                  onClick={() => nagivate("/test-vac/management")}
+                  onClick={() =>
+                    navigate(`/${auth.location}/test-vac/management`)
+                  }
                 >
                   Vaccination and Testing
                 </Nav.Item>
                 <Nav.Item
                   eventKey="3"
                   icon={<Icon icon="calendar" />}
-                  onClick={() => nagivate(`/${auth.location}/appointments`)}
+                  onClick={() => navigate(`/${auth.location}/appointments`)}
                 >
                   Appointments{" "}
                 </Nav.Item>
                 {auth.is_location_admin && (
                   <Nav.Item
                     eventKey="4"
-                    onClick={() => nagivate("/admin/add-staff")}
+                    onClick={() => navigate(`/${auth.location}/add-staff`)}
                   >
                     <div className="flex">
                       {<BsPersonPlusFill className="flex text-lg mr-1" />}
@@ -223,7 +218,7 @@ export default function NavBar({ hide, setHide }) {
                 )}
                 <Nav.Item
                   eventKey="5"
-                  onClick={() => nagivate("/add/availability")}
+                  onClick={() => navigate(`/${auth.location}/add/availability`)}
                 >
                   <div className="flex">
                     {<MdEventAvailable className="flex text-lg mr-1" />}Add
@@ -235,8 +230,7 @@ export default function NavBar({ hide, setHide }) {
                 <Nav.Item
                   icon={<Icon icon="sign-out" />}
                   onClick={() => {
-                    dispatch(logout());
-                    history.push("/account/login");
+                    dispatch(logout()).then(() => navigate("/accounts/login"));
                   }}
                 >
                   Sign Out
@@ -247,14 +241,16 @@ export default function NavBar({ hide, setHide }) {
                 <Dropdown title="Settings" icon={<Icon icon="cog" />}>
                   <Dropdown.Item
                     eventKey="6"
-                    onClick={() => nagivate("/account/change-password")}
+                    onClick={() => navigate("/accounts/change-password")}
                   >
                     Change Password
                   </Dropdown.Item>
                   {auth.is_location_admin && (
                     <Dropdown.Item
                       eventKey="7"
-                      onClick={() => nagivate("/reset/password/request")}
+                      onClick={() =>
+                        navigate("/accounts/reset/password/request")
+                      }
                     >
                       Reset employee password
                     </Dropdown.Item>
@@ -279,9 +275,10 @@ export default function NavBar({ hide, setHide }) {
       >
         <Navbar.Body>
           {show ? (
+            // desktop
             <Container maxWidth="xsl">
               <Nav onSelect={handelSelect} activeKey={nav.activeKey}>
-                <Nav.Item onClick={() => nagivate("/")} eventKey="1">
+                <Nav.Item onClick={() => navigate("/")} eventKey="1">
                   <div className="flex">
                     {<AiFillHome className="flex text-lg mr-1" />}
                     Home
@@ -317,12 +314,24 @@ export default function NavBar({ hide, setHide }) {
                 </Nav.Item>
                 <Nav.Item
                   onClick={() => {
-                    nagivate("/appointments");
+                    navigate("/appointments");
                   }}
                   eventKey="4"
                   icon={<Icon icon="calendar" />}
                 >
                   Appoinments
+                </Nav.Item>
+                <Nav.Item
+                  onClick={() => {
+                    navigate("/records");
+                    setExpand(!expand);
+                  }}
+                  eventKey="5"
+                >
+                  <div className="flex">
+                    {<AiOutlineFileText className="flex text-lg mr-1" />}
+                    Get my Records
+                  </div>
                 </Nav.Item>
               </Nav>
               <Nav
@@ -333,8 +342,8 @@ export default function NavBar({ hide, setHide }) {
               >
                 <Dropdown title="Settings" icon={<Icon icon="cog" />}>
                   <Dropdown.Item
-                    eventKey="5"
-                    onClick={() => nagivate("/update/patient/info")}
+                    eventKey="6"
+                    onClick={() => navigate("/update/patient/info")}
                   >
                     Update Information
                   </Dropdown.Item>
@@ -342,14 +351,9 @@ export default function NavBar({ hide, setHide }) {
               </Nav>
             </Container>
           ) : (
+            // mobile
             // eslint-disable-next-line
-            <Container
-              maxWidth="xsl"
-              style={{
-                height: height,
-                transition: expand ? ".3s ease-in-out" : ".3s ease-out",
-              }}
-            >
+            <Container maxWidth="xsl" style={{ height: height }}>
               <FaBars
                 style={{
                   fontSize: 37,
@@ -362,12 +366,12 @@ export default function NavBar({ hide, setHide }) {
                 <Nav
                   onSelect={handelSelect}
                   activeKey={nav.activeKey}
-                  className="transition-all duration-500 ease-in-out w-full"
+                  className="transition-all ease-in-out duration-500 w-full"
                 >
                   <div className="grid grid-cols-1 place-items-center">
                     <Nav.Item
                       onClick={() => {
-                        nagivate("/");
+                        navigate("/");
                         setExpand(!expand);
                       }}
                       eventKey="1"
@@ -407,7 +411,7 @@ export default function NavBar({ hide, setHide }) {
                     </Nav.Item>
                     <Nav.Item
                       onClick={() => {
-                        nagivate("/appointments");
+                        navigate("/appointments");
                         setExpand(!expand);
                       }}
                       eventKey="4"
@@ -415,11 +419,23 @@ export default function NavBar({ hide, setHide }) {
                     >
                       Appoinments
                     </Nav.Item>
+                    <Nav.Item
+                      onClick={() => {
+                        navigate("/records");
+                        setExpand(!expand);
+                      }}
+                      eventKey="5"
+                    >
+                      <div className="flex">
+                        {<AiOutlineFileText className="flex text-lg mr-1" />}
+                        Get my Records
+                      </div>
+                    </Nav.Item>
                     <Dropdown title="Settings" icon={<Icon icon="cog" />}>
                       <Dropdown.Item
-                        eventKey="5"
+                        eventKey="6"
                         onClick={() => {
-                          nagivate("/update/patient/info");
+                          navigate("/update/patient/info");
                           setExpand(!expand);
                         }}
                       >

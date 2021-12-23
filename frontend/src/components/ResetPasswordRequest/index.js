@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Card, Input, Form, Button, Alert, Typography } from "antd";
 import Container from "@mui/material/Container";
 import { useSelector, useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { resetRequest, clearState } from "../../store/authSlice";
 import { open } from "../../functions/Notifications";
 import { setActiveKey } from "../../store/navbarSlice";
@@ -12,7 +12,7 @@ const { Title } = Typography;
 export default function ResetPasswordRequest() {
   const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [form] = Form.useForm();
   const [email, setEmail] = useState();
 
@@ -24,7 +24,7 @@ export default function ResetPasswordRequest() {
     }
 
     if (!auth.is_moh_admin && !auth.is_location_admin) {
-      history.push("/");
+      navigate("/");
     }
     if (auth.success) {
       open("success", "Success", "An email with a reset link has been sent!");

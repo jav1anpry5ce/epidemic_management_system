@@ -2,24 +2,26 @@ import React, { useState, useEffect } from "react";
 import { Card, Input, Form, Button, Alert, Typography } from "antd";
 import Container from "@mui/material/Container";
 import { useSelector, useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { resetPassword, clearState } from "../../store/authSlice";
 import { setActiveKey } from "../../store/navbarSlice";
 
 const { Title } = Typography;
 
-export default function ResetPassword({ match }) {
+export default function ResetPassword() {
   const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [newPassword, setNewPassword] = useState();
   const [conPassword, setConPassword] = useState();
+
+  const { token } = useParams();
 
   useEffect(() => {
     dispatch(setActiveKey(""));
     if (auth.success) {
       dispatch(clearState());
-      history.push("/account/login");
+      navigate("/accounts/login");
     }
     return () => dispatch(clearState());
     // eslint-disable-next-line
@@ -27,7 +29,7 @@ export default function ResetPassword({ match }) {
 
   const handelSubmit = () => {
     const data = {
-      reset_token: match.params.token,
+      reset_token: token,
       new_password: newPassword,
       con_password: conPassword,
     };

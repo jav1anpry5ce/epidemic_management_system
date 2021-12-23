@@ -4,7 +4,7 @@ import Avatar from "@mui/material/Avatar";
 import Grid from "@mui/material/Grid";
 import { useSelector, useDispatch } from "react-redux";
 import { getPatient, clearState } from "../../store/mohSlice";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import CollapseCard from "../CollapseCard";
 import { setActiveKey } from "../../store/navbarSlice";
 import { EyeOutlined } from "@ant-design/icons";
@@ -28,7 +28,7 @@ export default function Patients() {
   const moh = useSelector((state) => state.moh);
   const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [data, setData] = useState();
   const [order, setOrder] = useState("");
   const [pagination, setPagination] = useState({
@@ -47,9 +47,10 @@ export default function Patients() {
 
   useEffect(() => {
     if (!auth.is_auth && !auth.is_moh_staff) {
-      history.push("/account/login");
+      navigate("/accounts/login");
     }
-  }, [auth.is_moh_staff, auth.is_auth, history]);
+    // eslint-disable-next-line
+  }, [auth.is_moh_staff, auth.is_auth]);
 
   useEffect(() => {
     dispatch(setActiveKey("2"));
@@ -69,7 +70,7 @@ export default function Patients() {
     };
     axios
       .get(
-        `/api/all-patients/?page=${page}&pageSize=${pageSize}&ordering=${order}tax_number${
+        `/api/patients/?page=${page}&pageSize=${pageSize}&ordering=${order}tax_number${
           q && `&search=${q}`
         }`,
         config

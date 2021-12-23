@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { clearState, getAllLocations } from "../../store/mohSlice";
 import { useSelector, useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { setActiveKey } from "../../store/navbarSlice";
 import { register, clearState as CS } from "../../store/authSlice";
 import Container from "@mui/material/Container";
@@ -16,7 +16,7 @@ export default function MohAdd() {
   const data = useSelector((state) => state.moh);
   const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [email, setEmail] = useState();
   const [firstName, setFirstName] = useState();
   const [lastName, setLastName] = useState();
@@ -27,7 +27,7 @@ export default function MohAdd() {
 
   useEffect(() => {
     if (!auth.is_moh_admin) {
-      history.push("/moh/home");
+      navigate("/moh/home");
     }
     dispatch(setActiveKey("6"));
     dispatch(getAllLocations());

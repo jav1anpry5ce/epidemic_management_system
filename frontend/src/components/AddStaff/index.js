@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Card, Input, Form, Button, Alert, Typography, Checkbox } from "antd";
 import Container from "@mui/material/Container";
 import { useSelector, useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { register, clearState } from "../../store/authSlice";
 import { open } from "../../functions/Notifications";
 import { setActiveKey } from "../../store/navbarSlice";
@@ -12,7 +12,7 @@ const { Title } = Typography;
 export default function AddStaff() {
   const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [form] = Form.useForm();
   const [isAdmin, setIsAdmin] = useState(false);
   const [canCheckIn, setCanCheckIn] = useState(false);
@@ -26,7 +26,7 @@ export default function AddStaff() {
   useEffect(() => {
     dispatch(setActiveKey("4"));
     if (!auth.is_location_admin) {
-      history.push("/account/login");
+      navigate("/account/login");
     }
     if (auth.success) {
       form.resetFields();

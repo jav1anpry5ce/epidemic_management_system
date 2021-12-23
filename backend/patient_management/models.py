@@ -109,7 +109,7 @@ def patient_code_post_save(sender, instance, created, *args, **kwargs):
         <html>
             <body>
                 <p>Hello {instance.patient.first_name},</p>
-                <p>We have received your request to update your personal information.</p>\
+                <p>We have received your request to update your personal information.</p>
                 <p>Please enter the code provied below to verify your identity, and you will be on your way of updating your info.</p>
                 <p>Code: {instance.code}</p>
                 <p>Do not share this code with anyone!</p>

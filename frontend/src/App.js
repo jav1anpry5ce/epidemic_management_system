@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { HashRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "./store/authSlice";
 import { Container, Header, Content, Footer as Foot } from "rsuite";
@@ -35,6 +35,7 @@ import {
   Footer,
   NotFound,
   AddAvailability,
+  GetRecords,
 } from "./components";
 
 import IdleTimer from "./functions/IdleTimer";
@@ -84,74 +85,54 @@ function App() {
 
         <Content style={{ backgroundColor: "rgba(28, 37, 59, 0.3)" }}>
           <BackTop />
-          <Switch>
-            <Route exact path="/" component={Home} />
-            <Route exact path="/patient-info/:uuid" component={PatientInfo} />
-            <Route exact path="/appointments" component={Appointments} />
-            <Route
-              exact
-              path="/create-appointment"
-              component={MakeAppointment}
-            />
-            <Route
-              exact
-              path="/appointment/management/:uuid"
-              component={AppointmentManagement}
-            />
-            <Route
-              exact
-              path="/test-vac/management"
-              component={VaccinationAndTesting}
-            />
-            <Route exact path="/account/login" component={Login} />
-            <Route exact path="/admin/add-staff" component={AddStaff} />
-            <Route
-              exact
-              path="/account/activation/:token1/:token2"
-              component={ActivateAccount}
-            />
-            <Route
-              exact
-              path={`/${auth.location}/appointments`}
-              component={LocationAppointments}
-            />
-            <Route
-              exact
-              path="/account/change-password"
-              component={ChangePassword}
-            />
-            <Route
-              exact
-              path="/reset/password/request"
-              component={ResetPasswordRequest}
-            />
-            <Route
-              exact
-              path="/password/reset/:token"
-              component={ResetPassword}
-            />
-            <Route exact path="/update/patient/info" component={UpdateInfo} />
-            <Route exact path="/moh/patients" component={Patients} />
-            <Route exact path="/moh/home" component={Moh} />
-            <Route
-              exact
-              path="/moh/batch-management"
-              component={BatchManagement}
-            />
-            <Route exact path="/moh/batch-creation" component={CreateBatch} />
-            <Route exact path="/moh/locations" component={Locations} />
-            <Route exact path="/moh/add-location" component={AddLocation} />
-            <Route exact path="/moh/add-staff" component={MohAdd} />
-            <Route
-              exact
-              path={`/${auth.location}/home`}
-              component={LocationHome}
-            />
-            <Route exact path="/got-the-stach/:uuid" component={ReceiveBatch} />
-            <Route exact path="/moh/positive-cases" component={PositiveCases} />
-            <Route exact path="/add/availability" component={AddAvailability} />
-            <Route component={() => <NotFound setHide={setHide} />} />
-          </Switch>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="patient-info/:uuid" element={<PatientInfo />} />
+            <Route path="appointments">
+              <Route index element={<Appointments />} />
+              <Route path="create" element={<MakeAppointment />} />
+              <Route path=":uuid" element={<AppointmentManagement />} />
+            </Route>
+            <Route path="accounts">
+              <Route index path="login" element={<Login />} />
+              <Route
+                path="activation/:token1/:token2"
+                element={<ActivateAccount />}
+              />
+              <Route path="change-password" element={<ChangePassword />} />
+              <Route
+                path="reset/password/request"
+                element={<ResetPasswordRequest />}
+              />
+              <Route path="password/reset/:token" element={<ResetPassword />} />
+            </Route>
+            <Route path={`${auth.location}`}>
+              <Route index path="home" element={<LocationHome />} />
+              <Route
+                path="test-vac/management"
+                element={<VaccinationAndTesting />}
+              />
+              <Route path="add-staff" element={<AddStaff />} />
+              <Route path="appointments" element={<LocationAppointments />} />
+              <Route path="add/availability" element={<AddAvailability />} />
+            </Route>
+            <Route path="update/patient/info" element={<UpdateInfo />} />
+            <Route path="moh">
+              <Route index path="home" element={<Moh />} />
+              <Route path="patients" element={<Patients />} />
+              <Route path="positive-cases" element={<PositiveCases />} />
+              <Route path="batches" element={<BatchManagement />}>
+                <Route path="create" element={<CreateBatch />} />
+              </Route>
+              <Route path="locations" element={<Locations />}>
+                <Route path="create" element={<AddLocation />} />
+              </Route>
+              <Route path="add-staff" element={<MohAdd />} />
+            </Route>
+            <Route path="got-the-stach/:uuid" element={<ReceiveBatch />} />
+            <Route path="records" element={<GetRecords />} />
+            <Route path="*" element={<NotFound setHide={setHide} />} />
+          </Routes>
         </Content>
         <Foot>
           <Footer />

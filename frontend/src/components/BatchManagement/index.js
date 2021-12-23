@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { clearState, getBatch } from "../../store/mohSlice";
 import { setActiveKey } from "../../store/navbarSlice";
 import Container from "@mui/material/Container";
@@ -16,7 +16,7 @@ export default function BatchManagement() {
   const auth = useSelector((state) => state.auth);
   const moh = useSelector((state) => state.moh);
   const dispatch = useDispatch();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [data, setData] = useState();
   const [order, setOrder] = useState(null);
   const [pagination, setPagination] = useState({
@@ -39,7 +39,7 @@ export default function BatchManagement() {
 
   useEffect(() => {
     if (!auth.is_moh_staff && !auth.is_auth) {
-      history.push("/account/login");
+      navigate("/accounts/login");
     }
     // eslint-disable-next-line
   }, [auth.is_auth, auth.is_moh_staff]);
@@ -226,7 +226,7 @@ export default function BatchManagement() {
           />
           <Button
             type="primary"
-            onClick={() => history.push("/moh/batch-creation")}
+            onClick={() => navigate("/moh/batch-creation")}
             style={{ border: "none" }}
             className="rounded-sm bg-gray-700 text-white hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white transition duration-300"
           >

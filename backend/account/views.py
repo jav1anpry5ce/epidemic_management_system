@@ -80,7 +80,7 @@ def login(request):
                 if user.is_moh_staff:
                     location = None
                 else:
-                    location = user.location.value
+                    location = user.location.slug
                 token = Token.objects.create(user=user)
                 user.last_login = timezone.now()
                 user.save()

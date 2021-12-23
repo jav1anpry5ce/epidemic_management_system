@@ -20,6 +20,7 @@ import {
   Card,
   Typography,
 } from "antd";
+import { useParams } from "react-router-dom";
 import { open } from "../../functions/Notifications";
 import PatientCard from "../PatientCard";
 import Loading from "../Loading";
@@ -40,15 +41,17 @@ export default function AppointmentManagement({ match }) {
   const [availableDates, setAvailableDates] = useState([]);
   const dateFns = require("date-fns");
 
+  const { uuid } = useParams();
+
   useEffect(() => {
     dispatch(clearState());
     dispatch(setActiveKey("4"));
-    dispatch(searchAppointments(match.params.uuid));
+    dispatch(searchAppointments(uuid));
     return () => {
       dispatch(clearState());
       dispatch(CS());
     };
-  }, [dispatch, match.params.uuid]);
+  }, [dispatch, uuid]);
 
   useEffect(() => {
     if (appointment.appointments) {
@@ -297,16 +300,20 @@ export default function AppointmentManagement({ match }) {
       ) : (
         !appointment.loading &&
         !appointment.appointments && (
-          <Grid container spacing={0}>
-            <Grid item xs={12}>
-              <Typography
-                variant="h4"
-                align="center"
-                style={{ marginTop: "25%" }}
-                color="white"
-              >
+          <Grid
+            container
+            spacing={0}
+            className="h-full"
+            style={{ height: "80vh" }}
+          >
+            <Grid
+              item
+              xs={12}
+              className="flex items-center justify-center h-full"
+            >
+              <p className=" text-white text-3xl text-semibold text-center">
                 This appointment does not exist in our records.
-              </Typography>
+              </p>
             </Grid>
           </Grid>
         )

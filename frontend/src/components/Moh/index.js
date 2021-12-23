@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { getBreakdown, clearState } from "../../store/mohSlice";
 import { useSelector, useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Container, CardContent, Grid, Typography } from "@mui/material";
 import { setActiveKey } from "../../store/navbarSlice";
 import { Card } from "./MohElements";
@@ -12,16 +12,17 @@ export default function MOHHOME() {
   const data = useSelector((state) => state.moh);
   const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(getBreakdown());
     dispatch(setActiveKey("1"));
     if (!auth.is_moh_staff) {
-      history.push("/account/login");
+      navigate("/accounts/login");
     }
     return () => dispatch(clearState());
-  }, [auth.is_moh_staff, dispatch, history]);
+    // eslint-disable-next-line
+  }, [auth.is_moh_staff]);
 
   if (data.breakdownData) {
     const cardData = [

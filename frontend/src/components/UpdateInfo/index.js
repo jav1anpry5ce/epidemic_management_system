@@ -60,7 +60,7 @@ export default function UpdateInfo() {
   const [image, setImage] = useState(null);
 
   useEffect(() => {
-    dispatch(setActiveKey("5"));
+    dispatch(setActiveKey("6"));
     if (patient.success) {
       dispatch(clearState());
       dispatch(updateSuccess());

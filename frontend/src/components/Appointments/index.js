@@ -11,7 +11,7 @@ import {
 } from "../../store/appointmentSlice";
 import Typography from "@mui/material/Typography";
 import { Button, Placeholder } from "rsuite";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import CustomPagination from "../CustomPagination";
 import { open } from "../../functions/Notifications";
 import { setActiveKey } from "../../store/navbarSlice";
@@ -20,7 +20,7 @@ const { Search } = Input;
 
 export default function Appointments() {
   const dispatch = useDispatch();
-  const history = useHistory();
+  const navigate = useNavigate();
   const appointments = useSelector((state) => state.appointment);
   const [activePage, setActivePage] = useState(1);
   const [itemsPerPage] = useState(6);
@@ -43,10 +43,10 @@ export default function Appointments() {
     setActivePage(1);
     dispatch(AppointmentSearch(q));
   };
-  function navigate(link) {
-    dispatch(clearAppointments());
-    history.push(link);
-  }
+  // function navigate(link) {
+  //   dispatch(clearAppointments());
+  //   history.push(link);
+  // }
   const [q, setQ] = useState();
   useEffect(() => {
     dispatch(setActiveKey("4"));
@@ -161,9 +161,7 @@ export default function Appointments() {
                             <Button
                               size="xs"
                               onClick={() =>
-                                navigate(
-                                  "/appointment/management/" + appointment.id
-                                )
+                                navigate("/appointments/" + appointment.id)
                               }
                               style={{ border: "none" }}
                               className="rounded-sm bg-gray-700 text-white hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white transition duration-300"
@@ -229,8 +227,7 @@ export default function Appointments() {
                               size="xs"
                               onClick={() =>
                                 navigate(
-                                  "/appointment/management/" +
-                                    appointments.appointment.id
+                                  "/appointments/" + appointments.appointment.id
                                 )
                               }
                               appearance="primary"
@@ -248,7 +245,7 @@ export default function Appointments() {
           </Grid>
           <Grid item xs={12}>
             <Button
-              onClick={() => history.push("/create-appointment")}
+              onClick={() => navigate("/appointments/create")}
               appearance="primary"
               style={{ border: "none" }}
               className="rounded-sm bg-gray-700 text-white hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white transition duration-300"

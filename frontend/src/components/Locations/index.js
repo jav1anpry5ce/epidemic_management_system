@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { clearState } from "../../store/mohSlice";
 import { setActiveKey } from "../../store/navbarSlice";
 import Container from "@mui/material/Container";
@@ -13,7 +13,7 @@ const { Title } = Typography;
 export default function Locations() {
   const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [data, setData] = useState();
   const [pagination, setPagination] = useState({
     current: 1,
@@ -26,7 +26,7 @@ export default function Locations() {
 
   useEffect(() => {
     if (!auth.is_moh_staff) {
-      history.push("/moh/home");
+      navigate("/moh/home");
     }
     dispatch(setActiveKey("5"));
     return () => clearState();
@@ -157,7 +157,7 @@ export default function Locations() {
       >
         <Button
           type="primary"
-          onClick={() => history.push("/moh/add-location")}
+          onClick={() => navigate("/moh/add-location")}
           style={{ marginBottom: 2, marginTop: -8, border: "none" }}
           className="rounded-sm bg-gray-700 text-white hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white transition duration-300"
         >

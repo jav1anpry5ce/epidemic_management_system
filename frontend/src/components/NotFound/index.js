@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function NotFound({ setHide }) {
-  const history = useHistory();
+  const navigate = useNavigate();
   useEffect(() => {
     setHide(true);
     return () => setHide(false);
@@ -24,7 +24,7 @@ export default function NotFound({ setHide }) {
       </p>
       <button
         className="py-1.5 px-4 rounded-lg bg-gray-700 text-white hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white transform transition hover:-translate-y-0.5 duration-300"
-        onClick={() => history.push("/")}
+        onClick={() => navigate("/")}
       >
         Go Home
       </button>

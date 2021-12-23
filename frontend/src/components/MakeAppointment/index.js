@@ -29,7 +29,7 @@ import {
   getPreviousVaccine,
 } from "../../store/patientSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import formatDate from "../../functions/formatDate";
 import { open } from "../../functions/Notifications";
 import { setActiveKey } from "../../store/navbarSlice";
@@ -44,7 +44,7 @@ export default function MakeAppointment() {
   const appointment = useSelector((state) => state.appointment);
   const location = useSelector((state) => state.location);
   const patient = useSelector((state) => state.patient);
-  const history = useHistory();
+  const navigate = useNavigate();
   const dateFns = require("date-fns");
   const genderData = [
     { label: "Male", value: "Male" },
@@ -127,7 +127,7 @@ export default function MakeAppointment() {
 
   useEffect(() => {
     if (appointment.success) {
-      history.push("/appointments");
+      navigate("/appointments");
     }
     if (appointment.message) {
       open("error", "Error", appointment.message);
@@ -283,7 +283,7 @@ export default function MakeAppointment() {
   const cancel = () => {
     dispatch(clearState());
     dispatch(cs());
-    history.push("/appointments");
+    navigate("/appointments");
   };
 
   return (

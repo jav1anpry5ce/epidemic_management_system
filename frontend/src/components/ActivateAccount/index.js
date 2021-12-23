@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Container from "@mui/material/Container";
 import { Card, Input, Form, Button, Alert, Typography } from "antd";
 import { useSelector, useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { activate, clearState } from "../../store/authSlice";
 import { setActiveKey } from "../../store/navbarSlice";
 
@@ -11,9 +11,11 @@ const { Title } = Typography;
 export default function ActivateAccount({ match }) {
   const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [password, setPassword] = useState();
   const [conPassword, setConPassword] = useState();
+
+  const { token1, token2 } = useParams();
 
   useEffect(() => {
     dispatch(setActiveKey(""));
@@ -21,15 +23,15 @@ export default function ActivateAccount({ match }) {
   }, []);
   useEffect(() => {
     if (auth.success) {
-      history.push("/account/login");
+      navigate("/account/login");
       dispatch(clearState());
     }
   });
   const handelSubmit = () => {
     if (password === conPassword) {
       const data = {
-        activate: match.params.token1,
-        token: match.params.token2,
+        activate: token1,
+        token: token2,
         password,
         con_password: conPassword,
       };

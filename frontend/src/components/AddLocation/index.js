@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { addLocation, clearState } from "../../store/mohSlice";
 import { useSelector, useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { setActiveKey } from "../../store/navbarSlice";
 import Container from "@mui/material/Container";
 import { Card, Input, Form, Button, Typography, Select, Checkbox } from "antd";
@@ -32,7 +32,7 @@ export default function AddLocation() {
   const data = useSelector((state) => state.moh);
   const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [location, setLocation] = useState();
   const [streetAddress, setStreetAddress] = useState();
   const [city, setCity] = useState();
@@ -45,7 +45,7 @@ export default function AddLocation() {
 
   useEffect(() => {
     if (!auth.is_moh_admin) {
-      history.push("/moh/home");
+      navigate("/moh/home");
     }
     dispatch(setActiveKey("5"));
     return () => dispatch(clearState());
@@ -216,7 +216,7 @@ export default function AddLocation() {
                 Submit
               </Button>
               <Button
-                onClick={() => history.push("/moh/locations")}
+                onClick={() => navigate("/moh/locations")}
                 disabled={data.loading}
               >
                 Back

@@ -5,6 +5,7 @@ import string
 import random
 from django.dispatch import receiver
 from django.db.models.signals import post_save, pre_save
+from django.utils.text import slugify
 
 def codeGenerator():
     S = 8
@@ -30,13 +31,19 @@ class Location(models.Model):
     authorization_code = models.CharField(max_length=8, default=codeGenerator, unique=True)
     label = models.CharField(max_length=50, null=True, blank=True)
     value = models.CharField(max_length=50, null=True, blank=True)
+    slug = models.SlugField(max_length=50, null=True, blank=True)
     availability = models.ManyToManyField(Availability)
     street_address = models.CharField(max_length=50, null=True, blank=True)
     city = models.CharField(max_length=50, null=True, blank=True)
     parish = models.CharField(max_length=50, null=True, blank=True)
 
+    def save(self, *args, **kwargs):
+        if self.value:
+            self.slug = slugify(self.value)
+        super(Location, self).save(*args, **kwargs)
+        
     def __str__(self):
-        return self.value
+        return str(self.slug)
 
     class Meta:
         verbose_name = 'Site'

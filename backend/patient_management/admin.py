@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Patient, PositiveCase, NextOfKin, Representative, DeathCase, RecoveredCase, HospitalizedCase
+from .models import Patient, PositiveCase, NextOfKin, Representative, DeathCase, RecoveredCase, HospitalizedCase, PatientCode
 
 class PatientConfig(admin.ModelAdmin):
     list_display = (
@@ -69,3 +69,4 @@ admin.site.register(Representative, RepresentativeConfig)
 admin.site.register(DeathCase, DeathCaseConfig)
 admin.site.register(RecoveredCase, RecoveredCaseConfig)
 admin.site.register(HospitalizedCase, HospitalizedCaseConfig)
+admin.site.register(PatientCode)

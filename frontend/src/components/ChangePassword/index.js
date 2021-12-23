@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Card, Input, Form, Button, Alert, Typography } from "antd";
 import Container from "@mui/material/Container";
 import { useSelector, useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { changePassword, clearState, logout } from "../../store/authSlice";
 import { setActiveKey } from "../../store/navbarSlice";
 
@@ -11,7 +11,7 @@ const { Title } = Typography;
 export default function ChangePassword() {
   const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [oldPassword, setOldPassword] = useState();
   const [newPassword, setNewPassword] = useState();
   const [conPassword, setConPassword] = useState();
@@ -35,11 +35,11 @@ export default function ChangePassword() {
     }
 
     if (!auth.is_auth) {
-      history.push("/");
+      navigate("/");
     }
     if (auth.success) {
       dispatch(logout());
-      history.push("/account/login");
+      navigate("/accounts/login");
       dispatch(clearState());
     }
     // eslint-disable-next-line

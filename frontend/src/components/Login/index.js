@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { login, clearState } from "../../store/authSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Card, Input, Form, Button, Alert, Typography } from "antd";
 import Container from "@mui/material/Container";
 import { setActiveKey } from "../../store/navbarSlice";
@@ -11,7 +11,7 @@ const { Title } = Typography;
 export default function Login() {
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
-  const history = useHistory();
+  const navigate = useNavigate();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
 
@@ -28,9 +28,9 @@ export default function Login() {
   }, [dispatch]);
   useEffect(() => {
     if (auth.is_auth && auth.is_moh_staff) {
-      history.push("/moh/home");
+      navigate("/moh/home");
     } else if (auth.is_auth) {
-      history.push(`/${auth.location}/home`);
+      navigate(`/${auth.location}/home`);
     }
     // eslint-disable-next-line
   }, [auth.is_auth]);

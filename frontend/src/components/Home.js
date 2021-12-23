@@ -124,6 +124,16 @@ export default function Home() {
     if (!mobile)
       return (
         <Container maxWidth="lg">
+          {/* <article className="bg-slate-800/70 backdrop-blur-sm w-full h-full px-4 py-2 rounded-md mt-4">
+            <p className="text-white text-2xl">
+              The Epidemic Response Management System is a web based application
+              that is designed to manage and track data of the COVID-19 pandemic
+              in Jamaica in order to reduce the likelihood of an epidemic. ERMS
+              is a user-friendly centralized system for user testing &
+              vaccination, digitalized reporting and the monitoring of vaccine
+              inventory for a reduction of shortage.
+            </p>
+          </article> */}
           <div className="flex flex-col justify-center items-center py-2 space-y-2 w-full h-full my-2">
             <div className="bg-white rounded-md shadow-md w-full py-2">
               <div className="px-2 mb-2">
@@ -157,6 +167,16 @@ export default function Home() {
               </div>
               <div style={{ width: "100%", height: 400 }} className="px-8">
                 <ResponsiveContainer>
+                  {/* <BarChart data={graph.data.drl} width={730}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Bar dataKey="death" fill="#e83b2e" />
+                    <Bar dataKey="recovered" fill="#82ca9d" />
+                    <Bar dataKey="hospitalized" fill="#355ce8" />
+                  </BarChart> */}
                   <LineChart
                     data={graph.data.drl}
                     margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
@@ -267,10 +287,10 @@ export default function Home() {
   if (!graph.loading && !graph.data)
     return (
       <div
-        style={{ minHeight: "83.5vh" }}
+        style={{ minHeight: "80vh" }}
         className="flex justify-center items-center"
       >
-        <h1 className="text-3xl font-semibold text-white">
+        <h1 className="text-3xl font-semibold text-white text-center">
           There was a problem loading this page!
         </h1>
       </div>

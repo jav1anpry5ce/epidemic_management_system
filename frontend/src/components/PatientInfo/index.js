@@ -13,14 +13,18 @@ import PatientCard from "../PatientCard";
 import Loading from "../Loading";
 import CollapseCard from "../CollapseCard";
 import { Typography } from "antd";
+import { useParams } from "react-router-dom";
 
 const { Title } = Typography;
 
-function PatientInfo({ match }) {
+function PatientInfo() {
   const dispatch = useDispatch();
   const patient = useSelector((state) => state.patient);
   const [vaccinedExpaned, setVaccinedExpanded] = useState(false);
   const [testingExpaned, setTestingExpanded] = useState(false);
+
+  const { uuid } = useParams();
+
   const expandVaccine = () => {
     if (vaccinedExpaned) {
       setVaccinedExpanded(false);
@@ -38,11 +42,11 @@ function PatientInfo({ match }) {
   useEffect(() => {
     dispatch(setActiveKey(""));
     dispatch(clearState());
-    const id = match.params.uuid;
+    const id = uuid;
     dispatch(info(id));
     dispatch(vaccineInfo(id));
     dispatch(testingInfo(id));
-  }, [dispatch, match]);
+  }, [dispatch, uuid]);
   if (patient.loading) {
     return <Loading />;
   } else if (!patient.info && !patient.loading) {

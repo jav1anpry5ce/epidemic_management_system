@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import Container from "@mui/material/Container";
 import { Card, Input, Form, Button, Alert, Typography } from "antd";
 import { open } from "../../functions/Notifications";
+import { useParams } from "react-router-dom";
 
 const { Title } = Typography;
 
@@ -12,6 +13,8 @@ export default function ReceiveBatch({ match }) {
   const dispatch = useDispatch();
   const [authorizationCode, setAuthorizationCode] = useState();
   const [form] = Form.useForm();
+
+  const { uuid } = useParams();
 
   useEffect(() => {
     if (data.success) {
@@ -29,7 +32,7 @@ export default function ReceiveBatch({ match }) {
 
   const handelSubmit = () => {
     const data = {
-      batch_id: match.params.uuid,
+      batch_id: uuid,
       authorization_code: authorizationCode.toUpperCase().trim(),
     };
     dispatch(receiveBatch(data));

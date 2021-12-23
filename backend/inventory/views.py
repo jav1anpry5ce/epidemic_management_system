@@ -99,7 +99,7 @@ def receive_batch(request):
     try:
         batch = LocationBatch.objects.get(batch_id=request.data.get('batch_id'))
         location = batch.location
-        if request.data.get('authorization_code') == location.authorization_code:
+        if request.data.get('authorization_code').upper().strip() == location.authorization_code:
             if batch.status == 'Dispatched':
                 batch.status = 'Received'
                 batch.save()

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   getBatchInfo,
   addBatch,
@@ -25,7 +25,7 @@ export default function CreateBatch() {
   const data = useSelector((state) => state.moh);
   const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [location, setLocation] = useState("");
   const [vaccine, setVaccine] = useState("");
   const [dose, setDose] = useState("");
@@ -34,7 +34,7 @@ export default function CreateBatch() {
 
   useEffect(() => {
     if (!auth.is_moh_staff && !auth.is_auth) {
-      history.push("/account/login");
+      navigate("/accounts/login");
     }
     // eslint-disable-next-line
   }, [auth.is_auth, auth.is_moh_staff]);
@@ -210,7 +210,7 @@ export default function CreateBatch() {
                     <Button
                       appearance="primary"
                       loading={data.loading}
-                      onClick={() => history.push("/moh/batch-management")}
+                      onClick={() => navigate("/moh/batch-management")}
                     >
                       Back
                     </Button>

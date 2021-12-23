@@ -14,7 +14,7 @@ import {
   deleteAvailability,
   clearState,
 } from "../../store/locationSlice";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import formatDate from "../../functions/formatDate";
 import { open } from "../../functions/Notifications";
@@ -29,7 +29,7 @@ export default function AddAvailability() {
   const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const dateFns = require("date-fns");
-  const history = useHistory();
+  const navigate = useNavigate();
   const [date, setDate] = useState();
   const [time, setTime] = useState();
   const [form] = Form.useForm();
@@ -45,7 +45,7 @@ export default function AddAvailability() {
 
   useEffect(() => {
     if (!auth.is_auth || auth.is_moh_staff) {
-      history.push("/account/login");
+      navigate("/account/login");
     }
     // eslint-disable-next-line
   }, [auth.is_auth, auth.is_moh_staff]);
