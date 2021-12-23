@@ -121,7 +121,7 @@ def account_post_save(sender, instance, created, *args, **kwargs):
             <body>
                 <p>Hello {instance.user.first_name}, welcome to our system!</p>
                 <p>Please go to the following link to activate your account.</p>
-                <p><a href="{site}account/activation/{instance.activate}/{instance.token}">{site}account/activation/{instance.activate}/{instance.token}</a></p>
+                <p><a href="{site}account/activation/{instance.activate}/{instance.token}">{site}accounts/activation/{instance.activate}/{instance.token}</a></p>
             </body>
         </html>
         '''
@@ -157,7 +157,7 @@ def reset_token_post_save(sender, instance, created, *args, **kwargs):
         <html>
             <body>
                 <p>We have received your reset request. attached you will find the reset link.</p>
-                <a href="{site}password/reset/{instance.token}">{site}password/reset/{instance.token}</a>
+                <a href="{site}accounts/password/reset/{instance.token}">{site}accounts/password/reset/{instance.token}</a>
                 <p><b>This link expires in 1 hour.</b></p>
             </body>
         </html>

@@ -14,7 +14,6 @@ import PhoneMask from "../../functions/PhoneMask";
 import TRNMask from "../../functions/TRNMask";
 import FileUploadIcon from "@rsuite/icons/FileUpload";
 import Grid from "@mui/material/Grid";
-import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import {
   makeAppointment,
@@ -287,7 +286,7 @@ export default function MakeAppointment() {
   };
 
   return (
-    <Container maxWidth="md" style={{ marginTop: "2%" }}>
+    <div className="sm:max-w-4xl sm:mx-auto sm:mt-4">
       <Modal
         title="Verify Identity"
         size="sm"
@@ -358,7 +357,8 @@ export default function MakeAppointment() {
           </Typography>
         }
         bordered={false}
-        style={{ width: "100%", marginBottom: "3%" }}
+        className="sm:mb-4 w-full"
+        // style={{ width: "100%", marginBottom: "3%" }}
       >
         <Form
           layout="vertical"
@@ -980,6 +980,6 @@ export default function MakeAppointment() {
       </Card>
       {appointment.loading && <Loading />}
       {patient.loading && <Loading />}
-    </Container>
+    </div>
   );
 }

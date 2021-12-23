@@ -30,7 +30,7 @@ export default function Login() {
     if (auth.is_auth && auth.is_moh_staff) {
       navigate("/moh/home");
     } else if (auth.is_auth) {
-      navigate(`/${auth.location}/home`);
+      navigate(`/${auth.location}`);
     }
     // eslint-disable-next-line
   }, [auth.is_auth]);

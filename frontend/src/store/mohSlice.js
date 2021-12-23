@@ -8,7 +8,7 @@ export const getAllPatients = createAsyncThunk("all/patients", async () => {
       Authorization: "Token " + sessionStorage.getItem("token"),
     },
   };
-  const response = await axios.get("api/patients/", config);
+  const response = await axios.get("api/patients", config);
   if (response.status === 200) {
     const patients = response.data;
     return { patients };
@@ -22,7 +22,7 @@ export const getPatient = createAsyncThunk("get/patient", async (trn) => {
       Authorization: "Token " + sessionStorage.getItem("token"),
     },
   };
-  const response = await axios.get(`api/patients/details/${trn}/`, config);
+  const response = await axios.get(`api/patients/details/${trn}`, config);
   if (response.status === 200) {
     const data = response.data;
     return { data };
@@ -36,7 +36,7 @@ export const getBatchInfo = createAsyncThunk("getBatchInfo", async () => {
       Authorization: "Token " + sessionStorage.getItem("token"),
     },
   };
-  const response = await axios.get("api/batch-info/", config);
+  const response = await axios.get("api/batch-info", config);
   if (response.status === 200) {
     const data = response.data;
     return { data };
@@ -53,7 +53,7 @@ export const addBatch = createAsyncThunk(
       },
     };
     try {
-      const response = await axios.post("api/location-batch/", data, config);
+      const response = await axios.post("api/location-batch", data, config);
       if (response.status === 201) {
         const data = response.data;
         return { data };
@@ -88,7 +88,7 @@ export const getBreakdown = createAsyncThunk("get/breakdown", async () => {
       Authorization: "Token " + sessionStorage.getItem("token"),
     },
   };
-  const response = await axios.get("api/get-breakdown/", config);
+  const response = await axios.get("api/get-breakdown", config);
   if (response.status === 200) {
     const data = response.data;
     return { data };
@@ -104,7 +104,7 @@ export const getPositiveCases = createAsyncThunk(
         Authorization: "Token " + sessionStorage.getItem("token"),
       },
     };
-    const response = await axios.get("api/get-positive-cases/", config);
+    const response = await axios.get("api/get-positive-cases", config);
     if (response.status === 200) {
       const data = response.data;
       return { data };
@@ -119,7 +119,10 @@ export const getCase = createAsyncThunk("get/case", async (data) => {
       Authorization: "Token " + sessionStorage.getItem("token"),
     },
   };
-  const response = await axios.get(`api/cases/${data.type}/${data.id}`, config);
+  const response = await axios.get(
+    `api/cases/${data.type}/${data.id}/`,
+    config
+  );
   if (response.status === 200) {
     const data = response.data;
     return { data };
@@ -152,7 +155,7 @@ export const getAllLocations = createAsyncThunk(
         Authorization: "Token " + sessionStorage.getItem("token"),
       },
     };
-    const response = await axios.get("api/get-all-locations/", config);
+    const response = await axios.get("api/get-all-locations", config);
     const data = response.data;
     return { data };
   }

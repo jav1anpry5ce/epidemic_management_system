@@ -23,7 +23,7 @@ export default function ActivateAccount({ match }) {
   }, []);
   useEffect(() => {
     if (auth.success) {
-      navigate("/account/login");
+      navigate("/accounts/login");
       dispatch(clearState());
     }
   });

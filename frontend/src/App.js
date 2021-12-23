@@ -75,6 +75,7 @@ function App() {
         backgroundImage: `url(${background})`,
         backgroundSize: "cover",
         backgroundAttachment: "fixed",
+        minHeight: "100vh",
       }}
       className="App"
     >
@@ -107,7 +108,7 @@ function App() {
               <Route path="password/reset/:token" element={<ResetPassword />} />
             </Route>
             <Route path={`${auth.location}`}>
-              <Route index path="home" element={<LocationHome />} />
+              <Route index path="" element={<LocationHome />} />
               <Route
                 path="test-vac/management"
                 element={<VaccinationAndTesting />}
@@ -121,10 +122,12 @@ function App() {
               <Route index path="home" element={<Moh />} />
               <Route path="patients" element={<Patients />} />
               <Route path="positive-cases" element={<PositiveCases />} />
-              <Route path="batches" element={<BatchManagement />}>
+              <Route path="batches">
+                <Route index path="" element={<BatchManagement />} />
                 <Route path="create" element={<CreateBatch />} />
               </Route>
-              <Route path="locations" element={<Locations />}>
+              <Route path="locations">
+                <Route index path="" element={<Locations />} />
                 <Route path="create" element={<AddLocation />} />
               </Route>
               <Route path="add-staff" element={<MohAdd />} />

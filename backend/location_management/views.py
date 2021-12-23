@@ -38,7 +38,7 @@ class LocationView(APIView):
 
     def post(self, request):
         try:
-            location = Location.objects.get(slug=request.data.get('value'))
+            location = Location.objects.get(value=request.data.get('value'))
             offer = Offer.objects.filter(location=location)
             test = Test.objects.filter(location=location)
             vaccine = LocationVaccine.objects.filter(location=location, number_of_dose__gte=Case(When(value='Johnson & Johnson', then=1), default=2))
@@ -470,6 +470,8 @@ def location_breakdown(request):
         location = request.user.location
         number_of_tests = Testing.objects.filter(location=location, status='Completed').count()
         pending_appointments = Appointment.objects.filter(location=location, status='pending').count()
+        offer_testing = Offer.objects.filter(value='Testing', location=location).exists()
+        offer_vaccines = Offer.objects.filter(value='Vaccination', location=location).exists()
         if Offer.objects.filter(location=location, value='Vaccination').exists():
             vaccines_administer = Vaccination.objects.filter(location=location, status='Completed').count()
             if LocationVaccine.objects.filter(location=location, value='Pfizer').exists():
@@ -485,6 +487,8 @@ def location_breakdown(request):
             'pfizer_in_stock': pfizer_in_stock,
             'moderna_in_stock':moderna_in_stock,
             'jj_in_stock': jj_in_stock,
+            'offer_testing': offer_testing,
+            'offer_vaccines': offer_vaccines
         }
         return Response(res, status=status.HTTP_200_OK)
     except:

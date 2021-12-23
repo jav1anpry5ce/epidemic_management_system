@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Container from "@mui/material/Container";
 import { Input, Card } from "antd";
 import Grid from "@mui/material/Grid";
 import { useSelector, useDispatch } from "react-redux";
@@ -43,10 +42,7 @@ export default function Appointments() {
     setActivePage(1);
     dispatch(AppointmentSearch(q));
   };
-  // function navigate(link) {
-  //   dispatch(clearAppointments());
-  //   history.push(link);
-  // }
+
   const [q, setQ] = useState();
   useEffect(() => {
     dispatch(setActiveKey("4"));
@@ -65,15 +61,12 @@ export default function Appointments() {
     // eslint-disable-next-line
   }, [appointments.success]);
   return (
-    <Container
-      maxWidth="md"
-      style={{ marginTop: "2%", marginBottom: "3%", color: "#f5f5f5" }}
-    >
+    <div className="sm:max-w-4xl sm:my-4 sm:mx-auto px-2">
       <div>
         <Typography variant="h4" style={{ color: "white" }}>
           Learn the facts about COVID-19! Get vaccinated!
         </Typography>
-        <Typography variant="h6" paragraph={true}>
+        <Typography variant="h6" paragraph={true} className="text-white">
           Here you are able to create and manage appointments.
         </Typography>
       </div>
@@ -265,6 +258,6 @@ export default function Appointments() {
           )}
         </Grid>
       </Card>
-    </Container>
+    </div>
   );
 }

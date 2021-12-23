@@ -210,7 +210,7 @@ export default function CreateBatch() {
                     <Button
                       appearance="primary"
                       loading={data.loading}
-                      onClick={() => navigate("/moh/batch-management")}
+                      onClick={() => navigate("/moh/batches")}
                     >
                       Back
                     </Button>

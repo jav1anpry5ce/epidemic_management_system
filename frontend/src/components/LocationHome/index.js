@@ -53,18 +53,20 @@ export default function LocationHome() {
         backgroundcolour: "#4f8598",
         visible: true,
       },
-      {
-        name: "Testing Administer",
+      data.locationData.offer_testing && {
+        name: "Tests Administerd",
         data: data.locationData.number_of_tests,
         backgroundcolour: "#437ab2",
         visible: true,
       },
-      data.locationData.vaccines_administer !== null && {
-        name: "Vaccines Administer",
-        data: data.locationData.vaccines_administer,
-        backgroundcolour: "#225955",
-        visible: data.locationData.vaccines_administer !== null ? true : false,
-      },
+      data.locationData.offer_vaccines &&
+        data.locationData.vaccines_administer !== null && {
+          name: "Vaccines Administerd",
+          data: data.locationData.vaccines_administer,
+          backgroundcolour: "#225955",
+          visible:
+            data.locationData.vaccines_administer !== null ? true : false,
+        },
     ];
     return (
       <Container maxWidth="xl" align="center">

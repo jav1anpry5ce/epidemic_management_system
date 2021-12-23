@@ -182,7 +182,7 @@ export default function NavBar({ hide, setHide }) {
               <Nav onSelect={handelSelect} activeKey={nav.activeKey}>
                 <Nav.Item
                   eventKey="1"
-                  onClick={() => navigate(`/${auth.location}/home`)}
+                  onClick={() => navigate(`/${auth.location}`)}
                 >
                   <div className="flex">
                     {<AiFillHome className="flex text-lg mr-1" />}
