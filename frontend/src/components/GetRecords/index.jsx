@@ -24,7 +24,7 @@ export default function GetRecords() {
     if (type === "TRN") {
       setLoading(true);
       await axios
-        .post("/api/patients/records", { trn })
+        .post("/api/patients/records/", { trn })
         .then(() => {
           setMessage("");
           setPage(2);

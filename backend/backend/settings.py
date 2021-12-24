@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
+    "django_extensions",
     'rest_framework',
     'django_filters',
     'rest_framework.authtoken',
@@ -194,3 +195,20 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'account.UserAccount'
 
 SITE_ID = 1
+
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+
+sentry_sdk.init(
+    dsn="https://f224b93ef8db46eeb8971ccc0c19fdef@o1098119.ingest.sentry.io/6120090",
+    integrations=[DjangoIntegration()],
+
+    # Set traces_sample_rate to 1.0 to capture 100%
+    # of transactions for performance monitoring.
+    # We recommend adjusting this value in production.
+    traces_sample_rate=1.0,
+
+    # If you wish to associate users to errors (assuming you are using
+    # django.contrib.auth) you may enable sending PII data.
+    send_default_pii=True
+)

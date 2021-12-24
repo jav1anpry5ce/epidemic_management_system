@@ -391,30 +391,32 @@ Do not share this code with anyone!
     
 @api_view(['POST'])
 def get_patient_records_link(request):
-    patient = PatientCode.objects.get(code=request.data.get('code')).patient
-    subject, from_email, to = 'Record Link', 'donotreply@localhost', patient.email
-    html_content = f'''
-    <html>
-        <body>
-            <p>Hello {patient.first_name},</p>
-            <p>Here is the link to view your records <a href="{site}patient-info/{patient.unique_id}">{site}patient-info/{patient.unique_id}</a></p>
-        </body>
-    </html>
+    if PatientCode.objects.filter(code=request.data.get('code')).exists():
+        patient = PatientCode.objects.get(code=request.data.get('code')).patient
+        subject, from_email, to = 'Record Link', 'donotreply@localhost', patient.email
+        html_content = f'''
+        <html>
+            <body>
+                <p>Hello {patient.first_name},</p>
+                <p>Here is the link to view your records <a href="{site}patient-info/{patient.unique_id}">{site}patient-info/{patient.unique_id}</a></p>
+            </body>
+        </html>
+        '''
+        text_content = ""
+        msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+        msg.attach_alternative(html_content, "text/html")
+        msg.content_subtype = "html"
+        msg.send()
+        text = f'''Hello {patient.first_name},
+    Here is the link to view your records. {site}patient-info/{patient.unique_id}
     '''
-    text_content = ""
-    msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
-    msg.attach_alternative(html_content, "text/html")
-    msg.content_subtype = "html"
-    msg.send()
-    text = f'''Hello {patient.first_name},
-Here is the link to view your records. {site}patient-info/{patient.unique_id}
-'''
-    send_sms(
-    text.strip(),
-    '+12065550100',
-    [f'{patient.phone},'],
-    fail_silently=True
-    )
-    PatientCode.objects.get(patient=patient).delete()
-    return Response({'Link': f'patient-info/{patient.unique_id}'}, status=status.HTTP_200_OK)
+        send_sms(
+        text.strip(),
+        '+12065550100',
+        [f'{patient.phone},'],
+        fail_silently=True
+        )
+        PatientCode.objects.get(patient=patient).delete()
+        return Response({'Link': f'patient-info/{patient.unique_id}'}, status=status.HTTP_200_OK)
+    return Response({'Message': 'Could not verify you!'}, status=status.HTTP_400_BAD_REQUEST)
         

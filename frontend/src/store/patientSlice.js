@@ -8,7 +8,7 @@ export const info = createAsyncThunk("info", async (id) => {
       Accept: "application/json",
     },
   };
-  const response = await axios.get(`/api/patients/${id}/`, config);
+  const response = await axios.get(`/api/patients/${id}`, config);
   if (response.status === 200) {
     const patient = response.data;
     return { patient };
@@ -22,7 +22,7 @@ export const verify = createAsyncThunk("verify", async (data) => {
       Accept: "application/json",
     },
   };
-  const response = await axios.post("/api/patients/verify", data, config);
+  const response = await axios.post("/api/patients/verify/", data, config);
   if (response.status === 202) {
     const message = response.data;
     return { message };
@@ -40,7 +40,7 @@ export const detailedInfo = createAsyncThunk(
     };
     try {
       const response = await axios.post(
-        "/api/patients/detailed/verify",
+        "/api/patients/detailed/verify/",
         data,
         config
       );

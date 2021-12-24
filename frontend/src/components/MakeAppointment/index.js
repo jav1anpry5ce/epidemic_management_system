@@ -12,7 +12,6 @@ import {
 import { Uploader, Icon } from "rsuite";
 import PhoneMask from "../../functions/PhoneMask";
 import TRNMask from "../../functions/TRNMask";
-import FileUploadIcon from "@rsuite/icons/FileUpload";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import {
@@ -625,15 +624,18 @@ export default function MakeAppointment() {
                   },
                 ]}
               >
-                <Uploader
-                  autoUpload={false}
-                  listType="text"
-                  onChange={(e) => setId(e.length !== 0 ? e[0].blobFile : null)}
-                >
-                  <Button size="lg" style={{ marginTop: 10 }}>
-                    <FileUploadIcon style={{ fontSize: 24 }} />
-                  </Button>
-                </Uploader>
+                <div className="h-full my-6 flex items-center">
+                  <input
+                    type="file"
+                    onChange={(e) => setId(e.target.files)}
+                    className="block w-full text-sm text-gray-500
+      file:mr-4 file:py-2 file:px-4
+      file:rounded-full file:border-0
+      file:text-sm file:font-semibold
+      file:bg-violet-50 file:text-violet-700
+      hover:file:bg-violet-100"
+                  />
+                </div>
               </Form.Item>
             </Grid>
             <Grid item xs={12}>
