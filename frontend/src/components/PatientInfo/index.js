@@ -47,7 +47,12 @@ function PatientInfo() {
     dispatch(vaccineInfo(id));
     dispatch(testingInfo(id));
   }, [dispatch, uuid]);
-  if (patient.loading) {
+  if (
+    patient.loading &&
+    !patient.info &&
+    !patient.vaccineRecord &&
+    !patient.testingRecord
+  ) {
     return <Loading />;
   } else if (!patient.info && !patient.loading) {
     return (

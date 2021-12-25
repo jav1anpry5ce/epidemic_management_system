@@ -54,19 +54,20 @@ function App() {
       timeout: 300,
       onTimeout: () => {
         if (auth.is_auth) {
-          dispatch(logout());
+          dispatch(logout()).then(() => (window.location = "/accounts/login"));
           alert("Your session was inactive for too long!");
         }
       },
       onExpired: () => {
         if (auth.is_auth) {
-          dispatch(logout());
+          dispatch(logout()).then(() => (window.location = "/accounts/login"));
           alert("You session is expired!");
         }
       },
     });
     return () => timer.cleanUp();
-  }, [auth.is_auth, dispatch]);
+    // eslint-disable-next-line
+  }, [auth.is_auth]);
 
   return (
     <Container

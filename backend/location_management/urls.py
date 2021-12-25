@@ -3,6 +3,7 @@ from django.urls import path
 
 from location_management import views
 
+
 urlpatterns = [
     path('location/', views.LocationView.as_view()),
     path('get-location/<parish>', views.get_location_by_parish),

@@ -141,7 +141,7 @@ export default function MakeAppointment() {
       dispatch(updateSuccess());
     }
     if (patient.loading || appointment.loading) {
-      setEffect("blur");
+      setEffect("blur-sm");
     } else {
       setEffect("");
     }
@@ -619,7 +619,7 @@ export default function MakeAppointment() {
                 style={{ marginBottom: 2 }}
                 rules={[
                   {
-                    required: true,
+                    required: patient.detailedinfo === null ? true : false,
                     message: "Please select your ID!",
                   },
                 ]}

@@ -30,7 +30,7 @@ export default function PatientCard({
           src={image}
           alt="patient"
           width={150}
-          className="h-full xs:hidden md:inline-flex"
+          className="h-full xs:hidden sm:block"
         />
 
         <CardContent>

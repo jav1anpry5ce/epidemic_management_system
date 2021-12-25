@@ -54,7 +54,7 @@ class Offer(models.Model):
     value = models.CharField(max_length=50, null=True, blank=True)
 
     def __str__(self):
-        return self.location.value
+        return str(self.location.value)
 
 class Test(models.Model):
     location = models.ForeignKey(Location, on_delete=models.CASCADE, blank=True, null=True)

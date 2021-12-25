@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Container from "@mui/material/Container";
 import {
   searchAppointments,
   updateAppointments,
@@ -118,7 +117,7 @@ export default function AppointmentManagement({ match }) {
   }, [location.data, date]);
 
   return (
-    <Container maxWidth="lg" style={{ marginTop: "2%" }}>
+    <div className="mx-2 sm:max-w-7xl sm:mx-auto my-2">
       {appointment.loading && <Loading />}
       {appointment.appointments ? (
         <Grid
@@ -256,6 +255,7 @@ export default function AppointmentManagement({ match }) {
                             {appointment.appointments.patient_choice}
                           </Option>
                         ) : (
+                          location.data &&
                           location.data.Vaccine.map((item) => (
                             <Option value={item.value} key={shortid.generate()}>
                               {item.label}
@@ -318,6 +318,6 @@ export default function AppointmentManagement({ match }) {
           </Grid>
         )
       )}
-    </Container>
+    </div>
   );
 }

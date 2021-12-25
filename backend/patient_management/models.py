@@ -26,7 +26,7 @@ class Patient(models.Model):
     country = models.CharField(max_length=50, null=True)
 
     def __str__(self):
-        return self.tax_number
+        return str(self.tax_number)
 
     def image_url(self):
         if self.image:

@@ -21,6 +21,7 @@ import { open } from "../../functions/Notifications";
 import toLocaldate from "../../functions/toLocalDate";
 import axios from "axios";
 import { MdDeleteForever } from "react-icons/md";
+import { setActiveKey } from "../../store/navbarSlice";
 
 const { Title } = Typography;
 
@@ -47,6 +48,7 @@ export default function AddAvailability() {
     if (!auth.is_auth || auth.is_moh_staff) {
       navigate("/account/login");
     }
+    dispatch(setActiveKey("5"));
     // eslint-disable-next-line
   }, [auth.is_auth, auth.is_moh_staff]);
 

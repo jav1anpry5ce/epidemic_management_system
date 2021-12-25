@@ -15,7 +15,7 @@ from django_filters import rest_framework as filterss
 from django.utils import timezone
 import datetime
 
-from .models import Availability, Location, Offer, Test, Appointment
+from .models import Location, Offer, Test, Appointment
 from .serializers import LocationSerializer, OfferSerializer, TestSerializer, AppointmentSerializer, CreateAppointmentSerializer, AvailabilitySerializer
 from patient_management.serializers import CreatePatientSerializer, NextOfKinSerializer, RepresentativeSerializer
 from patient_management.models import Patient, PositiveCase
@@ -84,8 +84,9 @@ class AppointmentView(APIView):
                 rep_serializer = RepresentativeSerializer(data=request.data)
                 if rep_serializer.is_valid():
                     if Patient.objects.filter(tax_number=request.data.get('tax_number')).exists():
+                        patient = Patient.objects.get(tax_number=request.data.get('tax_number'))
                         rep_serializer.save(patient=patient)
-                location = Location.objects.get(slug=request.data.get('location'))
+                location = Location.objects.get(value=request.data.get('location'))
                 if request.data.get('type') == "Testing":
                     try:
                         appointment = seraializer.save(patient=patient, location=location)
@@ -96,7 +97,7 @@ class AppointmentView(APIView):
                     appointment.location.availability.get(date=appointment.date, time=appointment.time).delete()
                     return Response(status=status.HTTP_201_CREATED)
                 else:
-                    if not Appointment.objects.filter(patient=patient, status='Completed', type='Vaccination').count() >= 2 and not Vaccination.objects.filter(patient=patient, status='Completed').count() >= 2:
+                    if not Appointment.objects.filter(patient=patient, status='Completed', type='Vaccination').count() >= 3 and not Vaccination.objects.filter(patient=patient, status='Completed').count() >= 3:
                         if not Vaccination.objects.filter(patient=patient, manufacture='Johnson & Johnson').count() > 0:
                             if not Appointment.objects.filter(patient=patient, status='Pending', type='Vaccination').count() > 0:
                                 if Vaccination.objects.filter(patient=patient, status='Completed'):
@@ -163,11 +164,8 @@ class AppointmentManagementView(APIView):
             second_dose = False
             appointment = Appointment.objects.get(id=request.data.get('q'))
             seraializer = AppointmentSerializer(appointment)
-            try:
-                if Vaccination.objects.get(patient=appointment.patient, status='Completed'):
-                    second_dose = True
-            except:
-                second_dose = False
+            if Vaccination.objects.filter(patient=appointment.patient, status="Completed").exists():
+                second_dose = True
             return Response({'appointment': seraializer.data, 'second_dose': second_dose}, status=status.HTTP_200_OK)
         except:
             return Response(status=status.HTTP_404_NOT_FOUND)
@@ -186,24 +184,19 @@ class AppointmentManagementView(APIView):
                                 vaccines.number_of_dose += 1
                                 vaccines.save()
                             else:
-                                try:
-                                    if Appointment.objects.get(patient=appointment.patient, type='Vaccination', status='Completed'):
-                                        completed_vaccination = Appointment.objects.get(patient=appointment.patient, type='Vaccination', status='Completed')
-                                        if (appointment.location != completed_vaccination.location):
-                                            vaccines = LocationVaccine.objects.get(location=appointment.location, value=appointment.patient_choice)
-                                            vaccines.number_of_dose += 1
-                                            vaccines.save()
-                                            vaccines = LocationVaccine.objects.get(location=completed_vaccination.location, value=completed_vaccination.patient_choice)
-                                            vaccines.number_of_dose -= 1
-                                            vaccines.save()
-                                    else:
+                                if Appointment.objects.filter(patient=appointment.patient, type='Vaccination', status='Completed').exists():
+                                    completed_vaccination = Appointment.objects.get(patient=appointment.patient, type='Vaccination', status='Completed')
+                                    if (appointment.location != completed_vaccination.location):
                                         vaccines = LocationVaccine.objects.get(location=appointment.location, value=appointment.patient_choice)
-                                        vaccines.number_of_dose += 2
-                                        vaccines.save()     
-                                except:
+                                        vaccines.number_of_dose += 1
+                                        vaccines.save()
+                                        vaccines = LocationVaccine.objects.get(location=completed_vaccination.location, value=completed_vaccination.patient_choice)
+                                        vaccines.number_of_dose -= 1
+                                        vaccines.save()
+                                else:
                                     vaccines = LocationVaccine.objects.get(location=appointment.location, value=appointment.patient_choice)
                                     vaccines.number_of_dose += 2
-                                    vaccines.save()
+                                    vaccines.save() 
                     except:
                         return Response({'Message': 'Something went wrong! Try again later'}, status=status.HTTP_400_BAD_REQUEST)
                     seraializer = AppointmentSerializer(appointment)

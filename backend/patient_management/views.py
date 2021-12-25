@@ -26,7 +26,6 @@ from .serializers import (
     RepresentativeSerializer, 
     DeathCaseSerializer,
     RecoveredCaseSerializer,
-    HospitalizedCaseSerializer,
     )
 from testing.models import Testing
 from vaccination.models import Vaccination
