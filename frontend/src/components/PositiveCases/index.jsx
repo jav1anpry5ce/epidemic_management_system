@@ -28,9 +28,9 @@ import {
   DatePicker,
 } from "antd";
 import shortid from "shortid";
-import toLocaldate from "../../functions/toLocalDate";
-import formatDate from "../../functions/formatDate";
-import { open } from "../../functions/Notifications";
+import toLocaldate from "../../utils/toLocalDate";
+import formatDate from "../../utils/formatDate";
+import { open } from "../../utils/Notifications";
 import axios from "axios";
 import moment from "moment";
 const { Title } = Typography;

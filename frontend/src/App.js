@@ -38,7 +38,7 @@ import {
   GetRecords,
 } from "./components";
 
-import IdleTimer from "./functions/IdleTimer";
+import IdleTimer from "./utils/IdleTimer";
 
 import background from "./asset/images/background2.jpg";
 

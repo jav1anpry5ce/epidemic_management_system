@@ -16,9 +16,9 @@ import {
 } from "../../store/locationSlice";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import formatDate from "../../functions/formatDate";
-import { open } from "../../functions/Notifications";
-import toLocaldate from "../../functions/toLocalDate";
+import formatDate from "../../utils/formatDate";
+import { open } from "../../utils/Notifications";
+import toLocaldate from "../../utils/toLocalDate";
 import axios from "axios";
 import { MdDeleteForever } from "react-icons/md";
 import { setActiveKey } from "../../store/navbarSlice";

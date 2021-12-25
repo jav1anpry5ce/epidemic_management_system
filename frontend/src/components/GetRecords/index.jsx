@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Card, Input, Form, Button, Alert } from "antd";
 import { setActiveKey } from "../../store/navbarSlice";
 import { useDispatch } from "react-redux";
-import TRNMask from "../../functions/TRNMask";
+import TRNMask from "../../utils/TRNMask";
 import axios from "axios";
 import { Link } from "react-router-dom";
 

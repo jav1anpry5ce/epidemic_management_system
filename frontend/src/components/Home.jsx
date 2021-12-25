@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getGraphicalData, clearState } from "../store/graphSlice";
-import { setActiveKey } from "./../store/navbarSlice";
+import { setActiveKey } from "../store/navbarSlice";
 import Container from "@mui/material/Container";
 import {
   LineChart,

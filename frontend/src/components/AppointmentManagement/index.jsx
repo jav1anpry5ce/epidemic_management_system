@@ -8,7 +8,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import Grid from "@mui/material/Grid";
 import { getType, clearState as CS } from "../../store/locationSlice";
-import formatDate from "../../functions/formatDate";
+import formatDate from "../../utils/formatDate";
 import { setActiveKey } from "../../store/navbarSlice";
 import {
   Form,
@@ -20,7 +20,7 @@ import {
   Typography,
 } from "antd";
 import { useParams } from "react-router-dom";
-import { open } from "../../functions/Notifications";
+import { open } from "../../utils/Notifications";
 import PatientCard from "../PatientCard";
 import Loading from "../Loading";
 import shortid from "shortid";

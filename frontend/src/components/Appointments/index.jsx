@@ -11,8 +11,7 @@ import {
 import Typography from "@mui/material/Typography";
 import { Button, Placeholder } from "rsuite";
 import { useNavigate } from "react-router-dom";
-import CustomPagination from "../CustomPagination";
-import { open } from "../../functions/Notifications";
+import { open } from "../../utils/Notifications";
 import { setActiveKey } from "../../store/navbarSlice";
 
 const { Search } = Input;
@@ -29,14 +28,6 @@ export default function Appointments() {
     appointments.appointments && appointments.appointments.length >= 1
       ? appointments.appointments.slice(indexOfFirstItem, indexOfLastItem)
       : null;
-  const pages = Math.ceil(
-    appointments.appointments
-      ? appointments.appointments.length / itemsPerPage
-      : null
-  );
-  const paginate = (pageNumber) => {
-    setActivePage(pageNumber);
-  };
   const handelSearch = () => {
     dispatch(clearAppointments());
     setActivePage(1);
@@ -246,16 +237,6 @@ export default function Appointments() {
               Make an Appointment
             </Button>
           </Grid>
-
-          {appointments.appointments && appointments.appointments.length >= 6 && (
-            <Grid item xs={12}>
-              <CustomPagination
-                pages={pages}
-                activePage={activePage}
-                paginate={paginate}
-              />
-            </Grid>
-          )}
         </Grid>
       </Card>
     </div>

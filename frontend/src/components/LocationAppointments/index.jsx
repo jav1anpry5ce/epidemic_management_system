@@ -3,8 +3,8 @@ import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { open } from "../../functions/Notifications";
-import toLocaldate from "../../functions/toLocalDate";
+import { open } from "../../utils/Notifications";
+import toLocaldate from "../../utils/toLocalDate";
 import { setActiveKey } from "../../store/navbarSlice";
 import {
   getAppointment,

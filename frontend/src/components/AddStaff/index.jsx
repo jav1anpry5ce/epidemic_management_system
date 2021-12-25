@@ -4,7 +4,7 @@ import Container from "@mui/material/Container";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { register, clearState } from "../../store/authSlice";
-import { open } from "../../functions/Notifications";
+import { open } from "../../utils/Notifications";
 import { setActiveKey } from "../../store/navbarSlice";
 
 const { Title } = Typography;

@@ -23,8 +23,8 @@ import {
   updateVac,
   updateTest,
 } from "../../store/TestVacSlice";
-import formatDate from "../../functions/formatDate";
-import { open } from "../../functions/Notifications";
+import formatDate from "../../utils/formatDate";
+import { open } from "../../utils/Notifications";
 import { EyeOutlined } from "@ant-design/icons";
 import Loading from "../Loading";
 import moment from "moment";

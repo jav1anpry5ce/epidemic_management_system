@@ -10,8 +10,8 @@ import {
   Checkbox,
 } from "antd";
 import { Uploader, Icon } from "rsuite";
-import PhoneMask from "../../functions/PhoneMask";
-import TRNMask from "../../functions/TRNMask";
+import PhoneMask from "../../utils/PhoneMask";
+import TRNMask from "../../utils/TRNMask";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import {
@@ -28,8 +28,8 @@ import {
 } from "../../store/patientSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import formatDate from "../../functions/formatDate";
-import { open } from "../../functions/Notifications";
+import formatDate from "../../utils/formatDate";
+import { open } from "../../utils/Notifications";
 import { setActiveKey } from "../../store/navbarSlice";
 import Loading from "../Loading";
 import shortid from "shortid";

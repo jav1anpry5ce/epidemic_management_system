@@ -15,7 +15,7 @@ import { setActiveKey } from "../../store/navbarSlice";
 import { Card, Input, Form, Button, Typography, Select } from "antd";
 import Loading from "../Loading";
 import PrintView from "./PrintView";
-import { open } from "../../functions/Notifications";
+import { open } from "../../utils/Notifications";
 import shortid from "shortid";
 
 const { Title } = Typography;

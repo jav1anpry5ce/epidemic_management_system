@@ -6,7 +6,7 @@ import { setActiveKey } from "../../store/navbarSlice";
 import { register, clearState as CS } from "../../store/authSlice";
 import Container from "@mui/material/Container";
 import { Card, Input, Form, Button, Typography, Select, Checkbox } from "antd";
-import { open } from "../../functions/Notifications";
+import { open } from "../../utils/Notifications";
 import shortid from "shortid";
 
 const { Title } = Typography;

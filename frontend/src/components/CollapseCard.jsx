@@ -7,7 +7,7 @@ import Collapse from "@mui/material/Collapse";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import toLocalDate from "../functions/toLocalDate";
+import toLocalDate from "../utils/toLocalDate";
 import shortid from "shortid";
 
 export default function CollapseCard({ Title, Data, expand, setExpand }) {

@@ -3,7 +3,7 @@ import { receiveBatch, clearState } from "../../store/locationSlice";
 import { useSelector, useDispatch } from "react-redux";
 import Container from "@mui/material/Container";
 import { Card, Input, Form, Button, Alert, Typography } from "antd";
-import { open } from "../../functions/Notifications";
+import { open } from "../../utils/Notifications";
 import { useParams } from "react-router-dom";
 
 const { Title } = Typography;

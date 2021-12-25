@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import Container from "@mui/material/Container";
-import formatDate from "../../functions/formatDate";
+import formatDate from "../../utils/formatDate";
 import { useDispatch, useSelector } from "react-redux";
-import TRNMask from "../../functions/TRNMask";
-import PhoneMask from "../../functions/PhoneMask";
+import TRNMask from "../../utils/TRNMask";
+import PhoneMask from "../../utils/PhoneMask";
 import { Uploader, Icon } from "rsuite";
 import {
   Card,
