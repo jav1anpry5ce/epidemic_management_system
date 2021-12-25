@@ -16,10 +16,6 @@ body {
   transform: translate(-50%, -50%);
 }
 
-.blur {
-  filter: blur(0.7px);
-}
-
 .App {
   min-height: 100vh;
   margin: 0;
