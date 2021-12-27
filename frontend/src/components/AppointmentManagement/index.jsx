@@ -29,7 +29,7 @@ const moment = require("moment");
 const { Title } = Typography;
 const { Option } = Select;
 
-export default function AppointmentManagement({ match }) {
+export default function AppointmentManagement() {
   const dispatch = useDispatch();
   const appointment = useSelector((state) => state.appointment);
   const location = useSelector((state) => state.location);
@@ -117,13 +117,13 @@ export default function AppointmentManagement({ match }) {
   }, [location.data, date]);
 
   return (
-    <div className="mx-2 sm:max-w-7xl sm:mx-auto my-2">
+    <div className="mx-2 sm:max-w-7xl sm:mx-auto sm:px-2 my-2">
       {appointment.loading && <Loading />}
       {appointment.appointments ? (
         <Grid
           container
           spacing={2}
-          className={appointment.loading ? "blur" : ""}
+          className={appointment.loading && "blur-sm"}
         >
           <Grid item xs={12} sm={12} md={6}>
             <PatientCard
@@ -311,7 +311,7 @@ export default function AppointmentManagement({ match }) {
               xs={12}
               className="flex items-center justify-center h-full"
             >
-              <p className=" text-white text-3xl text-semibold text-center">
+              <p className=" text-white text-3xl text-bold text-center">
                 This appointment does not exist in our records.
               </p>
             </Grid>

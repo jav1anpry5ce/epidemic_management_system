@@ -29,30 +29,30 @@ export default function PatientCard({
         <img
           src={image}
           alt="patient"
-          width={150}
-          className="h-full xs:hidden sm:block"
+          width={180}
+          className="xs:hidden sm:block aspect-auto rounded-r"
         />
 
         <CardContent>
-          <Grid container spacing={3}>
-            <Grid item xs={6}>
+          <Grid container spacing={2}>
+            <Grid item sm={6} xs={12}>
               <Typography variant="body2">First Name: {first_name}</Typography>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item sm={6} xs={12}>
               <Typography variant="body2">Last Name: {last_name}</Typography>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item sm={6} xs={12}>
               <Typography variant="body2">
                 Date of Birth: {date_of_birth}
               </Typography>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item sm={6} xs={12}>
               <Typography variant="body2">Gender: {gender}</Typography>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item sm={6} xs={12}>
               <Typography variant="body2">City: {city}</Typography>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item sm={6} xs={12}>
               <Typography variant="body2">Country: {country}</Typography>
             </Grid>
           </Grid>

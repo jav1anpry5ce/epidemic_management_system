@@ -254,32 +254,6 @@ export default function PositiveCases() {
         showTitle: false,
       },
     },
-
-    // {
-    //   title: "Recovering Location",
-    //   dataIndex: "recovering_location",
-    //   render: (recovering_location) => (
-    //     <Tooltip placement="topLeft" title={recovering_location}>
-    //       {recovering_location}
-    //     </Tooltip>
-    //   ),
-    //   ellipsis: {
-    //     showTitle: false,
-    //   },
-    // },
-    // {
-    //   title: "Status",
-    //   dataIndex: "status",
-    //   sorter: true,
-    //   render: (status) => (
-    //     <Tooltip placement="topLeft" title={status}>
-    //       {status}
-    //     </Tooltip>
-    //   ),
-    //   ellipsis: {
-    //     showTitle: false,
-    //   },
-    // },
     {
       title: "Action",
       dataIndex: "id",
@@ -606,7 +580,7 @@ export default function PositiveCases() {
         bordered={false}
         style={{ width: "100%" }}
       >
-        <div className="flex justify-between">
+        <div className="flex justify-between mb-4">
           <Select
             className="w-80"
             onChange={(e) => setSType(e)}
@@ -619,7 +593,7 @@ export default function PositiveCases() {
             ))}
           </Select>
           <Input.Search
-            className="w-2/5 mb-4"
+            className="w-2/5"
             onChange={(e) => setQ(e.target.value)}
             placeholder="Search using last name or TRN"
             onSearch={() => fetch()}

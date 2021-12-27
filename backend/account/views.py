@@ -71,56 +71,35 @@ def activate(request):
     except:
         return Response({'Message': 'Something went wrong!'}, status=status.HTTP_400_BAD_REQUEST)
 
+
 @api_view(['POST'])
 def login(request):
-    try:
-        try:
-            user = User.objects.get(email=request.data.get('email'))
-            if user.check_password(request.data.get('password')) and user.is_active:
-                if user.is_moh_staff:
-                    location = None
-                else:
-                    location = user.location.slug
-                token = Token.objects.create(user=user)
-                user.last_login = timezone.now()
-                user.save()
-                return Response({
-                    "auth_token": token.key, 
-                    "username": user.first_name, 
-                    "is_location_admin": user.is_location_admin, 
-                    "is_moh_staff": user.is_moh_staff,
-                    "is_moh_admin": user.is_moh_admin,
-                    "can_update_test": user.can_update_test, 
-                    "can_update_vaccine": user.can_update_vaccine, 
-                    'can_check_in': user.can_check_in,
-                    "can_receive_location_batch": user.can_receive_location_batch,
-                    "location": location
-                    })
-            return Response({'Message': 'Check email and/or password'}, status=status.HTTP_400_BAD_REQUEST)
-        except:
-            user = User.objects.get(email=request.data.get('email'))
-            if user.check_password(request.data.get('password')):
-                if user.is_moh_staff:
-                    location = None
-                else:
-                    location = user.location.value
-                token = Token.objects.get(user=user)
-                user.last_login = timezone.now()
-                user.save()
-                return Response({
-                    "auth_token": token.key, 
-                    "username": user.first_name, 
-                    "is_location_admin": user.is_location_admin, 
-                    'is_moh_staff': user.is_moh_staff, 
-                    'is_moh_admin': user.is_moh_admin, 
-                    "can_update_test": user.can_update_test, 
-                    "can_update_vaccine": user.can_update_vaccine, 
-                    'can_check_in': user.can_check_in, 
-                    "can_receive_location_batch": user.can_receive_location_batch,
-                    "location": location})
-            return Response({'Message': 'Check email and/or password'}, status=status.HTTP_404_NOT_FOUND)
-    except:
-        return Response({'Message': 'Check email and/or password'}, status=status.HTTP_404_NOT_FOUND)
+    if User.objects.filter(email=request.data.get('email')).exists():
+        user = User.objects.get(email=request.data.get('email'))
+        if user.check_password(request.data.get('password')) and user.is_active:
+            if user.is_moh_staff:
+                location = None
+            else:
+                location = user.location.slug
+            if Token.objects.filter(user=user).exists():
+                Token.objects.get(user=user).delete()
+            token = Token.objects.get_or_create(user=user)
+            user.last_login = timezone.now()
+            user.save()
+            return Response({
+                "auth_token": token[0].key, 
+                "username": user.first_name, 
+                "is_location_admin": user.is_location_admin, 
+                "is_moh_staff": user.is_moh_staff,
+                "is_moh_admin": user.is_moh_admin,
+                "can_update_test": user.can_update_test, 
+                "can_update_vaccine": user.can_update_vaccine, 
+                'can_check_in': user.can_check_in,
+                "can_receive_location_batch": user.can_receive_location_batch,
+                "location": location
+            })
+        return Response({'Message': 'Check email and/or password'}, status=status.HTTP_400_BAD_REQUEST)
+    return Response({'Message': 'Check email and/or password'}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 def logout(request):

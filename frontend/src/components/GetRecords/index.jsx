@@ -58,7 +58,7 @@ export default function GetRecords() {
         <Card
           headStyle={{ backgroundColor: "#1F2937", border: "none" }}
           title={
-            <p className="text-white text-2xl font-medium text-center">
+            <p className="text-white text-2xl font-semibold text-center">
               Get My Records
             </p>
           }
@@ -97,7 +97,7 @@ export default function GetRecords() {
         <Card
           headStyle={{ backgroundColor: "#1F2937", border: "none" }}
           title={
-            <p className="text-white text-2xl font-medium text-center">
+            <p className="text-white text-2xl font-semibold text-center">
               Verify Identity
             </p>
           }

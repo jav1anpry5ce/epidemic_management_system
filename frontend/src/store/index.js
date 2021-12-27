@@ -19,5 +19,5 @@ export default configureStore({
     moh: mohReducer,
     graph: graphReducer,
   },
-  devTools: true,
+  devTools: false,
 });

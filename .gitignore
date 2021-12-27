@@ -37,3 +37,5 @@ pnp-debug.log*
 static/
 media/
 qr_codes/
+
+key.txt

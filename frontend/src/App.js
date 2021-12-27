@@ -76,9 +76,8 @@ function App() {
         backgroundImage: `url(${background})`,
         backgroundSize: "cover",
         backgroundAttachment: "fixed",
-        minHeight: "100vh",
       }}
-      className="App"
+      className="min-h-screen"
     >
       <Router>
         <Header>

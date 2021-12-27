@@ -9,7 +9,7 @@ export default function NotFound({ setHide }) {
     // eslint-disable-next-line
   }, []);
   return (
-    <div className="bg-gray-100 flex justify-center items-center flex-col space-y-3 font-mono px-2 h-[93vh]">
+    <div className="bg-gray-100 flex justify-center items-center flex-col space-y-3 font-mono px-2 min-h-[93.5vh]">
       <h3 className="text-7xl font-bold tracking-wide text-center">404</h3>
       <p className="text-xl font-semibold text-center">Not Found</p>
       <p className="text-lg font-medium text-center">

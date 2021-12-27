@@ -31,6 +31,8 @@ from testing.models import Testing
 from vaccination.models import Vaccination
 from testing.serializers import TestingSerializer
 from vaccination.serializers import VaccinationSerializer
+import pyqrcode
+from functions import removeFile
 
 site = Site.objects.get_current()
 
@@ -392,12 +394,16 @@ Do not share this code with anyone!
 def get_patient_records_link(request):
     if PatientCode.objects.filter(code=request.data.get('code')).exists():
         patient = PatientCode.objects.get(code=request.data.get('code')).patient
+        qr = pyqrcode.create(f'{site}patient-info/{patient.unique_id}')
+        qr.png(f'qr_codes/{patient.unique_id}.png', scale = 8)
+        src = f'qr_codes/{patient.unique_id}.png'
         subject, from_email, to = 'Record Link', 'donotreply@localhost', patient.email
         html_content = f'''
         <html>
             <body>
                 <p>Hello {patient.first_name},</p>
                 <p>Here is the link to view your records <a href="{site}patient-info/{patient.unique_id}">{site}patient-info/{patient.unique_id}</a></p>
+                <p>You may present the attached qr code to any business that requires proof of vaccination or latest test results.</p>
             </body>
         </html>
         '''
@@ -405,7 +411,9 @@ def get_patient_records_link(request):
         msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
         msg.attach_alternative(html_content, "text/html")
         msg.content_subtype = "html"
+        msg.attach_file(src)
         msg.send()
+        removeFile(src)
         text = f'''Hello {patient.first_name},
     Here is the link to view your records. {site}patient-info/{patient.unique_id}
     '''
