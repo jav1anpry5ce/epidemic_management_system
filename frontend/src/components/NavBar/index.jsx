@@ -89,7 +89,7 @@ export default function NavBar({ hide, setHide }) {
           {auth.is_moh_staff ? (
             <Container maxWidth="xsl">
               <Nav onSelect={handelSelect} activeKey={nav.activeKey}>
-                <Nav.Item eventKey="1" onClick={() => navigate("/moh/home")}>
+                <Nav.Item eventKey="1" onClick={() => navigate("/moh")}>
                   <div className="flex">
                     {<AiFillHome className="flex text-lg mr-1" />}
                     Home

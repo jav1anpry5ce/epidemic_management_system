@@ -28,7 +28,7 @@ export default function Login() {
   }, [dispatch]);
   useEffect(() => {
     if (auth.is_auth && auth.is_moh_staff) {
-      navigate("/moh/home");
+      navigate("/moh");
     } else if (auth.is_auth) {
       navigate(`/${auth.location}`);
     }

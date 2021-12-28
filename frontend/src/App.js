@@ -99,7 +99,7 @@ function App() {
               <Route path=":uuid" element={<AppointmentManagement />} />
             </Route>
             <Route path="accounts">
-              <Route index path="login" element={<Login />} />
+              <Route path="login" element={<Login />} />
               <Route
                 path="activation/:token1/:token2"
                 element={<ActivateAccount />}
@@ -123,7 +123,14 @@ function App() {
               <Route path="password/reset/:token" element={<ResetPassword />} />
             </Route>
             <Route path={`${auth.location}`}>
-              <Route index path="" element={<LocationHome />} />
+              <Route
+                index
+                element={
+                  <PrivateRoutes>
+                    <LocationHome />
+                  </PrivateRoutes>
+                }
+              />
               <Route
                 path="test-vac/management"
                 element={
@@ -161,7 +168,6 @@ function App() {
             <Route path="moh">
               <Route
                 index
-                path="home"
                 element={
                   <MOHRoutes>
                     <Moh />
@@ -187,7 +193,6 @@ function App() {
               <Route path="batches">
                 <Route
                   index
-                  path=""
                   element={
                     <MOHRoutes>
                       <BatchManagement />
@@ -206,19 +211,18 @@ function App() {
               <Route path="locations">
                 <Route
                   index
-                  path=""
                   element={
-                    <MOHAdminRoutes>
+                    <MOHRoutes>
                       <Locations />
-                    </MOHAdminRoutes>
+                    </MOHRoutes>
                   }
                 />
                 <Route
                   path="create"
                   element={
-                    <MOHAdminRoutes>
+                    <MOHRoutes>
                       <AddLocation />
-                    </MOHAdminRoutes>
+                    </MOHRoutes>
                   }
                 />
               </Route>
