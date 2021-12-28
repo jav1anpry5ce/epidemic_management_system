@@ -13,6 +13,7 @@ import { Placeholder } from "rsuite";
 import { useNavigate } from "react-router-dom";
 import { open } from "../../utils/Notifications";
 import { setActiveKey } from "../../store/navbarSlice";
+import { Link } from "react-router-dom";
 
 const { Search } = Input;
 
@@ -155,17 +156,18 @@ export default function Appointments() {
             )}
           </Grid>
           <Grid item xs={12}>
-            <button
-              onClick={() => navigate("/appointments/create")}
-              appearance="primary"
-              style={{ border: "none" }}
-              className="rounded-sm px-4 py-2 bg-gray-700
+            <Link to="/appointments/create">
+              <button
+                appearance="primary"
+                style={{ border: "none" }}
+                className="rounded-sm px-4 py-2 bg-gray-700
                text-white hover:bg-gray-800 
                hover:text-white focus:bg-gray-800 
                focus:text-white transition duration-300 shadow shadow-slate-700/40 hover:shadow-lg hover:shadow-slate-800/70"
-            >
-              Make an Appointment
-            </button>
+              >
+                Make an Appointment
+              </button>
+            </Link>
           </Grid>
         </Grid>
       </Card>

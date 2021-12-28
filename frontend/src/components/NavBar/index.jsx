@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Icon, Navbar, Nav, Dropdown } from "rsuite";
 import { FaBars } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../store/authSlice";
 import { setActiveKey } from "../../store/navbarSlice";
@@ -89,55 +89,55 @@ export default function NavBar({ hide, setHide }) {
           {auth.is_moh_staff ? (
             <Container maxWidth="xsl">
               <Nav onSelect={handelSelect} activeKey={nav.activeKey}>
-                <Nav.Item eventKey="1" onClick={() => navigate("/moh")}>
-                  <div className="flex">
-                    {<AiFillHome className="flex text-lg mr-1" />}
-                    Home
-                  </div>
-                </Nav.Item>
-                <Nav.Item
-                  eventKey="2"
-                  onClick={() => navigate("/moh/patients")}
-                >
-                  <div className="flex">
-                    {<BsPersonFill className="flex text-lg mr-1" />}
-                    Patients
-                  </div>
-                </Nav.Item>
-                <Nav.Item
-                  eventKey="3"
-                  onClick={() => navigate("/moh/positive-cases")}
-                >
-                  <div className="flex">
-                    {<RiVirusLine className="flex text-lg mr-1" />}
-                    Positive Cases
-                  </div>
-                </Nav.Item>
-                <Nav.Item eventKey="4" onClick={() => navigate("/moh/batches")}>
-                  <div className="flex">
-                    {<GiCardboardBox className="flex text-lg mr-1" />}
-                    Batch
-                  </div>
-                </Nav.Item>
-                <Nav.Item
-                  eventKey="5"
-                  onClick={() => navigate("/moh/locations")}
-                >
-                  <div className="flex">
-                    {<BiCurrentLocation className="flex text-lg mr-1" />}
-                    Sites
-                  </div>
-                </Nav.Item>
-                {auth.is_moh_admin && (
-                  <Nav.Item
-                    eventKey="6"
-                    onClick={() => navigate("/moh/add-staff")}
-                  >
+                <Link to="/moh">
+                  <Nav.Item eventKey="1">
                     <div className="flex">
-                      {<BsPersonPlusFill className="flex text-lg mr-1" />}
-                      Add Staff
+                      {<AiFillHome className="flex text-lg mr-1" />}
+                      Home
                     </div>
                   </Nav.Item>
+                </Link>
+                <Link to="/moh/patients">
+                  <Nav.Item eventKey="2">
+                    <div className="flex">
+                      {<BsPersonFill className="flex text-lg mr-1" />}
+                      Patients
+                    </div>
+                  </Nav.Item>
+                </Link>
+                <Link to="/moh/positive-cases">
+                  <Nav.Item eventKey="3">
+                    <div className="flex">
+                      {<RiVirusLine className="flex text-lg mr-1" />}
+                      Positive Cases
+                    </div>
+                  </Nav.Item>
+                </Link>
+                <Link to="/moh/batches">
+                  <Nav.Item eventKey="4">
+                    <div className="flex">
+                      {<GiCardboardBox className="flex text-lg mr-1" />}
+                      Batch
+                    </div>
+                  </Nav.Item>
+                </Link>
+                <Link to="/moh/locations">
+                  <Nav.Item eventKey="5">
+                    <div className="flex">
+                      {<BiCurrentLocation className="flex text-lg mr-1" />}
+                      Sites
+                    </div>
+                  </Nav.Item>
+                </Link>
+                {auth.is_moh_admin && (
+                  <Link to="/moh/add-staff">
+                    <Nav.Item eventKey="6">
+                      <div className="flex">
+                        {<BsPersonPlusFill className="flex text-lg mr-1" />}
+                        Add Staff
+                      </div>
+                    </Nav.Item>
+                  </Link>
                 )}
               </Nav>
               <Nav pullRight>
@@ -158,21 +158,15 @@ export default function NavBar({ hide, setHide }) {
               >
                 <Nav.Item disabled>Hello, {auth.username}</Nav.Item>
                 <Dropdown title="Settings" icon={<Icon icon="cog" />}>
-                  <Dropdown.Item
-                    eventKey="8"
-                    onClick={() => navigate("/accounts/change-password")}
-                  >
-                    Change Password
-                  </Dropdown.Item>
+                  <Link to="/accounts/change-password">
+                    <Dropdown.Item eventKey="8">Change Password</Dropdown.Item>
+                  </Link>
                   {auth.is_moh_admin && (
-                    <Dropdown.Item
-                      eventKey="9"
-                      onClick={() =>
-                        navigate("/accounts/reset/password/request")
-                      }
-                    >
-                      Reset employee password
-                    </Dropdown.Item>
+                    <Link to="/accounts/reset/password/request">
+                      <Dropdown.Item eventKey="9">
+                        Reset employee password
+                      </Dropdown.Item>
+                    </Link>
                   )}
                 </Dropdown>
               </Nav>
@@ -180,51 +174,42 @@ export default function NavBar({ hide, setHide }) {
           ) : (
             <Container maxWidth="xsl">
               <Nav onSelect={handelSelect} activeKey={nav.activeKey}>
-                <Nav.Item
-                  eventKey="1"
-                  onClick={() => navigate(`/${auth.location}`)}
-                >
-                  <div className="flex">
-                    {<AiFillHome className="flex text-lg mr-1" />}
-                    Home
-                  </div>
-                </Nav.Item>
-                <Nav.Item
-                  eventKey="2"
-                  icon={<Icon icon="flask" />}
-                  onClick={() =>
-                    navigate(`/${auth.location}/test-vac/management`)
-                  }
-                >
-                  Vaccination and Testing
-                </Nav.Item>
-                <Nav.Item
-                  eventKey="3"
-                  icon={<Icon icon="calendar" />}
-                  onClick={() => navigate(`/${auth.location}/appointments`)}
-                >
-                  Appointments{" "}
-                </Nav.Item>
-                {auth.is_location_admin && (
-                  <Nav.Item
-                    eventKey="4"
-                    onClick={() => navigate(`/${auth.location}/add-staff`)}
-                  >
+                <Link to={`/${auth.location}`}>
+                  <Nav.Item eventKey="1">
                     <div className="flex">
-                      {<BsPersonPlusFill className="flex text-lg mr-1" />}
-                      Add Staff
+                      {<AiFillHome className="flex text-lg mr-1" />}
+                      Home
                     </div>
                   </Nav.Item>
+                </Link>
+                <Link to={`/${auth.location}/test-vac/management`}>
+                  <Nav.Item eventKey="2" icon={<Icon icon="flask" />}>
+                    Vaccination and Testing
+                  </Nav.Item>
+                </Link>
+                <Link to={`/${auth.location}/appointments`}>
+                  <Nav.Item eventKey="3" icon={<Icon icon="calendar" />}>
+                    Appointments{" "}
+                  </Nav.Item>
+                </Link>
+                {auth.is_location_admin && (
+                  <Link to={`/${auth.location}/add-staff`}>
+                    <Nav.Item eventKey="4">
+                      <div className="flex">
+                        {<BsPersonPlusFill className="flex text-lg mr-1" />}
+                        Add Staff
+                      </div>
+                    </Nav.Item>
+                  </Link>
                 )}
-                <Nav.Item
-                  eventKey="5"
-                  onClick={() => navigate(`/${auth.location}/add/availability`)}
-                >
-                  <div className="flex">
-                    {<MdEventAvailable className="flex text-lg mr-1" />}Add
-                    Availability
-                  </div>
-                </Nav.Item>
+                <Link to={`/${auth.location}/add/availability`}>
+                  <Nav.Item eventKey="5">
+                    <div className="flex">
+                      {<MdEventAvailable className="flex text-lg mr-1" />}Add
+                      Availability
+                    </div>
+                  </Nav.Item>
+                </Link>
               </Nav>
               <Nav pullRight>
                 <Nav.Item
@@ -239,21 +224,15 @@ export default function NavBar({ hide, setHide }) {
               <Nav pullRight onSelect={handelSelect} activeKey={nav.activeKey}>
                 <Nav.Item disabled>Hello, {auth.username}</Nav.Item>
                 <Dropdown title="Settings" icon={<Icon icon="cog" />}>
-                  <Dropdown.Item
-                    eventKey="6"
-                    onClick={() => navigate("/accounts/change-password")}
-                  >
-                    Change Password
-                  </Dropdown.Item>
+                  <Link to={`/accounts/change-password`}>
+                    <Dropdown.Item eventKey="6">Change Password</Dropdown.Item>
+                  </Link>
                   {auth.is_location_admin && (
-                    <Dropdown.Item
-                      eventKey="7"
-                      onClick={() =>
-                        navigate("/accounts/reset/password/request")
-                      }
-                    >
-                      Reset employee password
-                    </Dropdown.Item>
+                    <Link to={`/accounts/reset/password/request`}>
+                      <Dropdown.Item eventKey="7">
+                        Reset employee password
+                      </Dropdown.Item>
+                    </Link>
                   )}
                 </Dropdown>
               </Nav>
@@ -278,12 +257,14 @@ export default function NavBar({ hide, setHide }) {
             // desktop
             <Container maxWidth="xsl">
               <Nav onSelect={handelSelect} activeKey={nav.activeKey}>
-                <Nav.Item onClick={() => navigate("/")} eventKey="1">
-                  <div className="flex">
-                    {<AiFillHome className="flex text-lg mr-1" />}
-                    Home
-                  </div>
-                </Nav.Item>
+                <Link to="/">
+                  <Nav.Item eventKey="1">
+                    <div className="flex">
+                      {<AiFillHome className="flex text-lg mr-1" />}
+                      Home
+                    </div>
+                  </Nav.Item>
+                </Link>
                 <Nav.Item
                   eventKey="2"
                   onClick={() =>
@@ -312,27 +293,19 @@ export default function NavBar({ hide, setHide }) {
                     Vaccine Information
                   </div>
                 </Nav.Item>
-                <Nav.Item
-                  onClick={() => {
-                    navigate("/appointments");
-                  }}
-                  eventKey="4"
-                  icon={<Icon icon="calendar" />}
-                >
-                  Appoinments
-                </Nav.Item>
-                <Nav.Item
-                  onClick={() => {
-                    navigate("/records");
-                    setExpand(!expand);
-                  }}
-                  eventKey="5"
-                >
-                  <div className="flex">
-                    {<AiOutlineFileText className="flex text-lg mr-1" />}
-                    Get my Records
-                  </div>
-                </Nav.Item>
+                <Link to="/appointments">
+                  <Nav.Item eventKey="4" icon={<Icon icon="calendar" />}>
+                    Appoinments
+                  </Nav.Item>
+                </Link>
+                <Link to="/records">
+                  <Nav.Item eventKey="5">
+                    <div className="flex">
+                      {<AiOutlineFileText className="flex text-lg mr-1" />}
+                      Get my Records
+                    </div>
+                  </Nav.Item>
+                </Link>
               </Nav>
               <Nav
                 pullRight
@@ -341,12 +314,11 @@ export default function NavBar({ hide, setHide }) {
                 style={{ marginRight: 5 }}
               >
                 <Dropdown title="Settings" icon={<Icon icon="cog" />}>
-                  <Dropdown.Item
-                    eventKey="6"
-                    onClick={() => navigate("/update/patient/info")}
-                  >
-                    Update Information
-                  </Dropdown.Item>
+                  <Link to="/update/patient/info">
+                    <Dropdown.Item eventKey="6">
+                      Update Information
+                    </Dropdown.Item>
+                  </Link>
                 </Dropdown>
               </Nav>
             </Container>
@@ -369,18 +341,19 @@ export default function NavBar({ hide, setHide }) {
                   className="transition-all ease-in-out duration-500 w-full"
                 >
                   <div className="grid grid-cols-1 place-items-center">
-                    <Nav.Item
-                      onClick={() => {
-                        navigate("/");
-                        setExpand(!expand);
-                      }}
-                      eventKey="1"
-                    >
-                      <div className="flex">
-                        {<AiFillHome className="flex text-lg mr-1" />}
-                        Home
-                      </div>
-                    </Nav.Item>
+                    <Link to="/">
+                      <Nav.Item
+                        onClick={() => {
+                          setExpand(!expand);
+                        }}
+                        eventKey="1"
+                      >
+                        <div className="flex">
+                          {<AiFillHome className="flex text-lg mr-1" />}
+                          Home
+                        </div>
+                      </Nav.Item>
+                    </Link>
                     <Nav.Item
                       eventKey="2"
                       onClick={() =>
@@ -409,38 +382,41 @@ export default function NavBar({ hide, setHide }) {
                         Vaccine Information
                       </div>
                     </Nav.Item>
-                    <Nav.Item
-                      onClick={() => {
-                        navigate("/appointments");
-                        setExpand(!expand);
-                      }}
-                      eventKey="4"
-                      icon={<Icon icon="calendar" />}
-                    >
-                      Appoinments
-                    </Nav.Item>
-                    <Nav.Item
-                      onClick={() => {
-                        navigate("/records");
-                        setExpand(!expand);
-                      }}
-                      eventKey="5"
-                    >
-                      <div className="flex">
-                        {<AiOutlineFileText className="flex text-lg mr-1" />}
-                        Get my Records
-                      </div>
-                    </Nav.Item>
-                    <Dropdown title="Settings" icon={<Icon icon="cog" />}>
-                      <Dropdown.Item
-                        eventKey="6"
+                    <Link to="/appointments">
+                      <Nav.Item
                         onClick={() => {
-                          navigate("/update/patient/info");
                           setExpand(!expand);
                         }}
+                        eventKey="4"
+                        icon={<Icon icon="calendar" />}
                       >
-                        Update Information
-                      </Dropdown.Item>
+                        Appoinments
+                      </Nav.Item>
+                    </Link>
+                    <Link to="/records">
+                      <Nav.Item
+                        onClick={() => {
+                          setExpand(!expand);
+                        }}
+                        eventKey="5"
+                      >
+                        <div className="flex">
+                          {<AiOutlineFileText className="flex text-lg mr-1" />}
+                          Get my Records
+                        </div>
+                      </Nav.Item>
+                    </Link>
+                    <Dropdown title="Settings" icon={<Icon icon="cog" />}>
+                      <Link to="/update/patient/info">
+                        <Dropdown.Item
+                          eventKey="6"
+                          onClick={() => {
+                            setExpand(!expand);
+                          }}
+                        >
+                          Update Information
+                        </Dropdown.Item>
+                      </Link>
                     </Dropdown>
                   </div>
                 </Nav>
