@@ -40,6 +40,7 @@ import {
   MOHRoutes,
   MOHAdminRoutes,
   AdminRoutes,
+  ResetRoute,
 } from "./components";
 
 import IdleTimer from "./utils/IdleTimer";
@@ -115,9 +116,9 @@ function App() {
               <Route
                 path="reset/password/request"
                 element={
-                  <PrivateRoutes>
+                  <ResetRoute>
                     <ResetPasswordRequest />
-                  </PrivateRoutes>
+                  </ResetRoute>
                 }
               />
               <Route path="password/reset/:token" element={<ResetPassword />} />

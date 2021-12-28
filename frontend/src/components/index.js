@@ -31,3 +31,4 @@ export { default as PrivateRoutes } from "./PrivateRoutes";
 export { default as MOHRoutes } from "./MOHRoutes";
 export { default as MOHAdminRoutes } from "./MOHAdminRoutes";
 export { default as AdminRoutes } from "./AdminRoutes";
+export { default as ResetRoute } from "./ResetRoute";

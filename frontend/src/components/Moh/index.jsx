@@ -121,7 +121,7 @@ export default function MOHHOME() {
       </Container>
     );
   }
-  if (data.loading) {
+  if (data.loading && !data.breakdownData) {
     return <Loading />;
   }
   if (!data.loading && !data.breakdownData)
