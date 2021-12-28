@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { clearState } from "../../store/mohSlice";
 import { setActiveKey } from "../../store/navbarSlice";
@@ -11,7 +11,6 @@ import shortid from "shortid";
 const { Title } = Typography;
 
 export default function Locations() {
-  const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [data, setData] = useState();
@@ -25,13 +24,10 @@ export default function Locations() {
   const scroll = { y: 470 };
 
   useEffect(() => {
-    if (!auth.is_moh_staff) {
-      navigate("/moh/home");
-    }
     dispatch(setActiveKey("5"));
     return () => clearState();
     // eslint-disable-next-line
-  }, [auth.is_moh_staff]);
+  }, []);
 
   const fetch = () => {
     setLoading(true);

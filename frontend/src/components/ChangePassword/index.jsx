@@ -34,16 +34,13 @@ export default function ChangePassword() {
       dispatch(setActiveKey("6"));
     }
 
-    if (!auth.is_auth) {
-      navigate("/");
-    }
     if (auth.success) {
       dispatch(logout());
       navigate("/accounts/login");
       dispatch(clearState());
     }
     // eslint-disable-next-line
-  }, [auth.success, auth.is_auth]);
+  }, [auth.success, auth.is_moh_admin]);
 
   useEffect(() => {
     return () => dispatch(clearState());

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Card, Input, Form, Button, Alert, Typography, Checkbox } from "antd";
 import Container from "@mui/material/Container";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { register, clearState } from "../../store/authSlice";
 import { open } from "../../utils/Notifications";
 import { setActiveKey } from "../../store/navbarSlice";
@@ -12,7 +11,6 @@ const { Title } = Typography;
 export default function AddStaff() {
   const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const [form] = Form.useForm();
   const [isAdmin, setIsAdmin] = useState(false);
   const [canCheckIn, setCanCheckIn] = useState(false);
@@ -25,9 +23,6 @@ export default function AddStaff() {
 
   useEffect(() => {
     dispatch(setActiveKey("4"));
-    if (!auth.is_location_admin) {
-      navigate("/account/login");
-    }
     if (auth.success) {
       form.resetFields();
       setIsAdmin(false);
@@ -47,7 +42,7 @@ export default function AddStaff() {
     }
     return () => dispatch(clearState());
     // eslint-disable-next-line
-  }, [auth.success, auth.is_location_admin]);
+  }, [auth.success]);
   const handelClick = (id) => {
     if (id === 1) {
       setIsAdmin(!isAdmin);

@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { getBreakdown, clearState } from "../../store/mohSlice";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { Container, CardContent, Grid, Typography } from "@mui/material";
 import { setActiveKey } from "../../store/navbarSlice";
 import { Card } from "./MohElements";
@@ -10,19 +9,14 @@ import shortid from "shortid";
 
 export default function MOHHOME() {
   const data = useSelector((state) => state.moh);
-  const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(getBreakdown());
     dispatch(setActiveKey("1"));
-    if (!auth.is_moh_staff) {
-      navigate("/accounts/login");
-    }
     return () => dispatch(clearState());
     // eslint-disable-next-line
-  }, [auth.is_moh_staff]);
+  }, []);
 
   if (data.breakdownData) {
     const cardData = [

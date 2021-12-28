@@ -23,7 +23,6 @@ const { Option } = Select;
 
 export default function CreateBatch() {
   const data = useSelector((state) => state.moh);
-  const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [location, setLocation] = useState("");
@@ -31,13 +30,6 @@ export default function CreateBatch() {
   const [dose, setDose] = useState("");
   const componenetRef = useRef();
   const [form] = Form.useForm();
-
-  useEffect(() => {
-    if (!auth.is_moh_staff && !auth.is_auth) {
-      navigate("/accounts/login");
-    }
-    // eslint-disable-next-line
-  }, [auth.is_auth, auth.is_moh_staff]);
 
   useEffect(() => {
     dispatch(setActiveKey("4"));

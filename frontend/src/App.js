@@ -36,6 +36,10 @@ import {
   NotFound,
   AddAvailability,
   GetRecords,
+  PrivateRoutes,
+  MOHRoutes,
+  MOHAdminRoutes,
+  AdminRoutes,
 } from "./components";
 
 import IdleTimer from "./utils/IdleTimer";
@@ -100,10 +104,21 @@ function App() {
                 path="activation/:token1/:token2"
                 element={<ActivateAccount />}
               />
-              <Route path="change-password" element={<ChangePassword />} />
+              <Route
+                path="change-password"
+                element={
+                  <PrivateRoutes>
+                    <ChangePassword />
+                  </PrivateRoutes>
+                }
+              />
               <Route
                 path="reset/password/request"
-                element={<ResetPasswordRequest />}
+                element={
+                  <PrivateRoutes>
+                    <ResetPasswordRequest />
+                  </PrivateRoutes>
+                }
               />
               <Route path="password/reset/:token" element={<ResetPassword />} />
             </Route>
@@ -111,26 +126,110 @@ function App() {
               <Route index path="" element={<LocationHome />} />
               <Route
                 path="test-vac/management"
-                element={<VaccinationAndTesting />}
+                element={
+                  <PrivateRoutes>
+                    <VaccinationAndTesting />
+                  </PrivateRoutes>
+                }
               />
-              <Route path="add-staff" element={<AddStaff />} />
-              <Route path="appointments" element={<LocationAppointments />} />
-              <Route path="add/availability" element={<AddAvailability />} />
+              <Route
+                path="add-staff"
+                element={
+                  <AdminRoutes>
+                    <AddStaff />
+                  </AdminRoutes>
+                }
+              />
+              <Route
+                path="appointments"
+                element={
+                  <PrivateRoutes>
+                    <LocationAppointments />
+                  </PrivateRoutes>
+                }
+              />
+              <Route
+                path="add/availability"
+                element={
+                  <PrivateRoutes>
+                    <AddAvailability />
+                  </PrivateRoutes>
+                }
+              />
             </Route>
             <Route path="update/patient/info" element={<UpdateInfo />} />
             <Route path="moh">
-              <Route index path="home" element={<Moh />} />
-              <Route path="patients" element={<Patients />} />
-              <Route path="positive-cases" element={<PositiveCases />} />
+              <Route
+                index
+                path="home"
+                element={
+                  <MOHRoutes>
+                    <Moh />
+                  </MOHRoutes>
+                }
+              />
+              <Route
+                path="patients"
+                element={
+                  <MOHRoutes>
+                    <Patients />
+                  </MOHRoutes>
+                }
+              />
+              <Route
+                path="positive-cases"
+                element={
+                  <MOHRoutes>
+                    <PositiveCases />
+                  </MOHRoutes>
+                }
+              />
               <Route path="batches">
-                <Route index path="" element={<BatchManagement />} />
-                <Route path="create" element={<CreateBatch />} />
+                <Route
+                  index
+                  path=""
+                  element={
+                    <MOHRoutes>
+                      <BatchManagement />
+                    </MOHRoutes>
+                  }
+                />
+                <Route
+                  path="create"
+                  element={
+                    <MOHRoutes>
+                      <CreateBatch />
+                    </MOHRoutes>
+                  }
+                />
               </Route>
               <Route path="locations">
-                <Route index path="" element={<Locations />} />
-                <Route path="create" element={<AddLocation />} />
+                <Route
+                  index
+                  path=""
+                  element={
+                    <MOHAdminRoutes>
+                      <Locations />
+                    </MOHAdminRoutes>
+                  }
+                />
+                <Route
+                  path="create"
+                  element={
+                    <MOHAdminRoutes>
+                      <AddLocation />
+                    </MOHAdminRoutes>
+                  }
+                />
               </Route>
-              <Route path="add-staff" element={<MohAdd />} />
+              <Route
+                path="add-staff"
+                element={
+                  <MOHAdminRoutes>
+                    <MohAdd />
+                  </MOHAdminRoutes>
+                }
+              />
             </Route>
             <Route path="got-the-stach/:uuid" element={<ReceiveBatch />} />
             <Route path="records" element={<GetRecords />} />

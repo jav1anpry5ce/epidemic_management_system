@@ -10,7 +10,6 @@ import {
   resetLink,
   generateCsv,
 } from "../../store/mohSlice";
-import { useNavigate } from "react-router-dom";
 import { setActiveKey } from "../../store/navbarSlice";
 import { EyeOutlined } from "@ant-design/icons";
 import { LoadingOutlined } from "@ant-design/icons";
@@ -63,9 +62,7 @@ function calculate_age(dob) {
 
 export default function PositiveCases() {
   const moh = useSelector((state) => state.moh);
-  const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const [show, setShow] = useState(false);
   const [status, setStatus] = useState("");
   const [location, setLocation] = useState("");
@@ -85,13 +82,6 @@ export default function PositiveCases() {
   const [date, setDate] = useState(formatDate(new Date()));
   const [sType, setSType] = useState("Positive Cases");
   const scroll = { y: 470 };
-
-  useEffect(() => {
-    if (!auth.is_auth && !auth.is_moh_staff) {
-      navigate("/accounts/login");
-    }
-    // eslint-disable-next-line
-  }, [auth.is_moh_staff, auth.is_auth]);
 
   useEffect(() => {
     dispatch(setActiveKey("3"));

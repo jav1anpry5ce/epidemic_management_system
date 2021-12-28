@@ -13,7 +13,6 @@ import shortid from "shortid";
 const { Title } = Typography;
 
 export default function BatchManagement() {
-  const auth = useSelector((state) => state.auth);
   const moh = useSelector((state) => state.moh);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -36,13 +35,6 @@ export default function BatchManagement() {
     return () => dispatch(clearState());
     // eslint-disable-next-line
   }, []);
-
-  useEffect(() => {
-    if (!auth.is_moh_staff && !auth.is_auth) {
-      navigate("/accounts/login");
-    }
-    // eslint-disable-next-line
-  }, [auth.is_auth, auth.is_moh_staff]);
 
   const fetch = () => {
     setLoading(true);

@@ -9,7 +9,7 @@ import {
   clearState,
 } from "../../store/appointmentSlice";
 import Typography from "@mui/material/Typography";
-import { Button, Placeholder } from "rsuite";
+import { Placeholder } from "rsuite";
 import { useNavigate } from "react-router-dom";
 import { open } from "../../utils/Notifications";
 import { setActiveKey } from "../../store/navbarSlice";
@@ -20,17 +20,9 @@ export default function Appointments() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const appointments = useSelector((state) => state.appointment);
-  const [activePage, setActivePage] = useState(1);
-  const [itemsPerPage] = useState(6);
-  const indexOfLastItem = activePage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItem =
-    appointments.appointments && appointments.appointments.length >= 1
-      ? appointments.appointments.slice(indexOfFirstItem, indexOfLastItem)
-      : null;
+
   const handelSearch = () => {
     dispatch(clearAppointments());
-    setActivePage(1);
     dispatch(AppointmentSearch(q));
   };
 
@@ -85,157 +77,95 @@ export default function Appointments() {
           </Grid>
           {appointments.searchMessage && (
             <Grid item xs={12}>
-              <Typography variant="h5" align="center">
+              <h3 className="text-center text-3xl font-medium mt-4">
                 {appointments.searchMessage}
-              </Typography>
+              </h3>
             </Grid>
           )}
           {appointments.loading && (
             <Grid item xs={12}>
-              <Placeholder.Paragraph rows={2} active></Placeholder.Paragraph>
+              <Placeholder.Paragraph rows={2} active />
             </Grid>
           )}
           <Grid item xs={12}>
-            {appointments.appointments && appointments.appointments.length >= 1
-              ? currentItem.map((appointment) => (
-                  <Grid container spacing={2}>
-                    <Grid item xs={12}>
-                      <Card>
-                        <Grid container spacing={1}>
-                          <Grid item xs={2}>
-                            <Typography variant="caption">
-                              First Name
-                            </Typography>
-                            <br />
-                            <Typography variant="caption">
-                              {appointment.patient.first_name}
-                            </Typography>
-                          </Grid>
-                          <Grid item xs={2}>
-                            <Typography variant="caption">Last Name</Typography>
-                            <br />
-                            <Typography variant="caption">
-                              {appointment.patient.last_name}
-                            </Typography>
-                          </Grid>
-                          <Grid item xs={2}>
-                            <Typography variant="caption">Date</Typography>
-                            <br />
-                            <Typography variant="caption">
-                              {appointment.date}
-                            </Typography>
-                          </Grid>
-                          <Grid item xs={2}>
-                            <Typography variant="caption">Time</Typography>
-                            <br />
-                            <Typography variant="caption">
-                              {appointment.time}
-                            </Typography>
-                          </Grid>
-                          <Grid item xs={2}>
-                            <Typography variant="caption">Type</Typography>
-                            <br />
-                            <Typography variant="caption">
-                              {appointment.type}
-                            </Typography>
-                          </Grid>
-                          <Grid item xs={2}>
-                            <Typography variant="caption">Manage</Typography>
-                            <br />
-                            <Button
-                              size="xs"
-                              onClick={() =>
-                                navigate("/appointments/" + appointment.id)
-                              }
-                              style={{ border: "none" }}
-                              className="rounded-sm bg-gray-700 text-white hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white transition duration-300"
-                            >
-                              View
-                            </Button>
-                          </Grid>
-                        </Grid>
-                      </Card>
+            {appointments.appointment && (
+              <Grid container spacing={2} style={{ marginTop: 2 }}>
+                <Grid item xs={12}>
+                  <Card className="shadow-lg rounded-lg">
+                    <Grid container spacing={0}>
+                      <Grid item xs={2}>
+                        <Typography variant="caption">First Name</Typography>
+                        <br />
+                        <Typography variant="caption">
+                          {appointments.appointment.patient.first_name}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={2}>
+                        <Typography variant="caption">Last Name</Typography>
+                        <br />
+                        <Typography variant="caption">
+                          {appointments.appointment.patient.last_name}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={2}>
+                        <Typography variant="caption">Date</Typography>
+                        <br />
+                        <Typography variant="caption">
+                          {appointments.appointment.date}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={2}>
+                        <Typography variant="caption">Time</Typography>
+                        <br />
+                        <Typography variant="caption">
+                          {new Date(
+                            "1990-01-01 " + appointments.appointment.time
+                          )
+                            .toLocaleTimeString()
+                            .replace(/:\d+ /, " ")}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={2}>
+                        <Typography variant="caption">Status</Typography>
+                        <br />
+                        <Typography variant="caption">
+                          {appointments.appointment.status}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={2}>
+                        <Typography variant="caption">Manage</Typography>
+                        <br />
+                        <button
+                          onClick={() =>
+                            navigate(
+                              "/appointments/" + appointments.appointment.id
+                            )
+                          }
+                          appearance="primary"
+                          style={{ border: "none" }}
+                          className="rounded-sm px-2 bg-gray-700 text-white hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white transition duration-300"
+                        >
+                          View
+                        </button>
+                      </Grid>
                     </Grid>
-                  </Grid>
-                ))
-              : appointments.appointment && (
-                  <Grid container spacing={2} style={{ marginTop: 2 }}>
-                    <Grid item xs={12}>
-                      <Card className="shadow-lg rounded-lg">
-                        <Grid container spacing={0}>
-                          <Grid item xs={2}>
-                            <Typography variant="caption">
-                              First Name
-                            </Typography>
-                            <br />
-                            <Typography variant="caption">
-                              {appointments.appointment.patient.first_name}
-                            </Typography>
-                          </Grid>
-                          <Grid item xs={2}>
-                            <Typography variant="caption">Last Name</Typography>
-                            <br />
-                            <Typography variant="caption">
-                              {appointments.appointment.patient.last_name}
-                            </Typography>
-                          </Grid>
-                          <Grid item xs={2}>
-                            <Typography variant="caption">Date</Typography>
-                            <br />
-                            <Typography variant="caption">
-                              {appointments.appointment.date}
-                            </Typography>
-                          </Grid>
-                          <Grid item xs={2}>
-                            <Typography variant="caption">Time</Typography>
-                            <br />
-                            <Typography variant="caption">
-                              {new Date(
-                                "1990-01-01 " + appointments.appointment.time
-                              )
-                                .toLocaleTimeString()
-                                .replace(/:\d+ /, " ")}
-                            </Typography>
-                          </Grid>
-                          <Grid item xs={2}>
-                            <Typography variant="caption">Status</Typography>
-                            <br />
-                            <Typography variant="caption">
-                              {appointments.appointment.status}
-                            </Typography>
-                          </Grid>
-                          <Grid item xs={2}>
-                            <Typography variant="caption">Manage</Typography>
-                            <br />
-                            <Button
-                              size="xs"
-                              onClick={() =>
-                                navigate(
-                                  "/appointments/" + appointments.appointment.id
-                                )
-                              }
-                              appearance="primary"
-                              style={{ border: "none" }}
-                              className="rounded-sm bg-gray-700 text-white hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white transition duration-300"
-                            >
-                              View
-                            </Button>
-                          </Grid>
-                        </Grid>
-                      </Card>
-                    </Grid>
-                  </Grid>
-                )}
+                  </Card>
+                </Grid>
+              </Grid>
+            )}
           </Grid>
           <Grid item xs={12}>
-            <Button
+            <button
               onClick={() => navigate("/appointments/create")}
               appearance="primary"
               style={{ border: "none" }}
-              className="rounded-sm bg-gray-700 text-white hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white transition duration-300"
+              className="rounded-sm px-4 py-2 bg-gray-700
+               text-white hover:bg-gray-800 
+               hover:text-white focus:bg-gray-800 
+               focus:text-white transition duration-300 shadow shadow-slate-700/40 hover:shadow-lg hover:shadow-slate-800/70"
             >
               Make an Appointment
-            </Button>
+            </button>
           </Grid>
         </Grid>
       </Card>

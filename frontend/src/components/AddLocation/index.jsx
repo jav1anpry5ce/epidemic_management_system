@@ -30,7 +30,6 @@ const parishData = [
 
 export default function AddLocation() {
   const data = useSelector((state) => state.moh);
-  const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [location, setLocation] = useState();
@@ -44,13 +43,10 @@ export default function AddLocation() {
   const [form] = Form.useForm();
 
   useEffect(() => {
-    if (!auth.is_moh_admin) {
-      navigate("/moh/home");
-    }
     dispatch(setActiveKey("5"));
     return () => dispatch(clearState());
     // eslint-disable-next-line
-  }, [auth.is_moh_admin]);
+  }, []);
 
   useEffect(() => {
     if (data.success) {

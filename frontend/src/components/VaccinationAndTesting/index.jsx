@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { setActiveKey } from "../../store/navbarSlice";
 import {
   Card,
@@ -36,9 +35,7 @@ const { Option } = Select;
 
 export default function VaccinationAndTesting() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const testVac = useSelector((state) => state.testVac);
-  const auth = useSelector((state) => state.auth);
   const [date, setDate] = useState(formatDate(new Date()));
   const [manufacture, setManufacture] = useState("");
   const [vile_number, setVileNumber] = useState();
@@ -74,12 +71,9 @@ export default function VaccinationAndTesting() {
   useEffect(() => {
     dispatch(setActiveKey("2"));
     dispatch(clearState());
-    if (!auth.is_auth) {
-      navigate("/accounts/login");
-    }
     return () => dispatch(clearState());
     // eslint-disable-next-line
-  }, [auth.is_auth, dispatch]);
+  }, []);
 
   const fetch = () => {
     setLoading(true);

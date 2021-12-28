@@ -4,7 +4,6 @@ import Avatar from "@mui/material/Avatar";
 import Grid from "@mui/material/Grid";
 import { useSelector, useDispatch } from "react-redux";
 import { getPatient, clearState } from "../../store/mohSlice";
-import { useNavigate } from "react-router-dom";
 import CollapseCard from "../CollapseCard";
 import { setActiveKey } from "../../store/navbarSlice";
 import { EyeOutlined } from "@ant-design/icons";
@@ -26,9 +25,7 @@ const { Title } = Typography;
 
 export default function Patients() {
   const moh = useSelector((state) => state.moh);
-  const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const [data, setData] = useState();
   const [order, setOrder] = useState("");
   const [pagination, setPagination] = useState({
@@ -44,13 +41,6 @@ export default function Patients() {
   const [testingExpaned, setTestingExpanded] = useState(false);
   const [form] = Form.useForm();
   const scroll = { y: 470 };
-
-  useEffect(() => {
-    if (!auth.is_auth && !auth.is_moh_staff) {
-      navigate("/accounts/login");
-    }
-    // eslint-disable-next-line
-  }, [auth.is_moh_staff, auth.is_auth]);
 
   useEffect(() => {
     dispatch(setActiveKey("2"));

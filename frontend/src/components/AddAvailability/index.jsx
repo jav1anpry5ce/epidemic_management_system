@@ -14,7 +14,6 @@ import {
   deleteAvailability,
   clearState,
 } from "../../store/locationSlice";
-import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import formatDate from "../../utils/formatDate";
 import { open } from "../../utils/Notifications";
@@ -27,10 +26,8 @@ const { Title } = Typography;
 
 export default function AddAvailability() {
   const location = useSelector((state) => state.location);
-  const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const dateFns = require("date-fns");
-  const navigate = useNavigate();
   const [date, setDate] = useState();
   const [time, setTime] = useState();
   const [form] = Form.useForm();
@@ -45,12 +42,9 @@ export default function AddAvailability() {
   const scroll = { y: 270 };
 
   useEffect(() => {
-    if (!auth.is_auth || auth.is_moh_staff) {
-      navigate("/account/login");
-    }
     dispatch(setActiveKey("5"));
     // eslint-disable-next-line
-  }, [auth.is_auth, auth.is_moh_staff]);
+  }, []);
 
   useEffect(() => {
     if (location.success) {

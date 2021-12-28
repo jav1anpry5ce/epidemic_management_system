@@ -27,3 +27,7 @@ export { default as Footer } from "./Footer";
 export { default as NotFound } from "./NotFound";
 export { default as AddAvailability } from "./AddAvailability";
 export { default as GetRecords } from "./GetRecords";
+export { default as PrivateRoutes } from "./PrivateRoutes";
+export { default as MOHRoutes } from "./MOHRoutes";
+export { default as MOHAdminRoutes } from "./MOHAdminRoutes";
+export { default as AdminRoutes } from "./AdminRoutes";

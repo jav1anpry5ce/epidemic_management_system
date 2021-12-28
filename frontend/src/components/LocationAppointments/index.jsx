@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { open } from "../../utils/Notifications";
 import toLocaldate from "../../utils/toLocalDate";
 import { setActiveKey } from "../../store/navbarSlice";
@@ -33,8 +32,6 @@ const { Option } = Select;
 
 export default function LocationAppointments() {
   const appointments = useSelector((state) => state.location);
-  const auth = useSelector((state) => state.auth);
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [show, setShow] = useState(false);
   const [order, setOrder] = useState("");
@@ -61,11 +58,8 @@ export default function LocationAppointments() {
   useEffect(() => {
     dispatch(setActiveKey("3"));
     dispatch(clearState());
-    if (!auth.is_auth) {
-      navigate("/accounts/login");
-    }
     // eslint-disable-next-line
-  }, [auth.is_auth]);
+  }, []);
 
   useEffect(() => {
     return () => dispatch(clearState());
