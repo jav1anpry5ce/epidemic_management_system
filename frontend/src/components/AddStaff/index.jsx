@@ -129,21 +129,33 @@ export default function AddStaff() {
             <Input onChange={(e) => setLastName(e.target.value)} />
           </Form.Item>
           <Form.Item name="is_admin" style={{ marginBottom: 2 }}>
-            <Checkbox onChange={() => handelClick(1)}>Is Admin</Checkbox>
+            <Checkbox checked={isAdmin} onChange={() => handelClick(1)}>
+              Is Admin
+            </Checkbox>
           </Form.Item>
           <Form.Item name="can_update_test" style={{ marginBottom: 2 }}>
-            <Checkbox onChange={() => handelClick(2)}>Can Update Test</Checkbox>
+            <Checkbox checked={canUpdateTest} onChange={() => handelClick(2)}>
+              Can Update Test
+            </Checkbox>
           </Form.Item>
           <Form.Item name="can_update_vaccine" style={{ marginBottom: 2 }}>
-            <Checkbox onChange={() => handelClick(3)}>
+            <Checkbox
+              checked={canUpdateVaccine}
+              onChange={() => handelClick(3)}
+            >
               Can Update Vaccine
             </Checkbox>
           </Form.Item>
           <Form.Item name="can_check_in" style={{ marginBottom: 2 }}>
-            <Checkbox onChange={() => handelClick(4)}>Can Check In</Checkbox>
+            <Checkbox checked={canCheckIn} onChange={() => handelClick(4)}>
+              Can Check In
+            </Checkbox>
           </Form.Item>
           <Form.Item name="can_receive_location_batch">
-            <Checkbox onChange={() => handelClick(5)}>
+            <Checkbox
+              checked={canReceiveLocationBatch}
+              onChange={() => handelClick(5)}
+            >
               Can Receive Batch
             </Checkbox>
           </Form.Item>

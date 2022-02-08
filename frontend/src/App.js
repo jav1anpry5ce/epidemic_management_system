@@ -82,7 +82,7 @@ function App() {
         backgroundSize: "cover",
         backgroundAttachment: "fixed",
       }}
-      className="min-h-screen"
+      className="min-h-screen flex flex-col"
     >
       <Router>
         <Header>
@@ -100,7 +100,7 @@ function App() {
               <Route path=":uuid" element={<AppointmentManagement />} />
             </Route>
             <Route path="accounts">
-              <Route path="login" element={<Login />} />
+              <Route index path="login" element={<Login />} />
               <Route
                 path="activation/:token1/:token2"
                 element={<ActivateAccount />}

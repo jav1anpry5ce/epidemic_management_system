@@ -37,7 +37,7 @@ def testing_post_save(sender, instance, created, *args, **kwargs):
         <html>
             <body>
                 <p>Your appointment for your COVID-19 test was successfully made for {instance.appointment.date.strftime('%d %B, %Y')} at {convertTime(instance.appointment.time)}.</p>
-                <p>You can manage your appointmnet at <a href="{site}appointment/management/{instance.appointment.id}">{site}appointment/management/{instance.appointment.id}</a></p>
+                <p>You can manage your appointmnet at <a href="{site}appointments/{instance.appointment.id}">{site}appointments/{instance.appointment.id}</a></p>
                 <p>You can search for your appointment using the following code: {instance.appointment.shorten_id}</p>
             </body>
         </html>

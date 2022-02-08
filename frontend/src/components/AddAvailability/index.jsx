@@ -52,8 +52,12 @@ export default function AddAvailability() {
       dispatch(clearState());
       form.setFieldsValue({ date: "", time: "" });
     }
+    if (location.failed) {
+      open("error", "Error", location.message);
+      dispatch(clearState());
+    }
     // eslint-disable-next-line
-  }, [location.success]);
+  }, [location.success, location.failed]);
 
   useEffect(() => {
     return () => dispatch(clearState());
@@ -159,6 +163,7 @@ export default function AddAvailability() {
         style={{ width: "100%" }}
       >
         <Table
+          rowKey={(data) => data.id}
           columns={columns}
           dataSource={data}
           pagination={pagination}

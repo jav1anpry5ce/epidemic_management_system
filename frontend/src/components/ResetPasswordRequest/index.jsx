@@ -56,7 +56,7 @@ export default function ResetPasswordRequest() {
           </Title>
         }
         bordered={false}
-        style={{ width: "100%" }}
+        style={{ width: "100%", border: "none" }}
       >
         {auth.message && <Alert type="error" message={auth.message} />}
         <Form layout="vertical" onFinish={handelSubmit} form={form}>

@@ -1,14 +1,8 @@
 import React, { useEffect } from "react";
 import { locationBreakdown, clearState } from "../../store/locationSlice";
 import { useSelector, useDispatch } from "react-redux";
-import { Container, CardContent, Grid } from "@mui/material";
 import { setActiveKey } from "../../store/navbarSlice";
-import { Card } from "../Moh/MohElements";
 import Loading from "../Loading";
-import { Typography } from "antd";
-import shortid from "shortid";
-
-const { Title } = Typography;
 
 export default function LocationHome() {
   const data = useSelector((state) => state.location);
@@ -63,45 +57,27 @@ export default function LocationHome() {
         },
     ];
     return (
-      <Container maxWidth="xl" align="center">
-        <div
-          className="flex justify-center items-center py-4 w-full mx-auto"
-          style={{ minHeight: "85.5vh" }}
-        >
-          <Grid container spacing={5} style={{ justifyContent: "center" }}>
-            {cardData.map(
-              (data) =>
-                data.visible && (
-                  <Grid item sm={6} md={6} lg={4} key={shortid.generate()}>
-                    <Card
-                      backgroundcolour={data.backgroundcolour}
-                      color="white"
-                    >
-                      <CardContent>
-                        <Grid container spacing={3}>
-                          <Grid item xs={12}>
-                            <Title
-                              level={3}
-                              align="center"
-                              style={{ color: "#fff" }}
-                            >
-                              {data.name}
-                            </Title>
-                          </Grid>
-                          <Grid item xs={12}>
-                            <Title level={4} style={{ color: "#fff" }}>
-                              {data.data}
-                            </Title>
-                          </Grid>
-                        </Grid>
-                      </CardContent>
-                    </Card>
-                  </Grid>
-                )
-            )}
-          </Grid>
+      <div className="container max-w-7xl mx-auto min-h-[86.89vh] flex">
+        <div className="flex-1 grid md:grid-cols-2 lg:grid-cols-3 place-content-center gap-6 px-2 py-4">
+          {cardData.map(
+            (data) =>
+              data.visible && (
+                <div
+                  key={data.name}
+                  className="text-white px-4 py-3 h-44 rounded-lg transition-all duration-300 hover:shadow-2xl hover:scale-105 space-y-10"
+                  style={{ backgroundColor: data.backgroundcolour }}
+                >
+                  <h3 className="text-2xl font-semibold text-center">
+                    {data.name}
+                  </h3>
+                  <p className="text-center text-xl font-semibold">
+                    {data.data}
+                  </p>
+                </div>
+              )
+          )}
         </div>
-      </Container>
+      </div>
     );
   }
   if (data.loading) return <Loading />;

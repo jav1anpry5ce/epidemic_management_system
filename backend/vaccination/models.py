@@ -76,7 +76,7 @@ def vaccination_post_save(sender, instance, created, *args, **kwargs):
         <html>
             <body>
                 <p>Your appointment for your {instance.manufacture} vaccine was successfully made for {instance.appointment.date.strftime('%d %B, %Y')} at {convertTime(instance.appointment.time)}.</p>
-                <p>You can manage your appointment at <a href="{site}appointment/management/{instance.appointment.id}">{site}appointment/management/{instance.appointment.id}</a></p>
+                <p>You can manage your appointment at <a href="{site}appointments/{instance.appointment.id}">{site}appointments/{instance.appointment.id}</a></p>
                 <p>You can search for your appointment using the following code: {instance.appointment.shorten_id}</p>
             </body>
         </html>
@@ -87,7 +87,7 @@ def vaccination_post_save(sender, instance, created, *args, **kwargs):
         msg.content_subtype = "html"
         msg.send()
         text = f'''Your appointment for your {instance.manufacture} vaccine was successfully made for {instance.appointment.date.strftime('%d %B, %Y')} at {convertTime(instance.appointment.time)}.
-You can manage your appointmnet at {site}appointment/management/{instance.appointment.id}
+You can manage your appointmnet at {site}appointments/{instance.appointment.id}
 You can search for your appointment using the following code: {instance.appointment.shorten_id}
         '''
         send_sms(

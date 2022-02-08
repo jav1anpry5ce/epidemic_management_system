@@ -170,6 +170,7 @@ export const locationSlice = createSlice({
     appointments: null,
     appointment: null,
     success: false,
+    failed: false,
     aSuccess: false,
     message: null,
     error: false,
@@ -185,6 +186,7 @@ export const locationSlice = createSlice({
       state.error = false;
       state.loading = false;
       state.locationData = null;
+      state.failed = false;
     },
     updateSuccess: (state) => {
       state.aSuccess = false;
@@ -306,6 +308,8 @@ export const locationSlice = createSlice({
     },
     [addAvailability.rejected]: (state) => {
       state.loading = false;
+      state.failed = true;
+      state.message = "Date and time already exists!";
     },
     [deleteAvailability.pending]: (state) => {
       state.loading = true;

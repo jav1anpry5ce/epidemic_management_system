@@ -97,14 +97,15 @@ class AppointmentView(APIView):
                     appointment.location.availability.get(date=appointment.date, time=appointment.time).delete()
                     return Response(status=status.HTTP_201_CREATED)
                 else:
-                    if not Appointment.objects.filter(patient=patient, status='Completed', type='Vaccination').count() >= 3 and not Vaccination.objects.filter(patient=patient, status='Completed').count() >= 3:
+                    if not Appointment.objects.filter(patient=patient, status='Completed', type='Vaccination').count() >= 2 and not Vaccination.objects.filter(patient=patient, status='Completed').count() >= 3:
                         if not Vaccination.objects.filter(patient=patient, manufacture='Johnson & Johnson').count() > 0:
                             if not Appointment.objects.filter(patient=patient, status='Pending', type='Vaccination').count() > 0:
                                 if Vaccination.objects.filter(patient=patient, status='Completed'):
-                                    if Vaccination.objects.get(patient=patient, status='Completed').manufacture == request.data.get('patient_choice'):
+                                    if Vaccination.objects.filter(patient=patient, status='Completed')[0].manufacture == request.data.get('patient_choice'):
+                                        appointment = seraializer.save(patient=patient, location=location)
                                         try:
                                             try:
-                                                old_location = Vaccination.objects.get(patient=patient, status='Completed').location
+                                                old_location = Vaccination.objects.filter(patient=patient, status='Completed')[0].location
                                                 if old_location != location:
                                                     old_vaccines = LocationVaccine.objects.get(location=old_location, value=request.data.get('patient_choice'))
                                                     old_vaccines.number_of_dose += 1
@@ -116,7 +117,6 @@ class AppointmentView(APIView):
                                                 old_vaccines -= 1
                                                 old_vaccines.save()
                                                 return Response({'Message': 'Something went wrong! Try again later'}, status=status.HTTP_400_BAD_REQUEST)
-                                            appointment = seraializer.save(patient=patient, location=location)
                                             Vaccination.objects.create(patient=patient, location=location, manufacture=request.data.get('patient_choice'), appointment=appointment)
                                             appointment.location.availability.get(date=appointment.date, time=appointment.time).delete()
                                             return Response(status=status.HTTP_201_CREATED)
@@ -240,7 +240,7 @@ class AppointmentManagementView(APIView):
                             <body>
                                 <p>This is to notify that your appointment was successfully updated.</p>
                                 <p>Appointment Date: {datetime.datetime.strptime(appointment.date, '%Y-%m-%d').strftime("%d %B, %Y")} <br />Appointment Time: {convertTime(appointment.time)} <br />Appointment Type: {appointment.type}</p>
-                                <p>You can manage your appointment at <a href="{site}appointment/management/{appointment.id}">{site}appointment/management/{appointment.id}</a></p>
+                                <p>You can manage your appointment at <a href="{site}appointments/{appointment.id}">{site}appointments/{appointment.id}</a></p>
                                 <p>You can search for your appointment using the following code: {appointment.shorten_id}</p>
                             </body>
                         </html>
@@ -254,7 +254,7 @@ class AppointmentManagementView(APIView):
 Appointment Date: {datetime.datetime.strptime(appointment.date, '%Y-%m-%d').strftime("%d %B, %Y")}
 Appointment Time: {convertTime(appointment.time)}
 Appointment Type: {appointment.type}
-You can manage your appointment at {site}appointment/management/{appointment.id}
+You can manage your appointment at {site}appointments/{appointment.id}
 You can search for your appointment using the following code: {appointment.shorten_id}'''
                         send_sms(
                         text.strip(),
@@ -514,9 +514,13 @@ class CheckedIn(ListAPIView):
 def add_availability(request):
     serializer = AvailabilitySerializer(data=request.data)
     if serializer.is_valid():
-        availability = serializer.save()
-        request.user.location.availability.add(availability)
-        return Response({'Message': 'Date added!'}, status=status.HTTP_201_CREATED)
+        time = serializer.initial_data['time']
+        date = serializer.initial_data['date']
+        if not request.user.location.availability.filter(date=date, time=time).exists():
+            availability = serializer.save()
+            request.user.location.availability.add(availability)
+            return Response({'Message': 'Date added!'}, status=status.HTTP_201_CREATED)
+        return Response({'Message': 'This date and time already exists!'}, status=status.HTTP_400_BAD_REQUEST)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
