@@ -32,3 +32,4 @@ export { default as MOHRoutes } from "./MOHRoutes";
 export { default as MOHAdminRoutes } from "./MOHAdminRoutes";
 export { default as AdminRoutes } from "./AdminRoutes";
 export { default as ResetRoute } from "./ResetRoute";
+export { default as HomeV2 } from "./HomeV2";

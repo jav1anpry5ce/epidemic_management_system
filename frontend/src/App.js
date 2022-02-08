@@ -41,6 +41,7 @@ import {
   MOHAdminRoutes,
   AdminRoutes,
   ResetRoute,
+  HomeV2,
 } from "./components";
 
 import IdleTimer from "./utils/IdleTimer";
@@ -92,7 +93,7 @@ function App() {
         <Content style={{ backgroundColor: "rgba(28, 37, 59, 0.3)" }}>
           <BackTop />
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<HomeV2 />} />
             <Route path="patient-info/:uuid" element={<PatientInfo />} />
             <Route path="appointments">
               <Route index element={<Appointments />} />
