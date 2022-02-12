@@ -11,13 +11,20 @@ module.exports = {
         xs: { max: "550px" },
       },
       keyframes: {
-        wiggle: {
-          "0%, 100%": { transform: "translateY(-200px)" },
-          "50%": { transform: "translateY(200px)" },
+        slideIn: {
+          "0%": { transform: "translateX(70%)" },
+          "50%": { transform: "translateX(-10%)" },
+          "100%": { transform: "translateX(0%)" },
+        },
+        slideLeft: {
+          "0%": { transform: "translateX(-150%)" },
+          "50%": { transform: "translateX(30%)" },
+          "100%": { transform: "translateX(0%)" },
         },
       },
       animation: {
-        wiggle: "wiggle 1s ease-in-out infinite",
+        slideIn: "slideIn 1.5s ease-in-out",
+        slideLeft: "slideLeft 1.5s ease-in-out",
       },
     },
   },

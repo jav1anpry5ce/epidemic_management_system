@@ -31,22 +31,15 @@ import {
   ResetPasswordRequest,
   UpdateInfo,
   VaccinationAndTesting,
-  Home,
   Footer,
   NotFound,
   AddAvailability,
   GetRecords,
   PrivateRoutes,
-  MOHRoutes,
-  MOHAdminRoutes,
-  AdminRoutes,
-  ResetRoute,
-  HomeV2,
+  Home,
 } from "./components";
 
 import IdleTimer from "./utils/IdleTimer";
-
-import background from "./asset/images/background2.jpg";
 
 axios.defaults.baseURL = "http://192.168.0.200:8000/";
 
@@ -76,15 +69,7 @@ function App() {
   }, [auth.is_auth]);
 
   return (
-    <Container
-      style={{
-        backgroundColor: "#f5f5f5",
-        backgroundImage: `url(${background})`,
-        backgroundSize: "cover",
-        backgroundAttachment: "fixed",
-      }}
-      className="min-h-screen flex flex-col"
-    >
+    <Container className="min-h-screen bg-[url('./asset/images/background2.jpg')] bg-cover bg-no-repeat">
       <Router>
         <Header>
           <NavBar hide={hide} setHide={setHide} />
@@ -93,7 +78,7 @@ function App() {
         <Content style={{ backgroundColor: "rgba(28, 37, 59, 0.3)" }}>
           <BackTop />
           <Routes>
-            <Route path="/" element={<HomeV2 />} />
+            <Route path="/" element={<Home />} />
             <Route path="patient-info/:uuid" element={<PatientInfo />} />
             <Route path="appointments">
               <Route index element={<Appointments />} />
@@ -109,7 +94,7 @@ function App() {
               <Route
                 path="change-password"
                 element={
-                  <PrivateRoutes>
+                  <PrivateRoutes accessUser="staff">
                     <ChangePassword />
                   </PrivateRoutes>
                 }
@@ -117,9 +102,9 @@ function App() {
               <Route
                 path="reset/password/request"
                 element={
-                  <ResetRoute>
+                  <PrivateRoutes accessUser="reset">
                     <ResetPasswordRequest />
-                  </ResetRoute>
+                  </PrivateRoutes>
                 }
               />
               <Route path="password/reset/:token" element={<ResetPassword />} />
@@ -128,7 +113,7 @@ function App() {
               <Route
                 index
                 element={
-                  <PrivateRoutes>
+                  <PrivateRoutes accessUser="staff">
                     <LocationHome />
                   </PrivateRoutes>
                 }
@@ -136,7 +121,7 @@ function App() {
               <Route
                 path="test-vac/management"
                 element={
-                  <PrivateRoutes>
+                  <PrivateRoutes accessUser="staff">
                     <VaccinationAndTesting />
                   </PrivateRoutes>
                 }
@@ -144,15 +129,15 @@ function App() {
               <Route
                 path="add-staff"
                 element={
-                  <AdminRoutes>
+                  <PrivateRoutes accessUser="siteAdmin">
                     <AddStaff />
-                  </AdminRoutes>
+                  </PrivateRoutes>
                 }
               />
               <Route
                 path="appointments"
                 element={
-                  <PrivateRoutes>
+                  <PrivateRoutes accessUser="staff">
                     <LocationAppointments />
                   </PrivateRoutes>
                 }
@@ -160,7 +145,7 @@ function App() {
               <Route
                 path="add/availability"
                 element={
-                  <PrivateRoutes>
+                  <PrivateRoutes accessUser="staff">
                     <AddAvailability />
                   </PrivateRoutes>
                 }
@@ -171,42 +156,42 @@ function App() {
               <Route
                 index
                 element={
-                  <MOHRoutes>
+                  <PrivateRoutes accessUser="moh">
                     <Moh />
-                  </MOHRoutes>
+                  </PrivateRoutes>
                 }
               />
               <Route
                 path="patients"
                 element={
-                  <MOHRoutes>
+                  <PrivateRoutes accessUser="moh">
                     <Patients />
-                  </MOHRoutes>
+                  </PrivateRoutes>
                 }
               />
               <Route
                 path="positive-cases"
                 element={
-                  <MOHRoutes>
+                  <PrivateRoutes accessUser="moh">
                     <PositiveCases />
-                  </MOHRoutes>
+                  </PrivateRoutes>
                 }
               />
               <Route path="batches">
                 <Route
                   index
                   element={
-                    <MOHRoutes>
+                    <PrivateRoutes accessUser="moh">
                       <BatchManagement />
-                    </MOHRoutes>
+                    </PrivateRoutes>
                   }
                 />
                 <Route
                   path="create"
                   element={
-                    <MOHRoutes>
+                    <PrivateRoutes accessUser="moh">
                       <CreateBatch />
-                    </MOHRoutes>
+                    </PrivateRoutes>
                   }
                 />
               </Route>
@@ -214,26 +199,26 @@ function App() {
                 <Route
                   index
                   element={
-                    <MOHRoutes>
+                    <PrivateRoutes accessUser="moh">
                       <Locations />
-                    </MOHRoutes>
+                    </PrivateRoutes>
                   }
                 />
                 <Route
                   path="create"
                   element={
-                    <MOHRoutes>
+                    <PrivateRoutes accessUser="moh">
                       <AddLocation />
-                    </MOHRoutes>
+                    </PrivateRoutes>
                   }
                 />
               </Route>
               <Route
                 path="add-staff"
                 element={
-                  <MOHAdminRoutes>
+                  <PrivateRoutes accessUser="mohAdmin">
                     <MohAdd />
-                  </MOHAdminRoutes>
+                  </PrivateRoutes>
                 }
               />
             </Route>

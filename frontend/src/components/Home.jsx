@@ -1,298 +1,243 @@
-import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { getGraphicalData, clearState } from "../store/graphSlice";
+import React, { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { setActiveKey } from "../store/navbarSlice";
-import Container from "@mui/material/Container";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
-  Legend,
-  CartesianGrid,
-  ResponsiveContainer,
-} from "recharts";
-import { DatePicker, Select } from "antd";
-import Loading from "./Loading";
-import moment from "moment";
-import shortid from "shortid";
+import MythFacts from "./MythFacts";
+import doctor from "../asset/images/doctors.png";
+import hand from "../asset/images/hand.png";
+import second from "../asset/images/second.png";
+import safe from "../asset/images/safe.png";
+import { AiOutlinePlayCircle } from "react-icons/ai";
+import VaxImage from "../asset/images/VaxImage.jpg";
+import PregnantImage from "../asset/images/PregnantImage.jpg";
+import JabImage from "../asset/images/JabImage.jpg";
+import ShieldImage from "../asset/images/SheildImage.jpg";
+import SideEffectImage from "../asset/images/SideEffectImage.jpg";
+import MaskImage from "../asset/images/MaskImage.jpg";
+import SeniorImage from "../asset/images/SeniorImage.jpg";
+import { useNavigate } from "react-router-dom";
 
-const { Option } = Select;
-
-const parishData = [
-  { label: "All", value: "All" },
-  { label: "St. Andrew", value: "St. Andrew" },
-  { label: "Portland ", value: "Portland " },
-  { label: "St. Thomas", value: "St. Thomas" },
-  { label: "St. Catherine", value: "St. Catherine" },
-  { label: "St. Mary", value: "St. Mary" },
-  { label: "St. Ann", value: "St. Ann" },
-  { label: "Manchester", value: "Manchester" },
-  { label: "Clarendon", value: "Clarendon" },
-  { label: "Hanover", value: "Hanover" },
-  { label: "Westmoreland", value: "Westmoreland" },
-  { label: "St. James", value: "St. James" },
-  { label: "Trelawny", value: "Trelawny" },
-  { label: "St. Elizabeth", value: "St. Elizabeth" },
-];
-
-export default function Home() {
-  const graph = useSelector((state) => state.graph);
+export default function HomeV2() {
+  const [secondPlay, setSecondPlay] = useState(false);
+  const [safePlay, setSafePlay] = useState(false);
+  const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [month, setMonth] = useState(parseInt(new Date().getMonth()) + 1);
-  const [year, setYear] = useState(parseInt(new Date().getFullYear()));
-  const [mobile, setMobile] = useState(false);
-  const [death, setDeath] = useState();
-  const [recovered, setRecovered] = useState();
-  const [hospitalized, setHospitalized] = useState();
-  const [male, setMale] = useState();
-  const [female, setFemale] = useState();
-  const [vaccinations, setVaccinations] = useState();
-  const [parish, setParish] = useState("All");
 
   useEffect(() => {
     dispatch(setActiveKey("1"));
-    window.addEventListener("resize", resize);
-    if (window.innerHeight <= 600 || window.innerWidth <= 768) {
-      setMobile(true);
-    } else {
-      setMobile(false);
-    }
     // eslint-disable-next-line
   }, []);
 
-  const resize = () => {
-    if (window.innerHeight <= 600 || window.innerWidth <= 768) {
-      setMobile(true);
-    } else {
-      setMobile(false);
-    }
-  };
+  const data = [
+    {
+      image: VaxImage,
+      myth: "The COVID-19 vaccine is not safe because it was rapidly developed.",
+      fact: "The vaccine is proven safe and effective. It has gone through the same rigorous processes as every other vaccine, meeting all safety standards.",
+    },
+    {
+      image: PregnantImage,
+      myth: "The COVID-19 vaccine causes infertility in women.",
+      fact: "No vaccine suspected of impacting a person’s ability to conceive, has ever been or will ever be approved.",
+    },
+    {
+      image: JabImage,
+      myth: "You can get COVID-19 from the vaccine.",
+      fact: "YOU CANNOT get COVID-19 from the vaccine because it does not contain the live virus.",
+    },
+    {
+      image: JabImage,
+      myth: "Once I receive the vaccine, I will test positive for COVID-19.",
+      fact: "Viral tests look for the presence of the virus that causes COVID-19. Since there is no live virus in the vaccine, the vaccine cannot affect your test result. It is possible to get infected with the virus before the vaccine has had time to fully protect your body.",
+    },
+    {
+      image: VaxImage,
+      myth: "I have already been diagnosed with COVID-19, so I do not need to get the vaccine.",
+      fact: "If you have already had COVID-19, you will still need to take the vaccine as it is not known for how long natural immunity will last. Since COVID-19 can have severe health risks and the possibility of re-infection, the recommendation is to take the vaccine.",
+    },
 
-  useEffect(() => {
-    const data = {
-      year,
-      month,
-      parish,
-    };
-    dispatch(getGraphicalData(data));
+    {
+      image: ShieldImage,
+      myth: "Natural Immunity is better.",
+      fact: "Allowing the disease to spread until herd immunity is reached will cause millions of deaths and even more people living with the long term effects of the virus.",
+    },
 
-    // eslint-disable-next-line
-  }, [year, month, parish]);
+    {
+      image: SideEffectImage,
+      myth: "The COVID-19 vaccine has severe side effects such as allergic reactions.",
+      fact: "Although extremely rare, people can have severe allergic reactions to ingredients used in a vaccine. It is recommended that people with a history of anaphylaxis (severe allergic reaction) to the ingredients of the vaccine should not be vaccinated.",
+    },
 
-  useEffect(() => {
-    return () => dispatch(clearState());
-    // eslint-disable-next-line
-  }, []);
+    {
+      image: MaskImage,
+      myth: "Once I receive the COVID-19 vaccine, I no longer need to wear a mask.",
+      fact: "Mask wearing, hand washing and physical distancing remain necessary until a sufficient number of persons are immune.",
+    },
 
-  useEffect(() => {
-    if (graph.data) {
-      let d = 0;
-      let r = 0;
-      let h = 0;
-      let f = 0;
-      let m = 0;
-      let v = 0;
-      graph.data.drl.map((item) => {
-        d += item.death;
-        r += item.recovered;
-        h += item.recovered;
-        return d;
-      });
-      graph.data.mvf.map((item) => {
-        m += item.male;
-        f += item.female;
-        return f;
-      });
-      graph.data.vaccinations.map((item) => {
-        v += item.vaccinations;
-        return v;
-      });
-      setDeath(d);
-      setRecovered(r);
-      setHospitalized(h);
-      setMale(m);
-      setFemale(f);
-      setVaccinations(v);
-    }
-    // eslint-disable-next-line
-  }, [graph.data]);
+    {
+      image: SeniorImage,
+      myth: "Only the elderly need to take the vaccine.",
+      fact: "Allowing the disease to spread until herd immunity is reached will cause millions of deaths and even more people living with the long term effects of the virus.",
+    },
+  ];
 
-  if (!graph.data && graph.loading) return <Loading />;
-  if (graph.data) {
-    if (!mobile)
-      return (
-        <Container maxWidth="lg">
-          {/* <article className="bg-slate-800/70 backdrop-blur-sm w-full h-full px-4 py-2 rounded-md mt-4">
-            <p className="text-white text-2xl">
-              The Epidemic Response Management System is a web based application
-              that is designed to manage and track data of the COVID-19 pandemic
-              in Jamaica in order to reduce the likelihood of an epidemic. ERMS
-              is a user-friendly centralized system for user testing &
-              vaccination, digitalized reporting and the monitoring of vaccine
-              inventory for a reduction of shortage.
+  return (
+    <div className="overflow-x-hidden">
+      <div className="bg-slate-700 text-white">
+        <div className="flex w-full flex-col items-center space-x-3 px-2 py-4 lg:flex-row lg:justify-evenly">
+          <div className="max-w-lg space-y-4">
+            <p className="text-4xl font-bold">
+              What you need to know about COVID-19 Vaccines
             </p>
-          </article> */}
-          <div className="flex flex-col justify-center items-center py-2 space-y-2 w-full h-full my-2">
-            <div className="bg-white rounded-md shadow-md w-full py-2">
-              <div className="px-2 mb-2">
-                <div className="flex justify-between items-center">
-                  <DatePicker
-                    picker="month"
-                    format="MMM-YYYY"
-                    className="w-64"
-                    onChange={(e) => {
-                      setMonth(parseInt(new Date(e._d).getMonth()) + 1);
-                      setYear(parseInt(new Date(e._d).getFullYear()));
-                    }}
-                    defaultValue={moment(new Date())}
-                    allowClear={false}
-                  />
-                  <h1 className="text-center font-semibold text-2xl">
-                    Death Vs Recovered Vs Hospitalized
-                  </h1>
-                  <Select
-                    className="w-64"
-                    value={parish}
-                    onChange={(e) => setParish(e)}
-                  >
-                    {parishData.map((item) => (
-                      <Option value={item.value} key={shortid.generate()}>
-                        {item.label}
-                      </Option>
-                    ))}
-                  </Select>
-                </div>
-              </div>
-              <div style={{ width: "100%", height: 400 }} className="px-8">
-                <ResponsiveContainer>
-                  {/* <BarChart data={graph.data.drl} width={730}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="death" fill="#e83b2e" />
-                    <Bar dataKey="recovered" fill="#82ca9d" />
-                    <Bar dataKey="hospitalized" fill="#355ce8" />
-                  </BarChart> */}
-                  <LineChart
-                    data={graph.data.drl}
-                    margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" stroke="#ccc" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Line type="monotone" dataKey="death" stroke="#e83b2e" />
-                    <Line
-                      type="monotone"
-                      dataKey="recovered"
-                      stroke="#82ca9d"
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="hospitalized"
-                      stroke="#355ce8"
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-            <div className="bg-white rounded-md shadow-md w-full py-2">
-              <h1 className="text-center font-semibold text-2xl">
-                Male Vs Female
-              </h1>
-              <div style={{ width: "100%", height: 400 }} className="px-8">
-                <ResponsiveContainer>
-                  <LineChart
-                    data={graph.data.mvf}
-                    margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Line type="monotone" dataKey="male" stroke="#355ce8" />
-                    <Line type="monotone" dataKey="female" stroke="#f36eff" />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
-            </div>{" "}
-            <div className="bg-white rounded-md shadow-md w-full py-2">
-              <h1 className="text-center font-semibold text-2xl">
-                Vaccination
-              </h1>
-              <div style={{ width: "100%", height: 400 }} className="px-8">
-                <ResponsiveContainer>
-                  <LineChart
-                    data={graph.data.vaccinations}
-                    margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Line
-                      type="monotone"
-                      dataKey="vaccinations"
-                      stroke="#82ca9d"
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
+            <p className="text-lg">
+              Vaccination against COVID-19 is vital to stopping the spread of
+              the pandemic. COVID-19 vaccines have been rigorously tested and
+              approved by local and international regulatory bodies and are
+              critical to reducing illness, hospitalization and death associated
+              with COVID-19.
+            </p>
+            <div className="flex w-full items-center justify-center lg:justify-start">
+              <button
+                className="rounded bg-slate-800 px-8 py-3 hover:scale-105 
+              hover:bg-slate-700/95 hover:shadow-md"
+                onClick={() => navigate("/appointments/create")}
+              >
+                Make Appointment
+              </button>
             </div>
           </div>
-        </Container>
-      );
-    else
-      return (
-        <Container maxWidth="xls">
-          <div
-            className="flex flex-col items-center justify-center space-y-4 my-2"
-            style={{ minHeight: "85vh" }}
-          >
-            <div className="bg-red-700 rounded-md shadow-md px-2 py-2 text-center w-80 ">
-              <h1 className="text-2xl font-bold text-white">Death</h1>
-              <p className="text-xl font-bold text-white">{death}</p>
-            </div>
-            <div className="bg-green-700 rounded-md shadow-md px-2 py-2 text-center w-80 ">
-              <h1 className="text-2xl font-bold text-white">Recovered</h1>
-              <p className="text-xl font-bold text-white">{recovered}</p>
-            </div>
-            <div className="bg-purple-700 rounded-md shadow-md px-2 py-2 text-center w-80 ">
-              <h1 className="text-2xl font-bold text-white">Hospitalized</h1>
-              <p className="text-xl font-bold text-white">{hospitalized}</p>
-            </div>
-            <div className="bg-blue-700 rounded-md shadow-md px-2 py-2 text-center w-80 ">
-              <h1 className="text-2xl font-bold text-white">Male</h1>
-              <p className="text-xl font-bold text-white">{male}</p>
-            </div>
-            <div className="bg-pink-600 rounded-md shadow-md px-2 py-2 text-center w-80 ">
-              <h1 className="text-2xl font-bold text-white">Female</h1>
-              <p className="text-xl font-bold text-white">{female}</p>
-            </div>
-            <div className="bg-green-500 rounded-md shadow-md px-2 py-2 text-center w-80 ">
-              <h1 className="text-2xl font-bold text-white">Vaccinations</h1>
-              <p className="text-xl font-bold text-white">{vaccinations}</p>
-            </div>
-          </div>
-        </Container>
-      );
-  }
-  if (!graph.loading && !graph.data)
-    return (
-      <div
-        style={{ minHeight: "80vh" }}
-        className="flex justify-center items-center"
-      >
-        <h1 className="text-3xl font-semibold text-white text-center">
-          There was a problem loading this page!
-        </h1>
+          <img
+            src={doctor}
+            alt="doctors"
+            className="animate-slideIn delay-1000 md:max-w-[35rem]"
+            loading="lazy"
+          />
+        </div>
       </div>
-    );
+      <div className=" bg-slate-500 ">
+        <div className="mx-auto flex max-w-6xl flex-col space-y-3 py-4 px-2">
+          <div className="flex w-full flex-col items-center justify-between text-left text-white md:flex-row">
+            <p className="text-center text-4xl font-bold">
+              What is a vaccine?{" "}
+            </p>
+            <p className="max-w-xl text-xl">
+              A vaccine is a type of medicine that stimulates a person’s immune
+              system to produce immunity to a specific disease, protecting the
+              person from the disease.
+            </p>
+          </div>
+          <div className="flex w-full flex-col items-center space-x-8 text-white md:flex-row">
+            <img
+              src={hand}
+              alt="hand"
+              loading="lazy"
+              className="animate-slideLeft delay-1000 md:max-w-[30rem]"
+            />
+            <div className="space-y-8">
+              <p className="text-3xl font-bold">How do vaccines work?</p>
+              <div>
+                <p className="text-xl">
+                  Vaccines work with your body’s natural defense to build
+                  protection. When vaccinated, your immune system is able to:
+                </p>
+                <ul className="ml-8 list-outside list-disc">
+                  <li className="text-lg">
+                    Recognize the invading germ ( e.g. virus or bacteria).
+                  </li>
+                  <li className="text-lg">
+                    Produce antibodies that fight and destroy the germ before
+                    you become unwell.
+                  </li>
+                </ul>
+              </div>
+              <div className="flex w-full justify-center">
+                <button
+                  className="rounded bg-sky-700 px-8 py-2 hover:scale-105 
+                hover:shadow-xl hover:shadow-sky-700/40"
+                  onClick={() =>
+                    window.open(
+                      "https://www.who.int/news-room/feature-stories/detail/how-do-vaccines-work",
+                      "_blank"
+                    )
+                  }
+                >
+                  Learn More
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="bg-slate-800 py-2 px-2 text-white">
+        <div className="mx-auto max-w-6xl">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <div className="flex flex-col items-center justify-center space-y-3">
+              <p className="text-3xl font-bold">Process for Your 2nd Dose</p>
+              <div className="relative">
+                {secondPlay ? (
+                  <iframe
+                    src="https://www.youtube.com/embed/-MTIvHTfGJE"
+                    title="Second dose"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="aspect-video h-full rounded md:w-[35rem]"
+                  />
+                ) : (
+                  <>
+                    <img src={second} alt="second" className="rounded" />
+                    <AiOutlinePlayCircle
+                      className="absolute left-[40%] top-[35%] h-20 w-20 
+                    cursor-pointer rounded-full bg-black/20 p-2 text-white hover:bg-black/40
+                     md:top-[40%] md:left-[45%]"
+                      onClick={() => setSecondPlay(true)}
+                    />
+                  </>
+                )}
+              </div>
+            </div>
+            <div className="flex flex-col items-center justify-center space-y-3">
+              <p className="text-3xl font-bold">Are Vaccines Safe?</p>
+              <div className="relative">
+                {safePlay ? (
+                  <iframe
+                    src="https://www.youtube.com/embed/9Y7lA82HFGc"
+                    title="Are vaccine safe?"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="aspect-video h-full rounded md:w-[35rem]"
+                  />
+                ) : (
+                  <>
+                    <img src={safe} alt="safe" className="rounded" />
+                    <AiOutlinePlayCircle
+                      className="absolute left-[40%] top-[35%] h-20 w-20 cursor-pointer rounded-full bg-black/20
+                     p-2 text-white hover:bg-black/40 md:top-[40%] md:left-[45%]"
+                      onClick={() => setSafePlay(true)}
+                    />
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="bg-slate-500">
+        <div className="mx-auto max-w-6xl px-2 py-3">
+          <p className="pb-4 text-center text-4xl font-bold text-white">
+            Myths and Facts
+          </p>
+          <div className="grid grid-cols-1 content-center justify-items-center gap-3 md:grid-cols-2 lg:grid-cols-3">
+            {data.map((item, index) => (
+              <MythFacts
+                key={index}
+                image={item.image}
+                myth={item.myth}
+                fact={item.fact}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
