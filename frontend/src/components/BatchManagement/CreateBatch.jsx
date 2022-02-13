@@ -83,7 +83,7 @@ export default function CreateBatch() {
       >
         {data.success ? (
           <div
-            className="flex justify-center items-center"
+            className="flex items-center justify-center"
             style={{ minHeight: "60vh" }}
           >
             <Paper elevation={1} style={{ width: 585 }}>
@@ -96,12 +96,12 @@ export default function CreateBatch() {
                     />
                   </Grid>
                   <Grid item xs={12}>
-                    <div className="flex justify-between mb-3 w-full">
+                    <div className="mb-3 flex w-full justify-between">
                       <Button
                         type="primary"
                         onClick={handlePrint}
                         style={{ border: "none" }}
-                        className="rounded-sm bg-gray-700 text-white hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white transition duration-300"
+                        className="rounded-sm bg-gray-700 text-white transition duration-300 hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white"
                       >
                         Print
                       </Button>
@@ -116,14 +116,14 @@ export default function CreateBatch() {
           </div>
         ) : (
           <div
-            className="flex justify-center items-center"
+            className="flex items-center justify-center"
             style={{ minHeight: "60vh" }}
           >
             <Card
               headStyle={{ backgroundColor: "#1F2937", border: "none" }}
               title={
                 <Title level={4} style={{ color: "white" }} align="center">
-                  Create a new location Batch
+                  Create a new site batch
                 </Title>
               }
               bordered={false}
@@ -195,7 +195,7 @@ export default function CreateBatch() {
                       appearance="primary"
                       loading={data.loading}
                       style={{ border: "none" }}
-                      className="rounded-sm bg-gray-700 text-white hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white transition duration-300"
+                      className="rounded-sm bg-gray-700 text-white transition duration-300 hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white"
                     >
                       Submit
                     </Button>
