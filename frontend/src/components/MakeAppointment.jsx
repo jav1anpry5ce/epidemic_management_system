@@ -777,13 +777,11 @@ export default function MakeAppointment() {
                 >
                   {availableDates.map((item) => (
                     <Option value={item.time} key={shortid.generate()}>
-                      {new Date(`$2021-12-12 ${item.time}`).toLocaleTimeString(
-                        [],
-                        {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        }
-                      )}
+                      {console.log(item.time)}
+                      {moment(
+                        `2021-12-12 ${item.time}`,
+                        "YYYY-MM-DD HH:mm"
+                      ).format("LT")}
                     </Option>
                   ))}
                 </Select>

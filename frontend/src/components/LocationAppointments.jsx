@@ -252,24 +252,28 @@ export default function LocationAppointments() {
         onCancel={() => setShow(false)}
         title={<Title level={4}>Appointment Information</Title>}
         footer={[
-          <Button
-            key={shortid.generate()}
-            loading={appointments.aLoading}
-            onClick={handleCheckIn}
-            type="primary"
-            appearance="primary"
-            style={{ border: "none" }}
-            className="rounded-sm bg-gray-700 text-white transition duration-300 hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white"
-          >
-            Check Patient In
-          </Button>,
-          <Button
-            onClick={() => setShow(false)}
-            appearance="subtle"
-            key={shortid.generate()}
-          >
-            Cancel
-          </Button>,
+          !appointments.aLoading && (
+            <Button
+              key={shortid.generate()}
+              loading={appointments.aLoading}
+              onClick={handleCheckIn}
+              type="primary"
+              appearance="primary"
+              style={{ border: "none" }}
+              className="rounded-sm bg-gray-700 text-white transition duration-300 hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white"
+            >
+              Check Patient In
+            </Button>
+          ),
+          !appointments.aLoading && (
+            <Button
+              onClick={() => setShow(false)}
+              appearance="subtle"
+              key={shortid.generate()}
+            >
+              Cancel
+            </Button>
+          ),
         ]}
       >
         {appointments.appointment ? (
