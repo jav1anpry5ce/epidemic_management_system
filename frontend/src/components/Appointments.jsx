@@ -48,7 +48,11 @@ export default function Appointments() {
     <div className="px-2 sm:my-4 sm:mx-auto sm:max-w-4xl">
       <div>
         <Typography variant="h4" style={{ color: "white" }}>
-          Learn the facts about COVID-19! Get vaccinated!
+          Learn the{" "}
+          <button onClick={() => navigate("/")} className="hover:underline">
+            facts
+          </button>{" "}
+          about COVID-19! Get vaccinated!
         </Typography>
         <Typography variant="h6" paragraph={true} className="text-white">
           Here you are able to create and manage appointments.
