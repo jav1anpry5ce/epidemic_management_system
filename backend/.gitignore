@@ -13,6 +13,7 @@ __pycache__
 
 # production
 /build
+/cert
 
 .idea
 .vscode
