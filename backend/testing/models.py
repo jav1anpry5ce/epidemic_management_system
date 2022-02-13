@@ -15,6 +15,7 @@ from functions import removeFile
 site = Site.objects.get_current()
 
 
+
 class Testing(models.Model):
     id = models.UUIDField(default=uuid.uuid4, primary_key=True)
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, blank=True, null=True)

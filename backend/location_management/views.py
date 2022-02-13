@@ -27,6 +27,7 @@ from testing.serializers import getTestSerializer
 
 site = Site.objects.get_current()
 
+
 class LocationView(APIView):
     def get(self, request):
         try:

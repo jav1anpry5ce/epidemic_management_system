@@ -10,6 +10,7 @@ from patient_management.models import Patient
 site = Site.objects.get_current()
 
 
+
 class TestingView(APIView):
     permission_classes = [permissions.IsAuthenticated]
     def post(self, request):

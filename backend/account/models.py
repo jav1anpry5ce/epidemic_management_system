@@ -10,6 +10,7 @@ from django.db.models.signals import post_save, post_delete
 
 site = Site.objects.get_current()
 
+
 class UserAccountManager(BaseUserManager):
     def create_user(self, email, password, **extra_fields):
         if not email:
