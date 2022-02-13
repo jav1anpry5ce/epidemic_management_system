@@ -108,7 +108,7 @@ export default function HomeV2() {
             src={doctor}
             alt="doctors"
             className="animate-slideIn delay-1000 md:max-w-[35rem]"
-            loading="lazy"
+            loading="eager"
           />
         </div>
       </div>
