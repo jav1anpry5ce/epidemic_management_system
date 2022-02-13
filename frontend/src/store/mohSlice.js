@@ -53,7 +53,7 @@ export const addBatch = createAsyncThunk(
       },
     };
     try {
-      const response = await axios.post("api/location-batch", data, config);
+      const response = await axios.post("api/location-batch/", data, config);
       if (response.status === 201) {
         const data = response.data;
         return { data };
