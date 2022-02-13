@@ -28,3 +28,4 @@ export { default as AddAvailability } from "./AddAvailability";
 export { default as GetRecords } from "./GetRecords";
 export { default as PrivateRoutes } from "./PrivateRoutes";
 export { default as Home } from "./Home";
+export { default as StaffManagement } from "./StaffManagement";

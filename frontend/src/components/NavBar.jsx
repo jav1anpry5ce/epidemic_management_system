@@ -125,13 +125,10 @@ export default function NavBar({ hide, setHide }) {
                   </div>
                 </Nav.Item>
                 {auth.is_moh_admin && (
-                  <Nav.Item
-                    eventKey="6"
-                    onClick={() => navigate("/moh/add-staff")}
-                  >
+                  <Nav.Item eventKey="6" onClick={() => navigate("/moh/staff")}>
                     <div className="flex">
                       {<BsPersonPlusFill className="mr-1 flex text-lg" />}
-                      Add Staff
+                      Staff Management
                     </div>
                   </Nav.Item>
                 )}
@@ -204,11 +201,11 @@ export default function NavBar({ hide, setHide }) {
                 {auth.is_location_admin && (
                   <Nav.Item
                     eventKey="4"
-                    onClick={() => navigate(`/${auth.location}/add-staff`)}
+                    onClick={() => navigate(`/${auth.location}/staff`)}
                   >
                     <div className="flex">
                       {<BsPersonPlusFill className="mr-1 flex text-lg" />}
-                      Add Staff
+                      Staff Management
                     </div>
                   </Nav.Item>
                 )}

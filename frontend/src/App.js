@@ -37,6 +37,7 @@ import {
   GetRecords,
   PrivateRoutes,
   Home,
+  StaffManagement,
 } from "./components";
 
 import IdleTimer from "./utils/IdleTimer";
@@ -48,25 +49,25 @@ function App() {
   const dispatch = useDispatch();
   const [hide, setHide] = useState(false);
 
-  useEffect(() => {
-    const timer = new IdleTimer({
-      timeout: 300,
-      onTimeout: () => {
-        if (auth.is_auth) {
-          dispatch(logout()).then(() => (window.location = "/accounts/login"));
-          alert("Your session was inactive for too long!");
-        }
-      },
-      onExpired: () => {
-        if (auth.is_auth) {
-          dispatch(logout()).then(() => (window.location = "/accounts/login"));
-          alert("You session is expired!");
-        }
-      },
-    });
-    return () => timer.cleanUp();
-    // eslint-disable-next-line
-  }, [auth.is_auth]);
+  // useEffect(() => {
+  //   const timer = new IdleTimer({
+  //     timeout: 300,
+  //     onTimeout: () => {
+  //       if (auth.is_auth) {
+  //         dispatch(logout()).then(() => (window.location = "/accounts/login"));
+  //         alert("Your session was inactive for too long!");
+  //       }
+  //     },
+  //     onExpired: () => {
+  //       if (auth.is_auth) {
+  //         dispatch(logout()).then(() => (window.location = "/accounts/login"));
+  //         alert("You session is expired!");
+  //       }
+  //     },
+  //   });
+  //   return () => timer.cleanUp();
+  //   // eslint-disable-next-line
+  // }, [auth.is_auth]);
 
   return (
     <Container className="min-h-screen bg-[url('./asset/images/background2.jpg')] bg-cover bg-no-repeat">
@@ -126,14 +127,24 @@ function App() {
                   </PrivateRoutes>
                 }
               />
-              <Route
-                path="add-staff"
-                element={
-                  <PrivateRoutes accessUser="siteAdmin">
-                    <AddStaff />
-                  </PrivateRoutes>
-                }
-              />
+              <Route path="staff">
+                <Route
+                  index
+                  element={
+                    <PrivateRoutes accessUser="siteAdmin">
+                      <StaffManagement />
+                    </PrivateRoutes>
+                  }
+                />
+                <Route
+                  path="add"
+                  element={
+                    <PrivateRoutes accessUser="siteAdmin">
+                      <AddStaff />
+                    </PrivateRoutes>
+                  }
+                />
+              </Route>
               <Route
                 path="appointments"
                 element={
@@ -213,14 +224,24 @@ function App() {
                   }
                 />
               </Route>
-              <Route
-                path="add-staff"
-                element={
-                  <PrivateRoutes accessUser="mohAdmin">
-                    <MohAdd />
-                  </PrivateRoutes>
-                }
-              />
+              <Route path="staff">
+                <Route
+                  index
+                  element={
+                    <PrivateRoutes accessUser="mohAdmin">
+                      <StaffManagement />
+                    </PrivateRoutes>
+                  }
+                />
+                <Route
+                  path="add"
+                  element={
+                    <PrivateRoutes accessUser="mohAdmin">
+                      <MohAdd />
+                    </PrivateRoutes>
+                  }
+                />
+              </Route>
             </Route>
             <Route path="got-the-stach/:uuid" element={<ReceiveBatch />} />
             <Route path="records" element={<GetRecords />} />

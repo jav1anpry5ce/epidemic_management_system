@@ -5,12 +5,14 @@ import { useSelector, useDispatch } from "react-redux";
 import { register, clearState } from "../store/authSlice";
 import { open } from "../utils/Notifications";
 import { setActiveKey } from "../store/navbarSlice";
+import { useNavigate } from "react-router-dom";
 
 const { Title } = Typography;
 
 export default function AddStaff() {
   const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [form] = Form.useForm();
   const [isAdmin, setIsAdmin] = useState(false);
   const [canCheckIn, setCanCheckIn] = useState(false);
@@ -160,16 +162,24 @@ export default function AddStaff() {
             </Checkbox>
           </Form.Item>
           <Form.Item style={{ marginBottom: 2 }}>
-            <Button
-              type="primary"
-              htmlType="submit"
-              appearance="primary"
-              loading={auth.loading}
-              style={{ border: "none" }}
-              className="rounded-sm bg-gray-700 text-white transition duration-300 hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white"
-            >
-              Submit
-            </Button>
+            <div className="flex w-full items-center justify-between">
+              <Button
+                type="primary"
+                htmlType="submit"
+                appearance="primary"
+                loading={auth.loading}
+                style={{ border: "none" }}
+                className="rounded-sm bg-gray-700 text-white transition duration-300 hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white"
+              >
+                Submit
+              </Button>
+              <button
+                className="bg-gray-200/50 px-6 py-1 outline outline-1 outline-gray-400"
+                onClick={() => navigate(`/${auth.location}/staff`)}
+              >
+                Back
+              </button>
+            </div>
           </Form.Item>
         </Form>
       </Card>

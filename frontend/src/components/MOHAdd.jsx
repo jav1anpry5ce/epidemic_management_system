@@ -7,6 +7,7 @@ import Container from "@mui/material/Container";
 import { Card, Input, Form, Button, Typography, Select, Checkbox } from "antd";
 import { open } from "../utils/Notifications";
 import shortid from "shortid";
+import { useNavigate } from "react-router-dom";
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -15,6 +16,7 @@ export default function MohAdd() {
   const data = useSelector((state) => state.moh);
   const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [email, setEmail] = useState();
   const [firstName, setFirstName] = useState();
   const [lastName, setLastName] = useState();
@@ -171,16 +173,24 @@ export default function MohAdd() {
           )}
 
           <Form.Item style={{ marginBottom: 2 }}>
-            <Button
-              type="primary"
-              htmlType="submit"
-              appearance="primary"
-              loading={auth.loading}
-              style={{ border: "none" }}
-              className="rounded-sm bg-gray-700 text-white transition duration-300 hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white"
-            >
-              Submit
-            </Button>
+            <div className="flex w-full items-center justify-between">
+              <Button
+                type="primary"
+                htmlType="submit"
+                appearance="primary"
+                loading={auth.loading}
+                style={{ border: "none" }}
+                className="rounded-sm bg-gray-700 text-white transition duration-300 hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white"
+              >
+                Submit
+              </Button>
+              <button
+                className="bg-gray-200/50 px-6 py-1 outline outline-1 outline-gray-400"
+                onClick={() => navigate("/moh/staff")}
+              >
+                Back
+              </button>
+            </div>
           </Form.Item>
         </Form>
       </Card>

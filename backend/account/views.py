@@ -1,11 +1,16 @@
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
+from rest_framework.generics import ListAPIView
 from django.contrib.auth import get_user_model
 from location_management.models import Location
 from rest_framework.authtoken.models import Token
-from .models import ResetAccount, ActivateAccount
+from .models import ResetAccount, ActivateAccount, UserAccount
+from .serializers import StaffSerializer, DetailedStaffSerializer
 from django.utils import timezone
+from rest_framework import filters
+from django_filters import rest_framework as filterss
+from rest_framework.pagination import PageNumberPagination
 import random
 import string
 from validate_email import validate_email
@@ -166,3 +171,49 @@ def changePassword(request):
         return Response({'Message': 'The password you entered does not match the one on file!'}, status=status.HTTP_400_BAD_REQUEST)
     except:
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class CustomPageNumberPagination(PageNumberPagination):
+    page_size_query_param = 'pageSize'
+
+
+class StaffDetails(ListAPIView):
+    filter_backends = [filterss.DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
+    pagination_class = CustomPageNumberPagination
+    search_fields = ['email', 'last_name']
+
+    def get_queryset(self):
+        if self.kwargs.get('user') == 'MOHADMIN':
+            if self.request.user.is_authenticated and self.request.user.is_moh_admin:
+                return UserAccount.objects.all().exclude(email=self.request.user.email)
+            return []
+        elif self.kwargs.get('user') == 'SITEADMIN':
+            if self.request.user.is_authenticated and self.request.user.is_location_admin:
+                location = self.request.user.location
+                return UserAccount.objects.filter(location=location)
+            return []
+        else:
+            return []
+
+    def get_serializer_class(self):
+        if self.kwargs.get('user') == 'MOHADMIN':
+            return StaffSerializer
+        elif self.kwargs.get('user') == 'SITEADMIN':
+            return DetailedStaffSerializer
+        else:
+            return []
+
+@api_view(['POST'])
+def update_staff(request):
+    if request.user.is_location_admin or request.user.is_moh_admin:
+        staff = UserAccount.objects.get(email=request.data.get('email'))
+        staff.is_active = request.data.get('is_active')
+        staff.is_location_admin = request.data.get('is_location_admin')
+        staff.can_update_test = request.data.get('can_update_test')
+        staff.can_update_vaccine = request.data.get('can_update_vaccine')
+        staff.can_receive_location_batch = request.data.get('can_receive_location_batch')
+        staff.can_check_in = request.data.get('can_check_in')
+        staff.is_moh_admin = request.data.get('is_moh_admin')
+        staff.save()
+        return Response({'Message': 'Success'}, status=status.HTTP_204_NO_CONTENT)
+    return Response({'Message': 'You are not authorized to make this request.'})
