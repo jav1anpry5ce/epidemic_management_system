@@ -65,7 +65,7 @@ class BatchView(APIView):
                             'street_address': location.street_address, 
                             'city': location.city, 
                             'parish': location.parish, 
-                            'qr_image': 'http://192.168.0.200:8000' + batch.qr_image.url,
+                            'qr_image': 'https://javaughnpryce.live:8001' + batch.qr_image.url,
                             'date_created': batch.date_created,
                             }
                         return Response(res, status=status.HTTP_201_CREATED)
@@ -158,7 +158,7 @@ def get_batch(request, batch_id):
                 'city': batch.location.city,
                 'parish': batch.location.parish,
                 'date_created': batch.date_created,
-                'qr_image': f'http://192.168.0.200:8000{batch.qr_image.url}'
+                'qr_image': f'https://javaughnpryce.live:8001{batch.qr_image.url}'
             }
             return Response(data, status=status.HTTP_200_OK)
         return Response({'Message': 'You are not authorized to make this request.'}, status=status.HTTP_401_UNAUTHORIZED)

@@ -348,7 +348,7 @@ def generate_cvs(request, date, type):
                     cases = RecoveredCase.objects.filter(recovery_date=date).values_list('patient__first_name', 'patient__last_name', 'patient__phone', 'patient__street_address', 'patient__city', 'patient__parish', 'recovery_date')
                 for case in cases:
                     writer.writerow(case)
-            return Response({'link': f'http://192.168.0.200:8000/media/csv/{type}-report-{date}-for-{str(request.user)}.csv'})
+            return Response({'link': f'https://javaughnpryce.live:8001/media/csv/{type}-report-{date}-for-{str(request.user)}.csv'})
         return Response({'Message': 'You are not authorized to generate this report!'}, status=status.HTTP_401_UNAUTHORIZED)
     except:
         return Response({'Message': 'Something went wrong!'}, status=status.HTTP_400_BAD_REQUEST)

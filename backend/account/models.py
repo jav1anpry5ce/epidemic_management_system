@@ -71,7 +71,7 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
 
     def get_image(self):
         if self.profile_picture:
-            return 'http://192.168.0.150:8000' + self.profile_picture.url
+            return 'https://javaughnpryce.live:8001' + self.profile_picture.url
         return ''
 
     def __str__(self):
@@ -122,7 +122,7 @@ def account_post_save(sender, instance, created, *args, **kwargs):
             <body>
                 <p>Hello {instance.user.first_name}, welcome to our system!</p>
                 <p>Please go to the following link to activate your account.</p>
-                <p><a href="{site}account/activation/{instance.activate}/{instance.token}">{site}accounts/activation/{instance.activate}/{instance.token}</a></p>
+                <p><a href="{site}accounts/activation/{instance.activate}/{instance.token}">{site}accounts/activation/{instance.activate}/{instance.token}</a></p>
             </body>
         </html>
         '''

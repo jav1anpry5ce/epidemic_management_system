@@ -624,7 +624,7 @@ export default function MakeAppointment() {
                 <div className="mt-6 mb-2 flex h-full items-center">
                   <input
                     type="file"
-                    onChange={(e) => setId(e.target.files)}
+                    onChange={(e) => setId(e.target.files[0])}
                     className="block w-full text-sm text-gray-500
       file:mr-4 file:rounded-full file:border-0
       file:bg-violet-50 file:py-2

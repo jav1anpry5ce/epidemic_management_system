@@ -17,7 +17,7 @@ User = get_user_model()
 def create(request):
     try:
         try:
-            location = Location.objects.get(slug=request.data.get('location'))
+            location = Location.objects.get(label=request.data.get('location'))
         except:
             if not request.user.is_moh_admin or request.user.is_location_admin:
                 return Response({"Message": "location entered is not valid!"}, status=status.HTTP_400_BAD_REQUEST)
