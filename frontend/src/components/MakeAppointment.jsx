@@ -401,7 +401,7 @@ export default function MakeAppointment() {
               >
                 <Select value={title} onChange={(e) => setTitle(e)}>
                   {titledata.map((item, index) => (
-                    <Option key={index} vlaue={item.value}>
+                    <Option key={index} value={item.value}>
                       {item.label}
                     </Option>
                   ))}
@@ -710,7 +710,7 @@ export default function MakeAppointment() {
             </Grid>
             <Grid item xs={12}>
               <Form.Item
-                label="Appointment Loacation"
+                label="Appointment Location"
                 name="appointment_location"
                 style={{ marginBottom: 2 }}
                 rules={[
@@ -768,7 +768,7 @@ export default function MakeAppointment() {
                 ]}
               >
                 <Select
-                  vlaue={appointmentTime}
+                  value={appointmentTime}
                   onChange={(e) =>
                     setAppointmentTime(
                       new Date(`2021-12-12 ${e}`).toLocaleTimeString("it-IT")
