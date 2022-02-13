@@ -115,9 +115,7 @@ export default function HomeV2() {
       <div className=" bg-slate-500 ">
         <div className="mx-auto flex max-w-6xl flex-col space-y-3 py-4 px-2">
           <div className="flex w-full flex-col items-center justify-between text-left text-white md:flex-row">
-            <p className="text-center text-4xl font-bold">
-              What is a vaccine?{" "}
-            </p>
+            <p className="text-center text-4xl font-bold">What is a vaccine?</p>
             <p className="max-w-xl text-xl">
               A vaccine is a type of medicine that stimulates a person’s immune
               system to produce immunity to a specific disease, protecting the
@@ -148,7 +146,7 @@ export default function HomeV2() {
                   </li>
                 </ul>
               </div>
-              <div className="flex w-full justify-center">
+              <div className="-ml-4 flex w-full items-center justify-center lg:ml-0">
                 <button
                   className="rounded bg-sky-700 px-8 py-2 hover:scale-105 
                 hover:shadow-xl hover:shadow-sky-700/40"
