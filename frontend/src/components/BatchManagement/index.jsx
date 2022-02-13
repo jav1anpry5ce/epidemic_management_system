@@ -183,7 +183,7 @@ export default function BatchManagement() {
           </Button>,
           <Button
             style={{ border: "none" }}
-            className="rounded-sm bg-gray-700 text-white hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white transition duration-300"
+            className="rounded-sm bg-gray-700 text-white transition duration-300 hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white"
             onClick={handlePrint}
             key={shortid.generate()}
           >
@@ -206,7 +206,7 @@ export default function BatchManagement() {
         bordered={false}
         style={{ width: "100%", marginBottom: "3%" }}
       >
-        <div className="flex justify-between items-center justify-items-center mb-4">
+        <div className="mb-4 flex items-center justify-between justify-items-center">
           <Input.Search
             className="w-2/5"
             onChange={(e) => setQ(e.target.value)}
@@ -220,9 +220,9 @@ export default function BatchManagement() {
             type="primary"
             onClick={() => navigate("/moh/batches/create")}
             style={{ border: "none" }}
-            className="rounded-sm bg-gray-700 text-white hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white transition duration-300"
+            className="rounded-sm bg-gray-700 text-white transition duration-300 hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white"
           >
-            Add Location Batch
+            Add Site Batch
           </Button>
         </div>
         <Table
