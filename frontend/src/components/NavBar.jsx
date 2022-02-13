@@ -314,7 +314,7 @@ export default function NavBar({ hide, setHide }) {
             // mobile
             // eslint-disable-next-line
 
-            <div className="z-[1000] px-2">
+            <div className="px-2">
               <FaBars
                 style={{
                   fontSize: 37,
@@ -325,7 +325,7 @@ export default function NavBar({ hide, setHide }) {
               />
               <Transition
                 show={expand}
-                className="fixed top-0 left-0  h-full w-[100%] bg-[#000829] text-white"
+                className="fixed top-0 left-0 z-[1000] h-full w-[100%] bg-[#000829] text-white"
                 enter="transition translation duration-300"
                 enterFrom="opacity-0 translate-x-[-200%]"
                 enterTo="opacity-100 translate-x-[0%]"
