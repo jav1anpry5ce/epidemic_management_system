@@ -170,7 +170,9 @@ export default function HomeV2() {
         <div className="mx-auto max-w-6xl">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div className="flex flex-col items-center justify-center space-y-3">
-              <p className="text-3xl font-bold">Process for Your 2nd Dose</p>
+              <p className="text-center text-3xl font-bold">
+                Process for Your 2nd Dose
+              </p>
               <div className="relative">
                 {secondPlay ? (
                   <iframe
