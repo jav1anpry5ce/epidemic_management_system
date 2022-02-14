@@ -87,6 +87,12 @@ export default function HomeV2() {
             <p className="text-4xl font-bold">
               What you need to know about COVID-19 Vaccines
             </p>
+            <img
+              src={vaccine}
+              alt="doctors"
+              className="animate-slideIn mt-4 rounded delay-1000 md:max-w-[35rem] lg:hidden"
+              loading="eager"
+            />
             <p className="text-lg">
               Vaccination against COVID-19 is vital to stopping the spread of
               the pandemic. COVID-19 vaccines have been rigorously tested and
@@ -107,7 +113,7 @@ export default function HomeV2() {
           <img
             src={vaccine}
             alt="doctors"
-            className="animate-slideIn mt-4 rounded delay-1000 md:max-w-[35rem] lg:mt-0"
+            className="animate-slideIn mt-4 w-0 rounded delay-1000 md:max-w-[35rem] lg:mt-0 lg:w-full"
             loading="eager"
           />
         </div>
