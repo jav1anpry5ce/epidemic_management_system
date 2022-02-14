@@ -15,6 +15,7 @@ import SideEffectImage from "../asset/images/SideEffectImage.jpg";
 import MaskImage from "../asset/images/MaskImage.jpg";
 import SeniorImage from "../asset/images/SeniorImage.jpg";
 import { useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function HomeV2() {
   const [secondPlay, setSecondPlay] = useState(false);
@@ -80,13 +81,13 @@ export default function HomeV2() {
   ];
 
   return (
-    <div className="overflow-x-hidden">
+    <div layout className="overflow-x-hidden">
       <div className="w-full bg-slate-700 text-white">
         <div className="flex w-full flex-col items-center px-2 py-4 lg:flex-row lg:justify-evenly lg:space-x-3">
           <div className="max-w-lg space-y-4">
-            <p className="text-4xl font-bold">
+            <h3 className="text-4xl font-bold">
               What you need to know about COVID-19 Vaccines
-            </p>
+            </h3>
             <img
               src={vaccine}
               alt="doctors"
@@ -110,12 +111,19 @@ export default function HomeV2() {
               </button>
             </div>
           </div>
-          <img
-            src={vaccine}
-            alt="doctors"
-            className="animate-slideIn mt-4 w-0 rounded delay-1000 md:max-w-[35rem] lg:mt-0 lg:w-full"
-            loading="eager"
-          />
+          <motion.div
+            layout
+            whileInView={{ x: [400, -150, 0] }}
+            viewport={{ once: true }}
+            transition={{ duration: 1.5, ease: "easeInOut" }}
+          >
+            <motion.img
+              src={vaccine}
+              alt="doctors"
+              className="mt-4 w-0 rounded delay-1000 md:max-w-[35rem] lg:mt-0 lg:w-full"
+              loading="eager"
+            />
+          </motion.div>
         </div>
       </div>
       <div className=" bg-slate-500 ">
@@ -129,12 +137,19 @@ export default function HomeV2() {
             </p>
           </div>
           <div className="flex w-full flex-col items-center text-white md:flex-row lg:space-x-8">
-            <img
-              src={hand}
-              alt="hand"
-              loading="lazy"
-              className="animate-slideLeft delay-1000 md:max-w-[30rem]"
-            />
+            <motion.div
+              layout
+              whileInView={{ x: [-300, 150, 0] }}
+              viewport={{ once: true }}
+              transition={{ duration: 1.5, ease: "easeInOut" }}
+            >
+              <img
+                src={hand}
+                alt="hand"
+                loading="lazy"
+                className="delay-1000 md:max-w-[30rem]"
+              />
+            </motion.div>
             <div className="space-y-8">
               <p className="text-3xl font-bold">How do vaccines work?</p>
               <div>
@@ -190,7 +205,11 @@ export default function HomeV2() {
                     />
                   </div>
                 ) : (
-                  <>
+                  <motion.div
+                    whileInView={{ x: [-300, 50, 0] }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 1.5, ease: "easeInOut" }}
+                  >
                     <img src={second} alt="second" className="rounded" />
                     <AiOutlinePlayCircle
                       className="absolute left-[40%] top-[35%] h-20 w-20 
@@ -198,7 +217,7 @@ export default function HomeV2() {
                      md:top-[40%] md:left-[45%]"
                       onClick={() => setSecondPlay(true)}
                     />
-                  </>
+                  </motion.div>
                 )}
               </div>
             </div>
@@ -217,14 +236,18 @@ export default function HomeV2() {
                     />
                   </div>
                 ) : (
-                  <>
+                  <motion.div
+                    whileInView={{ x: [300, -50, 0] }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 1.5, ease: "easeInOut" }}
+                  >
                     <img src={safe} alt="safe" className="rounded" />
                     <AiOutlinePlayCircle
                       className="absolute left-[40%] top-[35%] h-20 w-20 cursor-pointer rounded-full bg-black/20
                      p-2 text-white hover:bg-black/40 md:top-[40%] md:left-[45%]"
                       onClick={() => setSafePlay(true)}
                     />
-                  </>
+                  </motion.div>
                 )}
               </div>
             </div>
@@ -236,16 +259,21 @@ export default function HomeV2() {
           <p className="pb-4 text-center text-4xl font-bold text-white">
             Myths and Facts
           </p>
-          <div className="grid grid-cols-1 content-center justify-items-center gap-3 md:grid-cols-2 lg:grid-cols-3">
-            {data.map((item, index) => (
-              <MythFacts
-                key={index}
-                image={item.image}
-                myth={item.myth}
-                fact={item.fact}
-              />
-            ))}
-          </div>
+          <AnimatePresence>
+            <motion.div
+              layout
+              className="grid grid-cols-1 content-center justify-items-center gap-3 md:grid-cols-2 lg:grid-cols-3"
+            >
+              {data.map((item, index) => (
+                <MythFacts
+                  key={index}
+                  image={item.image}
+                  myth={item.myth}
+                  fact={item.fact}
+                />
+              ))}
+            </motion.div>
+          </AnimatePresence>
         </div>
       </div>
     </div>
