@@ -81,8 +81,8 @@ export default function HomeV2() {
 
   return (
     <div className="overflow-x-hidden">
-      <div className="bg-slate-700 text-white">
-        <div className="flex w-full flex-col items-center space-x-3 px-2 py-4 lg:flex-row lg:justify-evenly">
+      <div className="w-full bg-slate-700 text-white">
+        <div className="flex w-full flex-col items-center px-2 py-4 lg:flex-row lg:justify-evenly lg:space-x-3">
           <div className="max-w-lg space-y-4">
             <p className="text-4xl font-bold">
               What you need to know about COVID-19 Vaccines
@@ -107,7 +107,7 @@ export default function HomeV2() {
           <img
             src={vaccine}
             alt="doctors"
-            className="animate-slideIn rounded delay-1000 md:max-w-[35rem]"
+            className="animate-slideIn mt-4 rounded delay-1000 md:max-w-[35rem] lg:mt-0"
             loading="eager"
           />
         </div>
@@ -122,7 +122,7 @@ export default function HomeV2() {
               person from the disease.
             </p>
           </div>
-          <div className="flex w-full flex-col items-center space-x-8 text-white md:flex-row">
+          <div className="flex w-full flex-col items-center text-white md:flex-row lg:space-x-8">
             <img
               src={hand}
               alt="hand"
@@ -146,7 +146,7 @@ export default function HomeV2() {
                   </li>
                 </ul>
               </div>
-              <div className="-ml-4 flex w-full items-center justify-center lg:ml-0">
+              <div className="flex w-full items-center justify-center">
                 <button
                   className="rounded bg-sky-700 px-8 py-2 hover:scale-105 
                 hover:shadow-xl hover:shadow-sky-700/40"
