@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import { useSelector, useDispatch } from "react-redux";
 import { open } from "../utils/Notifications";
@@ -37,7 +36,7 @@ export default function LocationAppointments() {
   const [order, setOrder] = useState("");
   const [q, setQ] = useState("");
   const [loading, setLoading] = useState(false);
-  const [data, setdata] = useState([]);
+  const [data, setData] = useState([]);
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 20,
@@ -106,7 +105,7 @@ export default function LocationAppointments() {
       )
       .then((data) => {
         setLoading(false);
-        setdata(data.data.results);
+        setData(data.data.results);
         setPagination({
           current: page,
           pageSize: pageSize,
@@ -141,14 +140,14 @@ export default function LocationAppointments() {
   useEffect(() => {
     if (appointments.success) {
       setShow(false);
-      open("success", "Success", "Patienet was successful Checked In");
+      open("success", "Success", "Patient was successful Checked In");
     }
     if (appointments.error) {
-      open("error", "Someting went wrong", appointments.message);
+      open("error", "Something went wrong", appointments.message);
     }
   }, [appointments.success, appointments.error, appointments.message]);
 
-  // table colmuns
+  // table columns
   const columns = [
     {
       title: "ID",
@@ -244,7 +243,10 @@ export default function LocationAppointments() {
   ];
 
   return (
-    <Container maxWidth="lg" style={{ marginTop: "2%", marginBottom: "1%" }}>
+    <div
+      style={{ minHeight: "80vh" }}
+      className="my-2 mx-auto flex max-w-6xl items-center justify-center justify-items-center py-2"
+    >
       <Modal
         size="lg"
         width={720}
@@ -389,6 +391,6 @@ export default function LocationAppointments() {
           scroll={scroll}
         />
       </Card>
-    </Container>
+    </div>
   );
 }

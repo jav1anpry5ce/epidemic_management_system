@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -261,7 +260,10 @@ export default function PositiveCases() {
   ];
 
   return (
-    <Container maxWidth="lg" style={{ marginTop: "2%", marginBottom: "1%" }}>
+    <div
+      style={{ minHeight: "80vh" }}
+      className="my-2 mx-auto flex max-w-5xl items-center justify-center justify-items-center py-2"
+    >
       <Modal
         style={{ top: 0 }}
         width={720}
@@ -609,6 +611,6 @@ export default function PositiveCases() {
           </Button>
         </div>
       </Card>
-    </Container>
+    </div>
   );
 }

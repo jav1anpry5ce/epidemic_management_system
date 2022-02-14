@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import { useSelector, useDispatch } from "react-redux";
 import { setActiveKey } from "../store/navbarSlice";
@@ -231,7 +230,10 @@ export default function VaccinationAndTesting() {
   ];
 
   return (
-    <Container maxWidth="lg" style={{ marginTop: "2%" }}>
+    <div
+      style={{ minHeight: "80vh" }}
+      className="my-2 mx-auto flex max-w-6xl items-center justify-center justify-items-center py-2"
+    >
       <Card
         headStyle={{ backgroundColor: "#1F2937", border: "none" }}
         title={
@@ -479,6 +481,6 @@ export default function VaccinationAndTesting() {
           )}
         </Modal>
       </Card>
-    </Container>
+    </div>
   );
 }

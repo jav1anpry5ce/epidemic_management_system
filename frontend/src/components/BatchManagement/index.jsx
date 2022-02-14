@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { clearState, getBatch } from "../../store/mohSlice";
 import { setActiveKey } from "../../store/navbarSlice";
-import Container from "@mui/material/Container";
 import { Table, Tooltip, Typography, Card, Button, Input, Modal } from "antd";
 import axios from "axios";
 import { EyeOutlined } from "@ant-design/icons";
@@ -146,7 +145,7 @@ export default function BatchManagement() {
       dataIndex: "batch_id",
       render: (dataIndex) => (
         <EyeOutlined
-          className="hover:text-blue-400 cursor-pointer"
+          className="cursor-pointer hover:text-blue-400"
           onClick={() => {
             setShow(true);
             dispatch(getBatch(dataIndex));
@@ -173,7 +172,10 @@ export default function BatchManagement() {
   });
 
   return (
-    <Container maxWidth="lg" style={{ marginTop: "2%" }}>
+    <div
+      style={{ minHeight: "80vh" }}
+      className="my-2 mx-auto flex max-w-5xl items-center justify-center justify-items-center py-2"
+    >
       <Modal
         visible={show}
         onCancel={() => setShow(false)}
@@ -235,6 +237,6 @@ export default function BatchManagement() {
           scroll={scroll}
         />
       </Card>
-    </Container>
+    </div>
   );
 }

@@ -3,7 +3,6 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { clearState } from "../store/mohSlice";
 import { setActiveKey } from "../store/navbarSlice";
-import Container from "@mui/material/Container";
 import { Table, Tooltip, Typography, Card, Button } from "antd";
 import axios from "axios";
 import shortid from "shortid";
@@ -140,7 +139,10 @@ export default function Locations() {
   ];
 
   return (
-    <Container maxWidth="lg" style={{ marginTop: "2%" }}>
+    <div
+      style={{ minHeight: "80vh" }}
+      className="my-2 mx-auto flex max-w-6xl items-center justify-center justify-items-center py-2"
+    >
       <Card
         headStyle={{ backgroundColor: "#1F2937", border: "none" }}
         title={
@@ -169,6 +171,6 @@ export default function Locations() {
           scroll={scroll}
         />
       </Card>
-    </Container>
+    </div>
   );
 }
