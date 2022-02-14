@@ -292,11 +292,11 @@ export const patientSlice = createSlice({
     },
     [codeVerify.pending]: (state) => {
       state.loading = true;
-      state.message = null;
     },
     [codeVerify.fulfilled]: (state, { payload }) => {
       state.loading = false;
       state.success = true;
+      state.message = null;
       sessionStorage.setItem("code", payload.code.Code);
     },
     [codeVerify.rejected]: (state, { payload }) => {
