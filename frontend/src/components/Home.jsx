@@ -88,14 +88,18 @@ export default function HomeV2() {
             <h3 className="text-4xl font-bold">
               What you need to know about COVID-19 Vaccines
             </h3>
-            <motion.img
-              src={vaccine}
+            <motion.div
+              layout
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              alt="doctors"
-              className="mt-4 rounded delay-1000 md:max-w-[35rem] lg:hidden"
-              loading="eager"
-            />
+            >
+              <img
+                src={vaccine}
+                alt="doctors"
+                className="mt-4 rounded delay-1000 md:max-w-[35rem] lg:hidden"
+                loading="eager"
+              />
+            </motion.div>
             <p className="text-lg">
               Vaccination against COVID-19 is vital to stopping the spread of
               the pandemic. COVID-19 vaccines have been rigorously tested and
