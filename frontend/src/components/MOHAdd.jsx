@@ -3,7 +3,6 @@ import { clearState, getAllLocations } from "../store/mohSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { setActiveKey } from "../store/navbarSlice";
 import { register, clearState as CS } from "../store/authSlice";
-import Container from "@mui/material/Container";
 import { Card, Input, Form, Button, Typography, Select, Checkbox } from "antd";
 import { open } from "../utils/Notifications";
 import shortid from "shortid";
@@ -78,7 +77,7 @@ export default function MohAdd() {
   };
 
   return (
-    <Container maxWidth="sm" style={{ marginTop: "2%" }}>
+    <div className="my-2 mx-auto flex min-h-[80vh] max-w-lg items-center justify-center justify-items-center py-2">
       <Card
         headStyle={{ backgroundColor: "#1F2937", border: "none" }}
         title={
@@ -180,12 +179,14 @@ export default function MohAdd() {
                 appearance="primary"
                 loading={auth.loading}
                 style={{ border: "none" }}
-                className="rounded-sm bg-gray-700 text-white transition duration-300 hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white"
+                className="rounded-sm bg-gray-700 text-white transition 
+                duration-300 hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white"
               >
                 Submit
               </Button>
               <button
-                className="bg-gray-200/50 px-6 py-1 outline outline-1 outline-gray-400"
+                className="bg-gray-200/50 px-6 py-1 outline outline-1 
+                outline-gray-400 transition duration-300 hover:bg-white hover:text-sky-500 hover:outline-sky-500"
                 onClick={() => navigate("/moh/staff")}
               >
                 Back
@@ -194,6 +195,6 @@ export default function MohAdd() {
           </Form.Item>
         </Form>
       </Card>
-    </Container>
+    </div>
   );
 }

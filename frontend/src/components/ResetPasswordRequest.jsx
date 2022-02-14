@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Card, Input, Form, Button, Alert, Typography } from "antd";
-import Container from "@mui/material/Container";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { resetRequest, clearState } from "../store/authSlice";
@@ -47,7 +46,7 @@ export default function ResetPasswordRequest() {
     dispatch(resetRequest(data));
   };
   return (
-    <Container maxWidth="sm" style={{ marginTop: "3%" }}>
+    <div className="my-2 mx-auto flex min-h-[80vh] max-w-xl items-center justify-center justify-items-center py-2">
       <Card
         headStyle={{ backgroundColor: "#1F2937", border: "none" }}
         title={
@@ -86,6 +85,6 @@ export default function ResetPasswordRequest() {
           </Form.Item>
         </Form>
       </Card>
-    </Container>
+    </div>
   );
 }

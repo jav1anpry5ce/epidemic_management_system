@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Card, Input, Form, Button, Alert, Typography, Checkbox } from "antd";
-import Container from "@mui/material/Container";
 import { useSelector, useDispatch } from "react-redux";
 import { register, clearState } from "../store/authSlice";
 import { open } from "../utils/Notifications";
@@ -78,7 +77,7 @@ export default function AddStaff() {
     dispatch(register(data));
   };
   return (
-    <Container maxWidth="sm" style={{ marginBottom: "1%", marginTop: "1%" }}>
+    <div className="my-2 mx-auto flex min-h-[80vh] max-w-lg items-center justify-center justify-items-center py-2">
       <Card
         headStyle={{ backgroundColor: "#1F2937", border: "none" }}
         title={
@@ -169,12 +168,14 @@ export default function AddStaff() {
                 appearance="primary"
                 loading={auth.loading}
                 style={{ border: "none" }}
-                className="rounded-sm bg-gray-700 text-white transition duration-300 hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white"
+                className="rounded-sm bg-gray-700 text-white transition duration-300 
+                hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white"
               >
                 Submit
               </Button>
               <button
-                className="bg-gray-200/50 px-6 py-1 outline outline-1 outline-gray-400"
+                className="bg-gray-200/50 px-6 py-1 outline outline-1 
+                outline-gray-400 transition duration-300 hover:bg-white hover:text-sky-500 hover:outline-sky-500"
                 onClick={() => navigate(`/${auth.location}/staff`)}
               >
                 Back
@@ -183,6 +184,6 @@ export default function AddStaff() {
           </Form.Item>
         </Form>
       </Card>
-    </Container>
+    </div>
   );
 }

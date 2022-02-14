@@ -3,7 +3,6 @@ import { login, clearState } from "../store/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Card, Input, Form, Button, Alert, Typography } from "antd";
-import Container from "@mui/material/Container";
 import { setActiveKey } from "../store/navbarSlice";
 
 const { Title } = Typography;
@@ -35,11 +34,7 @@ export default function Login() {
     // eslint-disable-next-line
   }, [auth.is_auth]);
   return (
-    <Container
-      maxWidth="sm"
-      style={{ marginTop: "3%" }}
-      className="d-flex justify-content-center"
-    >
+    <div className="my-2 mx-auto flex min-h-[80vh] max-w-xl items-center justify-center justify-items-center py-2">
       <Card
         headStyle={{ backgroundColor: "#1F2937", border: "none" }}
         title={
@@ -90,6 +85,6 @@ export default function Login() {
           </Form.Item>
         </Form>
       </Card>
-    </Container>
+    </div>
   );
 }

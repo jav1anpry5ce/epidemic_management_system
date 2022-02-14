@@ -243,10 +243,7 @@ export default function LocationAppointments() {
   ];
 
   return (
-    <div
-      style={{ minHeight: "80vh" }}
-      className="my-2 mx-auto flex max-w-6xl items-center justify-center justify-items-center py-2"
-    >
+    <div className="my-2 mx-auto flex min-h-[80vh] max-w-xl items-center justify-center justify-items-center py-2">
       <Modal
         size="lg"
         width={720}

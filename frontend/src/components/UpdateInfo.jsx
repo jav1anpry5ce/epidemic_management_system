@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Container from "@mui/material/Container";
 import formatDate from "../utils/formatDate";
 import { useDispatch, useSelector } from "react-redux";
 import TRNMask from "../utils/TRNMask";
@@ -116,7 +115,7 @@ export default function UpdateInfo() {
   };
 
   return (
-    <Container maxWidth="sm" style={{ marginTop: "4%", marginBottom: "3%" }}>
+    <div className="my-2 mx-auto flex min-h-[80vh] max-w-xl items-center justify-center justify-items-center py-2">
       {page === 1 && (
         <Card
           headStyle={{ backgroundColor: "#1F2937", border: "none" }}
@@ -331,6 +330,6 @@ export default function UpdateInfo() {
           </Form>
         </Card>
       )}
-    </Container>
+    </div>
   );
 }

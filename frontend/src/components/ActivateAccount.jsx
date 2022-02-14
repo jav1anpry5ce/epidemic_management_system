@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Container from "@mui/material/Container";
 import { Card, Input, Form, Button, Alert, Typography } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
@@ -39,7 +38,7 @@ export default function ActivateAccount({ match }) {
     }
   };
   return (
-    <Container maxWidth="sm" style={{ marginTop: "3%" }}>
+    <div className="my-2 mx-auto flex min-h-[80vh] max-w-xl items-center justify-center justify-items-center py-2">
       <Card
         headStyle={{ backgroundColor: "#1F2937", border: "none" }}
         title={
@@ -92,6 +91,6 @@ export default function ActivateAccount({ match }) {
           </Form.Item>
         </Form>
       </Card>
-    </Container>
+    </div>
   );
 }
