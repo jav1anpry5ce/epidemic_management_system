@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setActiveKey } from "../store/navbarSlice";
 import MythFacts from "./MythFacts";
-import doctor from "../asset/images/doctors.png";
+import vaccine from "../asset/images/Vaccine.jpg";
 import hand from "../asset/images/hand.png";
 import second from "../asset/images/second.png";
 import safe from "../asset/images/safe.png";
@@ -105,9 +105,9 @@ export default function HomeV2() {
             </div>
           </div>
           <img
-            src={doctor}
+            src={vaccine}
             alt="doctors"
-            className="animate-slideIn delay-1000 md:max-w-[35rem]"
+            className="animate-slideIn rounded delay-1000 md:max-w-[35rem]"
             loading="eager"
           />
         </div>
