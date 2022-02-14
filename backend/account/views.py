@@ -185,7 +185,14 @@ class StaffDetails(ListAPIView):
     def get_queryset(self):
         if self.kwargs.get('user') == 'MOHADMIN':
             if self.request.user.is_authenticated and self.request.user.is_moh_admin:
-                return UserAccount.objects.all().exclude(email=self.request.user.email)
+                staffs = []
+                moh_staff = UserAccount.objects.filter(is_moh_staff=True).exclude(email=self.request.user.email)
+                site_admin = UserAccount.objects.filter(is_location_admin=True)
+                for staff in moh_staff:
+                    staffs.append(staff)
+                for staff in site_admin:
+                    staffs.append(staff)
+                return staffs
             return []
         elif self.kwargs.get('user') == 'SITEADMIN':
             if self.request.user.is_authenticated and self.request.user.is_location_admin:
@@ -206,15 +213,20 @@ class StaffDetails(ListAPIView):
 @api_view(['POST'])
 def update_staff(request):
     try:
-        if request.user.is_location_admin or request.user.is_moh_admin:
-            if UserAccount.objects.filter(email=request.data.get('email')).exists():
-                staff = UserAccount.objects.get(email=request.data.get('email'))
+        if request.user.is_authenticated:
+            staff = UserAccount.objects.get(email=request.data.get('email'))
+            if request.user.is_location_admin:
                 staff.is_active = request.data.get('is_active')
                 staff.is_location_admin = request.data.get('is_location_admin')
                 staff.can_update_test = request.data.get('can_update_test')
                 staff.can_update_vaccine = request.data.get('can_update_vaccine')
                 staff.can_receive_location_batch = request.data.get('can_receive_location_batch')
                 staff.can_check_in = request.data.get('can_check_in')
+                staff.save()
+                return Response({'Message': 'Success'}, status=status.HTTP_204_NO_CONTENT)
+            elif request.user.is_moh_admin:
+                staff.is_active = request.data.get('is_active')
+                staff.is_location_admin = request.data.get('is_location_admin')
                 staff.is_moh_admin = request.data.get('is_moh_admin')
                 staff.save()
                 return Response({'Message': 'Success'}, status=status.HTTP_204_NO_CONTENT)
