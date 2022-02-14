@@ -22,6 +22,8 @@ class StaffSerializer(serializers.ModelSerializer):
             'email', 
             'location', 
             'is_location_admin',
+            'is_moh_admin',
+            'is_moh_staff',
             'is_active', 
             'last_login', 
         )

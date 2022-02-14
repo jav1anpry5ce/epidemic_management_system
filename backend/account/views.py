@@ -205,15 +205,20 @@ class StaffDetails(ListAPIView):
 
 @api_view(['POST'])
 def update_staff(request):
-    if request.user.is_location_admin or request.user.is_moh_admin:
-        staff = UserAccount.objects.get(email=request.data.get('email'))
-        staff.is_active = request.data.get('is_active')
-        staff.is_location_admin = request.data.get('is_location_admin')
-        staff.can_update_test = request.data.get('can_update_test')
-        staff.can_update_vaccine = request.data.get('can_update_vaccine')
-        staff.can_receive_location_batch = request.data.get('can_receive_location_batch')
-        staff.can_check_in = request.data.get('can_check_in')
-        staff.is_moh_admin = request.data.get('is_moh_admin')
-        staff.save()
-        return Response({'Message': 'Success'}, status=status.HTTP_204_NO_CONTENT)
-    return Response({'Message': 'You are not authorized to make this request.'})
+    try:
+        if request.user.is_location_admin or request.user.is_moh_admin:
+            if UserAccount.objects.filter(email=request.data.get('email')).exists():
+                staff = UserAccount.objects.get(email=request.data.get('email'))
+                staff.is_active = request.data.get('is_active')
+                staff.is_location_admin = request.data.get('is_location_admin')
+                staff.can_update_test = request.data.get('can_update_test')
+                staff.can_update_vaccine = request.data.get('can_update_vaccine')
+                staff.can_receive_location_batch = request.data.get('can_receive_location_batch')
+                staff.can_check_in = request.data.get('can_check_in')
+                staff.is_moh_admin = request.data.get('is_moh_admin')
+                staff.save()
+                return Response({'Message': 'Success'}, status=status.HTTP_204_NO_CONTENT)
+            return Response({'Message': 'Something went wrong!'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'Message': 'You are not authorized to make this request.'}, status=status.HTTP_401_UNAUTHORIZED)
+    except:
+        return Response({'Message': 'Something went wrong!'}, status=status.HTTP_400_BAD_REQUEST)

@@ -8,6 +8,8 @@ import format from "date-fns/format";
 import { useNavigate } from "react-router-dom";
 import { setActiveKey } from "../store/navbarSlice";
 
+import UpdateStaff from "./UpdateStaff";
+
 const { Title } = Typography;
 
 export default function StaffManagement() {
@@ -23,6 +25,8 @@ export default function StaffManagement() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
   const [q, setQ] = useState("");
+  const [show, setShow] = useState(false);
+  const [staff, setStaff] = useState();
   const scroll = { y: 470 };
 
   useEffect(() => {
@@ -65,10 +69,16 @@ export default function StaffManagement() {
     setPageSize(pagination.pageSize);
   };
 
+  const findStaff = (email) => {
+    const staff = data.filter((s) => s.email === email);
+    setStaff(staff[0]);
+    setShow(true);
+  };
+
   useEffect(() => {
     fetch();
     // eslint-disable-next-line
-  }, [page, pageSize]);
+  }, [page, pageSize, show]);
 
   const columns = [
     {
@@ -131,9 +141,12 @@ export default function StaffManagement() {
     },
     {
       title: "Action",
-      dataIndex: "id",
-      render: (dataIndex) => (
-        <EyeOutlined className="cursor-pointer hover:text-blue-400" />
+      dataIndex: "email",
+      render: (email) => (
+        <EyeOutlined
+          className="cursor-pointer hover:text-blue-400"
+          onClick={() => findStaff(email)}
+        />
       ),
       width: 120,
     },
@@ -144,6 +157,7 @@ export default function StaffManagement() {
       style={{ minHeight: "80vh" }}
       className="my-2 mx-auto flex max-w-5xl items-center justify-center justify-items-center py-2"
     >
+      <UpdateStaff staff={staff} show={show} setShow={setShow} />
       <Card
         headStyle={{ backgroundColor: "#1F2937", border: "none" }}
         title={
