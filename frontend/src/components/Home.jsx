@@ -165,22 +165,24 @@ export default function HomeV2() {
         </div>
       </div>
       <div className="bg-slate-800 py-2 px-2 text-white">
-        <div className="mx-auto max-w-6xl">
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <div className="mx-auto lg:max-w-6xl">
+          <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2">
             <div className="flex flex-col items-center justify-center space-y-3">
               <p className="text-center text-3xl font-bold">
                 Process for Your 2nd Dose
               </p>
               <div className="relative">
                 {secondPlay ? (
-                  <iframe
-                    src="https://www.youtube.com/embed/-MTIvHTfGJE"
-                    title="Second dose"
-                    frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    className="aspect-video h-full rounded md:w-[35rem]"
-                  />
+                  <div className="aspect-video h-full w-full rounded md:w-[35rem]">
+                    <iframe
+                      src="https://www.youtube.com/embed/-MTIvHTfGJE"
+                      title="Second dose"
+                      frameborder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      className="h-full w-full rounded"
+                    />
+                  </div>
                 ) : (
                   <>
                     <img src={second} alt="second" className="rounded" />
@@ -198,14 +200,16 @@ export default function HomeV2() {
               <p className="text-3xl font-bold">Are Vaccines Safe?</p>
               <div className="relative">
                 {safePlay ? (
-                  <iframe
-                    src="https://www.youtube.com/embed/9Y7lA82HFGc"
-                    title="Are vaccine safe?"
-                    frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    className="aspect-video h-full rounded md:w-[35rem]"
-                  />
+                  <div className="aspect-video h-full w-full rounded md:w-[35rem]">
+                    <iframe
+                      src="https://www.youtube.com/embed/9Y7lA82HFGc"
+                      title="Are vaccine safe?"
+                      frameborder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      className="h-full w-full rounded"
+                    />
+                  </div>
                 ) : (
                   <>
                     <img src={safe} alt="safe" className="rounded" />
