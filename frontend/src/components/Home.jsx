@@ -198,7 +198,7 @@ export default function HomeV2() {
               <p className="text-center text-3xl font-bold">
                 Process for Your 2nd Dose
               </p>
-              <div className="relative">
+              <>
                 {secondPlay ? (
                   <div className="aspect-video h-full w-full rounded md:w-[35rem]">
                     <iframe
@@ -215,6 +215,7 @@ export default function HomeV2() {
                     whileInView={{ x: [-300, 50, 0] }}
                     viewport={{ once: true }}
                     transition={{ duration: 1.5, ease: "easeInOut" }}
+                    className="relative"
                   >
                     <img src={second} alt="second" className="rounded" />
                     <AiOutlinePlayCircle
@@ -225,11 +226,11 @@ export default function HomeV2() {
                     />
                   </motion.div>
                 )}
-              </div>
+              </>
             </div>
             <div className="flex flex-col items-center justify-center space-y-3">
               <p className="text-3xl font-bold">Are Vaccines Safe?</p>
-              <div className="relative">
+              <>
                 {safePlay ? (
                   <div className="aspect-video h-full w-full rounded md:w-[35rem]">
                     <iframe
@@ -246,6 +247,7 @@ export default function HomeV2() {
                     whileInView={{ x: [300, -50, 0] }}
                     viewport={{ once: true }}
                     transition={{ duration: 1.5, ease: "easeInOut" }}
+                    className="relative"
                   >
                     <img src={safe} alt="safe" className="rounded" />
                     <AiOutlinePlayCircle
@@ -255,7 +257,7 @@ export default function HomeV2() {
                     />
                   </motion.div>
                 )}
-              </div>
+              </>
             </div>
           </div>
         </div>
