@@ -808,7 +808,10 @@ export default function MakeAppointment() {
                   value={appointmentTime}
                   onChange={(e) =>
                     setAppointmentTime(
-                      new Date(`2021-12-12 ${e}`).toLocaleTimeString("it-IT")
+                      dateFns.format(
+                        new Date(`2021-12-12 ${e}`),
+                        "YYYY-MM-DD HH:mm:ss"
+                      )
                     )
                   }
                 >

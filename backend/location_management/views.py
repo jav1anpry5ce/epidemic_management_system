@@ -57,8 +57,8 @@ class LocationView(APIView):
 def get_location_by_parish(request, parish):
     try:
         location = Location.objects.filter(parish=parish)
-        seraializer = LocationSerializer(location, many=True)
-        return Response(seraializer.data, status=status.HTTP_200_OK)
+        serializer = LocationSerializer(location, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
     except:
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -67,21 +67,22 @@ class AppointmentView(APIView):
     parser_classes = [MultiPartParser, FormParser]
     def post(self, request):
         try:
-            seraializer = CreateAppointmentSerializer(data=request.data)
-            if seraializer.is_valid():
+            print(request.data)
+            serializer = CreateAppointmentSerializer(data=request.data)
+            if serializer.is_valid():
                 if Patient.objects.filter(tax_number=request.data.get('tax_number')).exists():
                     patient = Patient.objects.get(tax_number=request.data.get('tax_number'))
                 else:
-                    patient_seraializer = CreatePatientSerializer(data=request.data)
-                    if patient_seraializer.is_valid():
+                    patient_serializer = CreatePatientSerializer(data=request.data)
+                    if patient_serializer.is_valid():
                         kinSerializer = NextOfKinSerializer(data=request.data)
                         if kinSerializer.is_valid():
-                            patient = patient_seraializer.save()
+                            patient = patient_serializer.save()
                             kinSerializer.save(patient=patient)
                         else:
                             return Response(kinSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
                     else:
-                        return Response(patient_seraializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                        return Response(patient_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
                 rep_serializer = RepresentativeSerializer(data=request.data)
                 if rep_serializer.is_valid():
                     if Patient.objects.filter(tax_number=request.data.get('tax_number')).exists():
@@ -90,7 +91,7 @@ class AppointmentView(APIView):
                 location = Location.objects.get(value=request.data.get('location'))
                 if request.data.get('type') == "Testing":
                     try:
-                        appointment = seraializer.save(patient=patient, location=location)
+                        appointment = serializer.save(patient=patient, location=location)
                         Testing.objects.create(patient=patient, location=location, type=request.data.get('patient_choice'), appointment=appointment)
                     except:
                         appointment.delete()
@@ -103,7 +104,7 @@ class AppointmentView(APIView):
                             if not Appointment.objects.filter(patient=patient, status='Pending', type='Vaccination').count() > 0:
                                 if Vaccination.objects.filter(patient=patient, status='Completed'):
                                     if Vaccination.objects.filter(patient=patient, status='Completed')[0].manufacture == request.data.get('patient_choice'):
-                                        appointment = seraializer.save(patient=patient, location=location)
+                                        appointment = serializer.save(patient=patient, location=location)
                                         try:
                                             try:
                                                 old_location = Vaccination.objects.filter(patient=patient, status='Completed')[0].location
@@ -136,7 +137,7 @@ class AppointmentView(APIView):
                                             vaccines.save()
                                         except:
                                             return Response({'Message': 'Something went wrong! Try again later.'}, status=status.HTTP_400_BAD_REQUEST)
-                                        appointment = seraializer.save(patient=patient, location=location)
+                                        appointment = serializer.save(patient=patient, location=location)
                                         Vaccination.objects.create(patient=patient, location=location, manufacture=request.data.get('patient_choice'), appointment=appointment)
                                         appointment.location.availability.get(date=appointment.date, time=appointment.time).delete()
                                         return Response(status=status.HTTP_201_CREATED)
@@ -146,7 +147,7 @@ class AppointmentView(APIView):
                             return Response({'Message': 'You already have an pending vaccination appointment!'}, status=status.HTTP_400_BAD_REQUEST)
                         return Response({'Message': 'You are all vaxxed up!'}, status=status.HTTP_400_BAD_REQUEST)
                     return Response({'Message': 'You are all vaxxed up!'}, status=status.HTTP_400_BAD_REQUEST)
-            return Response(seraializer.errors, status=status.HTTP_400_BAD_REQUEST)      
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)      
         except:
             return Response({'Message': 'There was an error! Please try again later.'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -154,8 +155,8 @@ class AppointmentView(APIView):
 def search_appointments(request, shorten_id):
     try:
         appointment = Appointment.objects.get(shorten_id=shorten_id)
-        seraializer = AppointmentSerializer(appointment)
-        return Response(seraializer.data, status=status.HTTP_200_OK)
+        serializer = AppointmentSerializer(appointment)
+        return Response(serializer.data, status=status.HTTP_200_OK)
     except:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -164,10 +165,10 @@ class AppointmentManagementView(APIView):
         try:
             second_dose = False
             appointment = Appointment.objects.get(id=request.data.get('q'))
-            seraializer = AppointmentSerializer(appointment)
+            serializer = AppointmentSerializer(appointment)
             if Vaccination.objects.filter(patient=appointment.patient, status="Completed").exists():
                 second_dose = True
-            return Response({'appointment': seraializer.data, 'second_dose': second_dose}, status=status.HTTP_200_OK)
+            return Response({'appointment': serializer.data, 'second_dose': second_dose}, status=status.HTTP_200_OK)
         except:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -200,12 +201,12 @@ class AppointmentManagementView(APIView):
                                     vaccines.save() 
                     except:
                         return Response({'Message': 'Something went wrong! Try again later'}, status=status.HTTP_400_BAD_REQUEST)
-                    seraializer = AppointmentSerializer(appointment)
+                    serializer = AppointmentSerializer(appointment)
                     subject, from_email, to = 'Cancelled Appointment', 'donotreply@localhost', appointment.patient.email
                     html_content = f'''
                     <html>
                         <body>
-                            <p>This is to notify that your appoinntment for {appointment.date.strftime('%d %B, %Y')} at {convertTime(appointment.time)} was successfully cancelled!</p>
+                            <p>This is to notify that your appointment for {appointment.date.strftime('%d %B, %Y')} at {convertTime(appointment.time)} was successfully cancelled!</p>
                         </body>
                     </html>
                     '''
@@ -214,14 +215,14 @@ class AppointmentManagementView(APIView):
                     msg.attach_alternative(html_content, "text/html")
                     msg.content_subtype = "html"
                     msg.send()
-                    text = f'''This is to notify that your appoinntment for {appointment.date.strftime('%d %B, %Y')} at {convertTime(appointment.time)} was successfully cancelled!'''
+                    text = f'''This is to notify that your appointment for {appointment.date.strftime('%d %B, %Y')} at {convertTime(appointment.time)} was successfully cancelled!'''
                     send_sms(
                     text.strip(),
                     '+12065550100',
                     [f'{appointment.patient.phone},'],
                     fail_silently=True
                     )
-                    return Response(seraializer.data, status=status.HTTP_202_ACCEPTED)
+                    return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
                 except:
                     return Response({'Message': "It's not you It's us!"}, status=status.HTTP_400_BAD_REQUEST)
             else:
@@ -234,7 +235,7 @@ class AppointmentManagementView(APIView):
                         appointment.time = request.data.get('time')
                         appointment.patient_choice = request.data.get('patient_choice')
                         appointment.save()
-                        seraializer = AppointmentSerializer(appointment)
+                        serializer = AppointmentSerializer(appointment)
                         subject, from_email, to = 'Appointment Updated', 'donotreply@localhost', appointment.patient.email
                         html_content = f'''
                         <html>
@@ -264,7 +265,7 @@ You can search for your appointment using the following code: {appointment.short
                         fail_silently=True
                         )
                         appointment.location.availability.get(date=appointment.date, time=appointment.time).delete()
-                        return Response(seraializer.data,status=status.HTTP_202_ACCEPTED)
+                        return Response(serializer.data,status=status.HTTP_202_ACCEPTED)
                     except:
                         return Response({'Message': "It's not you It's us!"}, status=status.HTTP_400_BAD_REQUEST)
                 return Response({'Message': 'Appointment date or time must be different to rescheduled.'}, status=status.HTTP_400_BAD_REQUEST)
@@ -320,8 +321,8 @@ def check_in_patient(request, patient_id):
 def get_appointment(request, appointment_id):
     try:
         appointment = Appointment.objects.get(id=appointment_id)
-        seraializer = AppointmentSerializer(appointment)
-        return Response(seraializer.data, status=status.HTTP_200_OK)
+        serializer = AppointmentSerializer(appointment)
+        return Response(serializer.data, status=status.HTTP_200_OK)
     except:
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
