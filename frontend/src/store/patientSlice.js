@@ -200,6 +200,7 @@ export const patientSlice = createSlice({
       state.vMessage = null;
       state.detailedinfo = null;
       state.kinInfo = null;
+      state.previousVaccine = [];
     },
     updateSuccess: (state) => {
       state.success = false;
