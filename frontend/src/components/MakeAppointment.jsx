@@ -815,8 +815,8 @@ export default function MakeAppointment() {
                   {availableDates.map((item) => (
                     <Option value={item.time} key={shortid.generate()}>
                       {moment(
-                        `2021-12-12 ${item.time}`,
-                        "YYYY-MM-DD HH:mm"
+                        `2021/12/12 ${item.time}`,
+                        "YYYY/MM/DD HH:mm"
                       ).format("LT")}
                     </Option>
                   ))}

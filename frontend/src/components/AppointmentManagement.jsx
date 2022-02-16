@@ -52,6 +52,8 @@ export default function AppointmentManagement() {
     };
   }, [dispatch, uuid]);
 
+  useEffect(() => {}, [time]);
+
   useEffect(() => {
     if (appointment.appointments) {
       dispatch(getType(appointment.appointments.location.value));
@@ -95,7 +97,7 @@ export default function AppointmentManagement() {
         location: appointment.appointments.location.value,
         date: moment(moment(appointment.appointments.date)),
         time: new Date(
-          `2020-12-12 ${appointment.appointments.time}`
+          `2020/12/12 ${appointment.appointments.time}`
         ).toLocaleTimeString([], {
           hour: "2-digit",
           minute: "2-digit",
@@ -200,11 +202,12 @@ export default function AppointmentManagement() {
                       className="mb-0"
                     >
                       <Select
-                        vlaue={time}
+                        value={time}
                         onChange={(e) =>
                           setTime(
-                            new Date(`2021-12-12 ${e}`).toLocaleTimeString(
-                              "it-IT"
+                            dateFns.format(
+                              new Date(`2021/12/12 ${e}`),
+                              "HH:mm:ss"
                             )
                           )
                         }
@@ -212,7 +215,7 @@ export default function AppointmentManagement() {
                         {availableDates.map((item) => (
                           <Option value={item.time} key={shortid.generate()}>
                             {new Date(
-                              `$2021-12-12 ${item.time}`
+                              `$2021/12/12 ${item.time}`
                             ).toLocaleTimeString([], {
                               hour: "2-digit",
                               minute: "2-digit",
