@@ -281,10 +281,6 @@ export default function MakeAppointment() {
     navigate("/appointments");
   };
 
-  useEffect(() => {
-    if (appointmentTime) alert(appointmentTime);
-  }, [appointmentTime]);
-
   return (
     <div className="sm:mx-auto sm:mt-4 sm:max-w-4xl">
       <Modal
@@ -813,7 +809,7 @@ export default function MakeAppointment() {
                   onChange={(e) =>
                     setAppointmentTime(
                       dateFns.format(
-                        new Date(`2021-12-12 ${e}`),
+                        new Date(`2021/12/12 ${e}`),
                         "YYYY-MM-DD HH:mm:ss"
                       )
                     )
