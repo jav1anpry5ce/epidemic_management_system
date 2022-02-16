@@ -281,6 +281,10 @@ export default function MakeAppointment() {
     navigate("/appointments");
   };
 
+  useEffect(() => {
+    if (appointmentTime) alert(appointmentTime);
+  }, [appointmentTime]);
+
   return (
     <div className="sm:mx-auto sm:mt-4 sm:max-w-4xl">
       <Modal
