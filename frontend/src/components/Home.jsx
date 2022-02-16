@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setActiveKey } from "../store/navbarSlice";
 import MythFacts from "./MythFacts";
-import vaccine from "../asset/images/Vaccine.jpg";
+import vaccine from "../asset/images/Vaccine.png";
 import hand from "../asset/images/hand.png";
 import second from "../asset/images/second.png";
 import safe from "../asset/images/safe.png";
@@ -14,6 +14,9 @@ import ShieldImage from "../asset/images/SheildImage.jpg";
 import SideEffectImage from "../asset/images/SideEffectImage.jpg";
 import MaskImage from "../asset/images/MaskImage.jpg";
 import SeniorImage from "../asset/images/SeniorImage.jpg";
+import life from "../asset/images/back-to-life.png";
+import moh from "../asset/images/MOHW.png";
+import vac from "../asset/images/vac.png";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -132,8 +135,29 @@ export default function HomeV2() {
           </motion.div>
         </div>
       </div>
+      <div className="bg-slate-500">
+        <motion.div
+          className="mx-auto flex max-w-6xl flex-col items-center
+         bg-yellow-400 px-4 py-2 shadow-2xl shadow-yellow-400/30 lg:scale-105 lg:flex-row lg:space-x-32 lg:rounded-lg"
+          layout
+          whileInView={{ scale: [0, 1.1, 1.05] }}
+          viewport={{ once: true }}
+          transition={{ duration: 1.5, ease: "easeInOut" }}
+        >
+          <img src={life} alt="Vaccination" className="w-[30rem]" />
+          <div className="flex items-center space-x-2">
+            <img src={moh} alt="Vaccination" className="aspect-auto w-[9rem]" />
+            <img src={vac} alt="Vaccination" className="w-[5rem]" />
+            <div className="flex flex-col">
+              <p className="font-bold text-black">www.moh.gov.jm</p>
+              <p className="font-bold text-black">888-ONE-LOVE (663-5683)</p>
+              <p className="font-bold text-black">@themohwgovjm</p>
+            </div>
+          </div>
+        </motion.div>
+      </div>
       <div className=" bg-slate-500 ">
-        <div className="mx-auto flex max-w-6xl flex-col space-y-3 py-4 px-2">
+        <div className="mx-auto flex max-w-6xl flex-col space-y-3 px-2 py-4">
           <div className="flex w-full flex-col items-center justify-between text-left text-white md:flex-row">
             <p className="text-center text-4xl font-bold">What is a vaccine?</p>
             <p className="max-w-xl text-xl">
