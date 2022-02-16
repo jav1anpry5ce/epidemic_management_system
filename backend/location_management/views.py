@@ -67,7 +67,6 @@ class AppointmentView(APIView):
     parser_classes = [MultiPartParser, FormParser]
     def post(self, request):
         try:
-            print(request.data)
             serializer = CreateAppointmentSerializer(data=request.data)
             if serializer.is_valid():
                 if Patient.objects.filter(tax_number=request.data.get('tax_number')).exists():
@@ -206,7 +205,7 @@ class AppointmentManagementView(APIView):
                     html_content = f'''
                     <html>
                         <body>
-                            <p>This is to notify that your appointment for {appointment.date.strftime('%d %B, %Y')} at {convertTime(appointment.time)} was successfully cancelled!</p>
+                            <p>This is to notify that your appoinntment for {appointment.date.strftime('%d %B, %Y')} at {convertTime(appointment.time)} was successfully cancelled!</p>
                         </body>
                     </html>
                     '''
@@ -215,7 +214,7 @@ class AppointmentManagementView(APIView):
                     msg.attach_alternative(html_content, "text/html")
                     msg.content_subtype = "html"
                     msg.send()
-                    text = f'''This is to notify that your appointment for {appointment.date.strftime('%d %B, %Y')} at {convertTime(appointment.time)} was successfully cancelled!'''
+                    text = f'''This is to notify that your appoinntment for {appointment.date.strftime('%d %B, %Y')} at {convertTime(appointment.time)} was successfully cancelled!'''
                     send_sms(
                     text.strip(),
                     '+12065550100',

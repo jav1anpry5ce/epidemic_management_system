@@ -808,10 +808,7 @@ export default function MakeAppointment() {
                   value={appointmentTime}
                   onChange={(e) =>
                     setAppointmentTime(
-                      dateFns.format(
-                        new Date(`2021/12/12 ${e}`),
-                        "YYYY-MM-DD HH:mm:ss"
-                      )
+                      dateFns.format(new Date(`2021/12/12 ${e}`), "HH:mm:ss")
                     )
                   }
                 >
