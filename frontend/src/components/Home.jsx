@@ -220,7 +220,7 @@ export default function HomeV2() {
                     <img src={second} alt="second" className="rounded" />
                     <AiOutlinePlayCircle
                       className="absolute left-[40%] top-[35%] h-20 w-20 
-                    cursor-pointer rounded-full bg-black/20 p-2 text-white hover:bg-black/40
+                    cursor-pointer rounded-full bg-black/40 p-2 text-white hover:bg-black/50
                      md:top-[40%] md:left-[45%]"
                       onClick={() => setSecondPlay(true)}
                     />
@@ -251,8 +251,8 @@ export default function HomeV2() {
                   >
                     <img src={safe} alt="safe" className="rounded" />
                     <AiOutlinePlayCircle
-                      className="absolute left-[40%] top-[35%] h-20 w-20 cursor-pointer rounded-full bg-black/20
-                     p-2 text-white hover:bg-black/40 md:top-[40%] md:left-[45%]"
+                      className="absolute left-[40%] top-[35%] h-20 w-20 cursor-pointer rounded-full bg-black/40
+                     p-2 text-white hover:bg-black/50 md:top-[40%] md:left-[45%]"
                       onClick={() => setSafePlay(true)}
                     />
                   </motion.div>
