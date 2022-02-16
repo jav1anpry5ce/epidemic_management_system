@@ -70,7 +70,7 @@ function App() {
   }, [auth.is_auth]);
 
   return (
-    <Container className="min-h-screen bg-[url('./asset/images/background2.jpg')] bg-cover bg-no-repeat">
+    <Container className="min-h-screen bg-[url('./asset/images/background2.jpg')] bg-cover bg-fixed bg-no-repeat">
       <Router>
         <Header>
           <NavBar hide={hide} setHide={setHide} />

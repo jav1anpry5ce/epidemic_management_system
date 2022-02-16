@@ -757,7 +757,7 @@ export default function MakeAppointment() {
                             new Date(patient?.previousVaccine[0].date_given),
                             patient?.previousVaccine[0].next_dose
                           )
-                        : new Date()
+                        : dateFns.subDays(new Date(), 1)
                     )
                   }
                   format="DD/MM/YYYY"
