@@ -45,7 +45,7 @@ export default function Appointments() {
     // eslint-disable-next-line
   }, [appointments.success]);
   return (
-    <div className="px-2 sm:my-4 sm:mx-auto sm:max-w-4xl">
+    <div className="min-h-[80vh] px-2 py-2 sm:my-4 sm:mx-auto sm:max-w-4xl">
       <div>
         <Typography variant="h4" style={{ color: "white" }}>
           Learn the{" "}
@@ -98,28 +98,28 @@ export default function Appointments() {
                 <Grid item xs={12}>
                   <Card className="rounded-lg shadow-lg">
                     <Grid container spacing={0}>
-                      <Grid item xs={2}>
+                      <Grid item sm={2} xs={6}>
                         <Typography variant="caption">First Name</Typography>
                         <br />
                         <Typography variant="caption">
                           {appointments.appointment.patient.first_name}
                         </Typography>
                       </Grid>
-                      <Grid item xs={2}>
+                      <Grid item sm={2} xs={6}>
                         <Typography variant="caption">Last Name</Typography>
                         <br />
                         <Typography variant="caption">
                           {appointments.appointment.patient.last_name}
                         </Typography>
                       </Grid>
-                      <Grid item xs={2}>
+                      <Grid item sm={2} xs={6}>
                         <Typography variant="caption">Date</Typography>
                         <br />
                         <Typography variant="caption">
                           {appointments.appointment.date}
                         </Typography>
                       </Grid>
-                      <Grid item xs={2}>
+                      <Grid item sm={2} xs={6}>
                         <Typography variant="caption">Time</Typography>
                         <br />
                         <Typography variant="caption">
@@ -130,14 +130,14 @@ export default function Appointments() {
                             .replace(/:\d+ /, " ")}
                         </Typography>
                       </Grid>
-                      <Grid item xs={2}>
+                      <Grid item sm={2} xs={6}>
                         <Typography variant="caption">Status</Typography>
                         <br />
                         <Typography variant="caption">
                           {appointments.appointment.status}
                         </Typography>
                       </Grid>
-                      <Grid item xs={2}>
+                      <Grid item sm={2} xs={6}>
                         <Typography variant="caption">Manage</Typography>
                         <br />
                         <button
