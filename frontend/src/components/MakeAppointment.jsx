@@ -749,7 +749,17 @@ export default function MakeAppointment() {
                 <DatePicker
                   disabled={location.loading}
                   onChange={(e) => setAppointmentDate(formatDate(e))}
-                  disabledDate={(date) => dateFns.isBefore(date, new Date())}
+                  disabledDate={(date) =>
+                    dateFns.isBefore(
+                      date,
+                      patient?.previousVaccine[0]
+                        ? dateFns.addWeeks(
+                            new Date(patient?.previousVaccine[0].date_given),
+                            patient?.previousVaccine[0].next_dose
+                          )
+                        : new Date()
+                    )
+                  }
                   format="DD/MM/YYYY"
                   style={{ width: "100%" }}
                 />

@@ -330,7 +330,18 @@ def patient_vaccine(request):
     try:
         patient = Patient.objects.get(tax_number=request.data.get('tax_number'))
         vaccine = Vaccination.objects.filter(patient=patient, status='Completed')
-        res = [{'value': vaccine[0].manufacture, 'label': vaccine[0].manufacture}]
+        next_dose = 0
+        if vaccine[0].manufacture == "Moderna":
+            next_dose = 4
+        elif vaccine[0].manufacture == "Pfizer":
+            next_dose = 3
+        elif vaccine[0].manufacture == "Astra Zeneca":
+            next_dose = 8
+        res = [{
+            'value': vaccine[0].manufacture, 
+            'date_given': vaccine[0].date_given, 
+            'next_dose': next_dose
+            }]
         return Response(res, status=status.HTTP_200_OK)
     except:
         return Response(status=status.HTTP_404_NOT_FOUND)
