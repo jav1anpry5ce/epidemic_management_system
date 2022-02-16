@@ -736,6 +736,32 @@ export default function MakeAppointment() {
             </Grid>
             <Grid item xs={12} sm={6}>
               <Form.Item
+                label="Appointment Type"
+                name="appointment_type"
+                style={{ marginBottom: 2 }}
+                rules={[
+                  {
+                    required: true,
+                    message: "Please select your appointment type!",
+                  },
+                ]}
+              >
+                <Select
+                  onChange={(e) => setAppointmentType(e)}
+                  disabled={location.loading}
+                  searchable={false}
+                >
+                  {location.data &&
+                    location.data.Offer.map((item) => (
+                      <Option value={item.value} key={shortid.generate()}>
+                        {item.label}
+                      </Option>
+                    ))}
+                </Select>
+              </Form.Item>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Form.Item
                 label="Appointment Date"
                 name="appointment_date"
                 style={{ marginBottom: 2 }}
@@ -752,7 +778,8 @@ export default function MakeAppointment() {
                   disabledDate={(date) =>
                     dateFns.isBefore(
                       date,
-                      patient?.previousVaccine[0]
+                      patient?.previousVaccine[0] &&
+                        appointmentType === "Vaccination"
                         ? dateFns.addWeeks(
                             new Date(patient?.previousVaccine[0].date_given),
                             patient?.previousVaccine[0].next_dose
@@ -796,32 +823,7 @@ export default function MakeAppointment() {
                 </Select>
               </Form.Item>
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <Form.Item
-                label="Appointment Type"
-                name="appointment_type"
-                style={{ marginBottom: 2 }}
-                rules={[
-                  {
-                    required: true,
-                    message: "Please select your appointment type!",
-                  },
-                ]}
-              >
-                <Select
-                  onChange={(e) => setAppointmentType(e)}
-                  disabled={location.loading}
-                  searchable={false}
-                >
-                  {location.data &&
-                    location.data.Offer.map((item) => (
-                      <Option value={item.value} key={shortid.generate()}>
-                        {item.label}
-                      </Option>
-                    ))}
-                </Select>
-              </Form.Item>
-            </Grid>
+
             {appointmentType === "Testing" ? (
               <Grid item xs={12} sm={6}>
                 <Form.Item
