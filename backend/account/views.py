@@ -81,29 +81,37 @@ def activate(request):
 def login(request):
     if User.objects.filter(email=request.data.get('email')).exists():
         user = User.objects.get(email=request.data.get('email'))
-        if user.check_password(request.data.get('password')) and user.is_active:
-            if user.is_moh_staff:
-                location = None
+        if user.is_active:
+            if user.check_password(request.data.get('password')):
+                if user.is_moh_staff:
+                    location = None
+                else:
+                    location = user.location.slug
+                if Token.objects.filter(user=user).exists():
+                    Token.objects.get(user=user).delete()
+                token = Token.objects.get_or_create(user=user)
+                user.last_login = timezone.now()
+                user.login_attempt = 0
+                user.save()
+                return Response({
+                    "auth_token": token[0].key, 
+                    "username": user.first_name, 
+                    "is_location_admin": user.is_location_admin, 
+                    "is_moh_staff": user.is_moh_staff,
+                    "is_moh_admin": user.is_moh_admin,
+                    "can_update_test": user.can_update_test, 
+                    "can_update_vaccine": user.can_update_vaccine, 
+                    'can_check_in': user.can_check_in,
+                    "can_receive_location_batch": user.can_receive_location_batch,
+                    "location": location
+                })
             else:
-                location = user.location.slug
-            if Token.objects.filter(user=user).exists():
-                Token.objects.get(user=user).delete()
-            token = Token.objects.get_or_create(user=user)
-            user.last_login = timezone.now()
-            user.save()
-            return Response({
-                "auth_token": token[0].key, 
-                "username": user.first_name, 
-                "is_location_admin": user.is_location_admin, 
-                "is_moh_staff": user.is_moh_staff,
-                "is_moh_admin": user.is_moh_admin,
-                "can_update_test": user.can_update_test, 
-                "can_update_vaccine": user.can_update_vaccine, 
-                'can_check_in': user.can_check_in,
-                "can_receive_location_batch": user.can_receive_location_batch,
-                "location": location
-            })
-        return Response({'Message': 'Check email and/or password'}, status=status.HTTP_400_BAD_REQUEST)
+                user.login_attempt += 1
+                if user.login_attempt > 3:
+                    user.is_active = False
+                user.save()
+                return Response({'Message': 'Check email and/or password'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'Message': 'Please contact your administrator!'}, status=status.HTTP_400_BAD_REQUEST)
     return Response({'Message': 'Check email and/or password'}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
@@ -119,6 +127,8 @@ def resetRequest(request):
     try:
         try:
             user = User.objects.get(email=request.data.get('email'))
+            user.login_attempt = 0
+            user.save()
         except:
             return Response({'Message': 'email provided does not match any in our records!'}, status=status.HTTP_404_NOT_FOUND)
         if request.user.is_location_admin or request.user.is_moh_admin:

@@ -6,7 +6,7 @@ admin.site.site_header = 'Epidemic Response Management System Admin Panel'
 
 class UserAccountConfig(UserAdmin):
     search_fields = ('email', 'last_name')
-    list_display = ('email', 'location', 'is_active', 'last_login')
+    list_display = ('email', 'location', 'is_active', 'last_login', 'login_attempt')
     readonly_fields = ('date_joined', 'last_login')
     fieldsets = (
         ('Personal Information', {'fields': ('email', 'first_name', 'last_name',)}),
