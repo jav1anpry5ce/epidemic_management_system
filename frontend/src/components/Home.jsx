@@ -288,7 +288,8 @@ export default function HomeV2() {
       </div>
       <div className="bg-slate-500">
         <div className="mx-auto max-w-6xl px-2 py-3">
-          <p className="pb-4 text-center text-4xl font-bold text-white">
+          <p className="text-center text-3xl font-bold text-white">COVID-19</p>
+          <p className="pb-4 text-center text-4xl text-white">
             Myths and Facts
           </p>
           <AnimatePresence>
