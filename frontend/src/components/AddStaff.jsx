@@ -4,14 +4,13 @@ import { useSelector, useDispatch } from "react-redux";
 import { register, clearState } from "../store/authSlice";
 import { open } from "../utils/Notifications";
 import { setActiveKey } from "../store/navbarSlice";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const { Title } = Typography;
 
 export default function AddStaff() {
   const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const [form] = Form.useForm();
   const [isAdmin, setIsAdmin] = useState(false);
   const [canCheckIn, setCanCheckIn] = useState(false);
@@ -173,13 +172,13 @@ export default function AddStaff() {
               >
                 Submit
               </Button>
-              <button
+              <Link
                 className="bg-gray-200/50 px-6 py-1 outline outline-1 
-                outline-gray-400 transition duration-300 hover:bg-white hover:text-sky-500 hover:outline-sky-500"
-                onClick={() => navigate(`/${auth.location}/staff`)}
+                outline-gray-400 transition duration-300 hover:bg-white hover:text-sky-500 hover:no-underline hover:outline hover:outline-1 hover:outline-sky-500"
+                to={`/${auth.location}/staff`}
               >
                 Back
-              </button>
+              </Link>
             </div>
           </Form.Item>
         </Form>

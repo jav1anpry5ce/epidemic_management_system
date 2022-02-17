@@ -6,7 +6,7 @@ import { register, clearState as CS } from "../store/authSlice";
 import { Card, Input, Form, Button, Typography, Select, Checkbox } from "antd";
 import { open } from "../utils/Notifications";
 import shortid from "shortid";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -15,7 +15,6 @@ export default function MohAdd() {
   const data = useSelector((state) => state.moh);
   const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const [email, setEmail] = useState();
   const [firstName, setFirstName] = useState();
   const [lastName, setLastName] = useState();
@@ -184,13 +183,13 @@ export default function MohAdd() {
               >
                 Submit
               </Button>
-              <button
+              <Link
                 className="bg-gray-200/50 px-6 py-1 outline outline-1 
-                outline-gray-400 transition duration-300 hover:bg-white hover:text-sky-500 hover:outline-sky-500"
-                onClick={() => navigate("/moh/staff")}
+                outline-gray-400 transition duration-300 hover:bg-white hover:text-sky-500 hover:no-underline hover:outline hover:outline-1 hover:outline-sky-500"
+                to="/moh/staff"
               >
                 Back
-              </button>
+              </Link>
             </div>
           </Form.Item>
         </Form>

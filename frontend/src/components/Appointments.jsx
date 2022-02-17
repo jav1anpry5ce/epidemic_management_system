@@ -10,7 +10,6 @@ import {
 } from "../store/appointmentSlice";
 import Typography from "@mui/material/Typography";
 import { Placeholder } from "rsuite";
-import { useNavigate } from "react-router-dom";
 import { open } from "../utils/Notifications";
 import { setActiveKey } from "../store/navbarSlice";
 import { Link } from "react-router-dom";
@@ -19,7 +18,6 @@ const { Search } = Input;
 
 export default function Appointments() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const appointments = useSelector((state) => state.appointment);
 
   const handelSearch = () => {
@@ -49,9 +47,9 @@ export default function Appointments() {
       <div>
         <Typography variant="h4" style={{ color: "white" }}>
           Learn the{" "}
-          <button onClick={() => navigate("/")} className="hover:underline">
+          <Link to="/" className="hover:underline">
             facts
-          </button>{" "}
+          </Link>{" "}
           about COVID-19! Get vaccinated!
         </Typography>
         <Typography variant="h6" paragraph={true} className="text-white">
@@ -140,18 +138,14 @@ export default function Appointments() {
                       <Grid item sm={2} xs={6}>
                         <Typography variant="caption">Manage</Typography>
                         <br />
-                        <button
-                          onClick={() =>
-                            navigate(
-                              "/appointments/" + appointments.appointment.id
-                            )
-                          }
+                        <Link
+                          to={`/appointments/${appointments.appointment.id}`}
                           appearance="primary"
                           style={{ border: "none" }}
-                          className="rounded-sm bg-gray-700 px-2 text-white transition duration-300 hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white"
+                          className="rounded-sm bg-gray-700 px-2 text-white transition duration-300 hover:bg-gray-800 hover:text-white hover:no-underline focus:bg-gray-800 focus:text-white"
                         >
                           View
-                        </button>
+                        </Link>
                       </Grid>
                     </Grid>
                   </Card>

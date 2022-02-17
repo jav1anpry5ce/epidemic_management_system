@@ -17,13 +17,12 @@ import SeniorImage from "../asset/images/SeniorImage.jpg";
 import life from "../asset/images/back-to-life.png";
 import moh from "../asset/images/MOHW.png";
 import vac from "../asset/images/vac.png";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function HomeV2() {
   const [secondPlay, setSecondPlay] = useState(false);
   const [safePlay, setSafePlay] = useState(false);
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -111,13 +110,13 @@ export default function HomeV2() {
               with COVID-19.
             </p>
             <div className="flex w-full items-center justify-center lg:justify-start">
-              <button
+              <Link
                 className="rounded bg-slate-800 px-8 py-3 hover:scale-105 
-              hover:bg-slate-700/95 hover:shadow-md"
-                onClick={() => navigate("/appointments/create")}
+              hover:bg-slate-700/95 hover:text-white hover:no-underline hover:shadow-md"
+                to="/appointments/create"
               >
                 Make Appointment
-              </button>
+              </Link>
             </div>
           </div>
           <motion.div

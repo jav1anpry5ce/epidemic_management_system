@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { clearState, getBatch } from "../../store/mohSlice";
 import { setActiveKey } from "../../store/navbarSlice";
 import { Table, Tooltip, Typography, Card, Button, Input, Modal } from "antd";
@@ -14,7 +14,6 @@ const { Title } = Typography;
 export default function BatchManagement() {
   const moh = useSelector((state) => state.moh);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const [data, setData] = useState();
   const [order, setOrder] = useState(null);
   const [pagination, setPagination] = useState({
@@ -172,10 +171,7 @@ export default function BatchManagement() {
   });
 
   return (
-    <div
-      style={{ minHeight: "80vh" }}
-      className="my-2 mx-auto flex max-w-5xl items-center justify-center justify-items-center py-2"
-    >
+    <div className="my-2 mx-auto flex min-h-[80vh] max-w-5xl items-center justify-center justify-items-center py-2">
       <Modal
         visible={show}
         onCancel={() => setShow(false)}
@@ -218,14 +214,14 @@ export default function BatchManagement() {
             }}
             placeholder="Search using location name or batch id"
           />
-          <Button
+          <Link
             type="primary"
-            onClick={() => navigate("/moh/batches/create")}
+            to="/moh/batches/create"
             style={{ border: "none" }}
-            className="rounded-sm bg-gray-700 text-white transition duration-300 hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white"
+            className="rounded-sm bg-gray-700 px-4 py-1 text-white transition duration-300 hover:bg-gray-800 hover:text-white hover:no-underline focus:bg-gray-800 focus:text-white"
           >
             Add Site Batch
-          </Button>
+          </Link>
         </div>
         <Table
           columns={columns}

@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { AiFillCheckCircle, AiFillCloseCircle } from "react-icons/ai";
 import { useSelector, useDispatch } from "react-redux";
 import format from "date-fns/format";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { setActiveKey } from "../store/navbarSlice";
 
 import UpdateStaff from "./UpdateStaff";
@@ -14,7 +14,6 @@ const { Title } = Typography;
 
 export default function StaffManagement() {
   const auth = useSelector((state) => state.auth);
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
@@ -175,12 +174,12 @@ export default function StaffManagement() {
             onSearch={fetch}
             className=" w-2/5"
           />
-          <button
-            className="bg-slate-700 px-6 py-1 text-white hover:scale-105"
-            onClick={() => navigate("add")}
+          <Link
+            className="bg-slate-700 px-6 py-1 text-white hover:scale-105 hover:text-white hover:no-underline"
+            to="add"
           >
             Add Staff
-          </button>
+          </Link>
         </div>
         <Table
           rowKey={(data) => data.email}

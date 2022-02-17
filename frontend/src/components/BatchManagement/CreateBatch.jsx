@@ -77,15 +77,9 @@ export default function CreateBatch() {
 
   if (data.batchInfo) {
     return (
-      <Container
-        maxWidth="sm"
-        // style={{ marginTop: "2%" }}
-      >
+      <div className="my-2 mx-auto flex min-h-[80vh] w-full max-w-lg items-center justify-center justify-items-center py-2">
         {data.success ? (
-          <div
-            className="flex items-center justify-center"
-            style={{ minHeight: "60vh" }}
-          >
+          <div className="flex w-full items-center justify-center">
             <Paper elevation={1} style={{ width: 585 }}>
               <Container>
                 <Grid container spacing={1}>
@@ -115,10 +109,7 @@ export default function CreateBatch() {
             </Paper>
           </div>
         ) : (
-          <div
-            className="flex items-center justify-center"
-            style={{ minHeight: "60vh" }}
-          >
+          <div className="flex w-full items-center justify-center">
             <Card
               headStyle={{ backgroundColor: "#1F2937", border: "none" }}
               title={
@@ -211,7 +202,7 @@ export default function CreateBatch() {
             </Card>
           </div>
         )}
-      </Container>
+      </div>
     );
   } else {
     return <Loading />;
