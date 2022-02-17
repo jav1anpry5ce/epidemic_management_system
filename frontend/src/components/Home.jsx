@@ -140,7 +140,7 @@ export default function HomeV2() {
           className="mx-auto flex max-w-6xl flex-col items-center
          bg-yellow-400 px-4 py-2 shadow-2xl shadow-yellow-400/30 lg:scale-105 lg:flex-row lg:space-x-32 lg:rounded-lg"
           layout
-          whileInView={{ scale: [0, 1.1, window.outerHeight > 670 ? 1.05 : 1] }}
+          whileInView={{ scale: [0, 1.1, window.outerWidth > 412 ? 1.05 : 1] }}
           viewport={{ once: true }}
           transition={{ duration: 1.5, ease: "easeInOut" }}
         >
