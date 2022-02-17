@@ -147,7 +147,7 @@ export default function HomeV2() {
           <img src={life} alt="Vaccination" className="w-[30rem]" />
           <div className="flex items-center space-x-2">
             <img src={moh} alt="Vaccination" className="aspect-auto w-[9rem]" />
-            <img src={vac} alt="Vaccination" className="w-[5rem]" />
+            <img src={vac} alt="Vaccination" className="w-[4rem]" />
             <div className="flex flex-col">
               <p className="font-bold text-black">www.moh.gov.jm</p>
               <p className="font-bold text-black">888-ONE-LOVE (663-5683)</p>
