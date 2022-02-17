@@ -5,9 +5,9 @@ export default function MythFacts({ image, myth, fact }) {
   return (
     <motion.div
       layout
-      whileInView={{ opacity: [0, 1] }}
+      whileInView={{ translateY: [200, 0] }}
       viewport={{ once: true }}
-      transition={{ ease: "linear" }}
+      transition={{ ease: "easeIn" }}
       exit={{ opacity: 0 }}
       whileTap={{ scale: 0.97 }}
       whileHover={{ scale: 1.02 }}

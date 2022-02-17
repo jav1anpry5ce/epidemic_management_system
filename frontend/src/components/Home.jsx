@@ -287,7 +287,7 @@ export default function HomeV2() {
         </div>
       </div>
       <div className="bg-slate-500">
-        <div className="mx-auto max-w-6xl px-2 py-3">
+        <div className="mx-auto max-w-7xl px-2 py-3">
           <p className="text-center text-3xl font-bold text-white">COVID-19</p>
           <p className="pb-4 text-center text-4xl text-white">
             Myths and Facts
@@ -295,7 +295,7 @@ export default function HomeV2() {
           <AnimatePresence>
             <motion.div
               layout
-              className="grid grid-cols-1 content-center justify-items-center gap-3 md:grid-cols-2 lg:grid-cols-3"
+              className="grid grid-cols-1 content-center justify-items-center gap-3 overflow-hidden px-8 pb-8 md:grid-cols-2 lg:grid-cols-3"
             >
               {data.map((item, index) => (
                 <MythFacts
