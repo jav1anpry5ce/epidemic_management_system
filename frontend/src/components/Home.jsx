@@ -295,7 +295,7 @@ export default function HomeV2() {
           <AnimatePresence>
             <motion.div
               layout
-              className="grid grid-cols-1 content-center justify-items-center gap-3 overflow-hidden px-8 pb-8 md:grid-cols-2 lg:grid-cols-3"
+              className="grid grid-cols-1 content-center justify-items-center gap-3 overflow-hidden md:grid-cols-2 lg:grid-cols-3 lg:px-8 lg:pb-8"
             >
               {data.map((item, index) => (
                 <MythFacts
