@@ -14,9 +14,9 @@ import ShieldImage from "../asset/images/SheildImage.jpg";
 import SideEffectImage from "../asset/images/SideEffectImage.jpg";
 import MaskImage from "../asset/images/MaskImage.jpg";
 import SeniorImage from "../asset/images/SeniorImage.jpg";
-import life from "../asset/images/back-to-life.png";
-import moh from "../asset/images/MOHW.png";
-import vac from "../asset/images/vac.png";
+// import life from "../asset/images/back-to-life.png";
+// import moh from "../asset/images/MOHW.png";
+// import vac from "../asset/images/vac.png";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
