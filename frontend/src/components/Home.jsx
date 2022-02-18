@@ -134,7 +134,7 @@ export default function HomeV2() {
           </motion.div>
         </div>
       </div>
-      <div className="bg-slate-500">
+      {/* <div className="bg-slate-500">
         <motion.div
           className="mx-auto flex max-w-6xl flex-col items-center
          bg-yellow-400 px-4 py-2 shadow-2xl shadow-yellow-400/30 lg:scale-105 lg:flex-row lg:space-x-32 lg:rounded-lg"
@@ -154,7 +154,7 @@ export default function HomeV2() {
             </div>
           </div>
         </motion.div>
-      </div>
+      </div> */}
       <div className=" bg-slate-500 ">
         <div className="mx-auto flex max-w-6xl flex-col space-y-3 px-2 py-4">
           <div className="flex w-full flex-col items-center justify-between text-left text-white md:flex-row">
