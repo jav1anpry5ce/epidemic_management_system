@@ -17,7 +17,7 @@ export default function NotFound({ setHide }) {
   }, []);
   return (
     <div
-      className="flex h-full min-h-[93vh] flex-col items-center justify-center 
+      className="flex h-full min-h-[calc(100vh-32px)] flex-col items-center justify-center 
     space-y-3 bg-gray-100 px-2 font-mono"
     >
       <h3 className="text-center text-7xl font-bold tracking-wide text-black">
