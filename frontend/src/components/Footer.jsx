@@ -1,5 +1,5 @@
 import React from "react";
-// import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default function Footer() {
   return (
@@ -12,9 +12,9 @@ export default function Footer() {
           </Link>{" "}
           & Wellness Jamaica.
         </h3> */}
-        <h3 className="text-center text-base text-white">
+        <Link className="text-center text-base text-white" to="/accounts/login">
           Site developed by Blue Star Technologies Solution.
-        </h3>
+        </Link>
       </div>
     </div>
   );
