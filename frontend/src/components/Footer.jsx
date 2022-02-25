@@ -12,7 +12,10 @@ export default function Footer() {
           </Link>{" "}
           & Wellness Jamaica.
         </h3> */}
-        <Link className="text-center text-base text-white" to="/accounts/login">
+        <Link
+          className="flex items-center justify-center text-center text-base text-white"
+          to="/accounts/login"
+        >
           Site developed by Blue Star Technologies Solution.
         </Link>
       </div>
