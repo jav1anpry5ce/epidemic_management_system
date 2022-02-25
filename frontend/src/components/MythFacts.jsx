@@ -5,15 +5,12 @@ export default function MythFacts({ image, myth, fact }) {
   return (
     <motion.div
       layout
-      whileInView={{ translateY: [200, 0] }}
+      whileInView={{ opacity: [0.3, 1], scale: [0.75, 1] }}
       viewport={{ once: true }}
-      transition={{ ease: "easeIn" }}
-      exit={{ opacity: 0 }}
-      whileTap={{ scale: 0.97 }}
-      whileHover={{ scale: 1.02 }}
-      className="flex max-w-[25rem] items-center rounded-xl bg-white hover:shadow-xl 
-      hover:shadow-slate-900/40 hover:outline hover:outline-2 hover:outline-blue-500/70 
-      active:outline active:outline-2 active:outline-blue-500/70"
+      transition={{ ease: "easeInOut" }}
+      className="flex max-w-[25rem] items-center rounded-xl bg-white hover:scale-105 
+      hover:shadow-md hover:shadow-slate-900/40 hover:outline hover:outline-2 
+      hover:outline-blue-500/70 active:outline active:outline-2 active:outline-blue-500/70"
     >
       <div className="flex flex-col items-center justify-center py-4 px-2">
         <img src={image} alt="cartoon" className="aspect-square h-20 w-20" />
