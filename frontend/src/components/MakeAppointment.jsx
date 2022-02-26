@@ -52,6 +52,7 @@ export default function MakeAppointment() {
     { label: "Ms.", value: "Ms." },
     { label: "Dr.", value: "Dr." },
     { label: "Jr.", value: "Jr." },
+    { label: "Sr.", value: "Sr." },
     { label: "Prof.", value: "Prof." },
     { label: "Rev.", value: "Rev." },
     { label: "Hon.", value: "Hon." },
