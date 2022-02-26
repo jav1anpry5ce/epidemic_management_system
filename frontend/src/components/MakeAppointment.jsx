@@ -44,12 +44,17 @@ export default function MakeAppointment() {
   const genderData = [
     { label: "Male", value: "Male" },
     { label: "Female", value: "Female" },
+    { label: "Other", value: "Other" },
   ];
   const titledata = [
     { label: "Mr.", value: "Mr." },
     { label: "Mrs.", value: "Mrs." },
     { label: "Ms.", value: "Ms." },
     { label: "Dr.", value: "Dr." },
+    { label: "Jr.", value: "Jr." },
+    { label: "Prof.", value: "Prof." },
+    { label: "Rev.", value: "Rev." },
+    { label: "Hon.", value: "Hon." },
   ];
   const parishData = [
     { label: "St. Andrew", value: "St. Andrew" },
