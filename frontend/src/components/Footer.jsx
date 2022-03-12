@@ -16,7 +16,7 @@ export default function Footer() {
           className="flex items-center justify-center text-center text-base text-white"
           to="/accounts/login"
         >
-          Site developed by Blue Star Technologies Solution.
+          © 2022 Site developed by Blue Star Technologies Solution.
         </Link>
       </div>
     </div>
