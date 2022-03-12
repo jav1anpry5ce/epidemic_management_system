@@ -104,7 +104,7 @@ export default function HomeV2() {
             </motion.div>
             <p className="text-lg">
               Vaccination against COVID-19 is vital to stopping the spread of
-              the pandemic. COVID-19 vaccines have been rigorously tested and
+              the virus. COVID-19 vaccines have been rigorously tested and
               approved by local and international regulatory bodies and are
               critical to reducing illness, hospitalization and death associated
               with COVID-19.
