@@ -12,7 +12,7 @@ export default function MythFacts({ image, myth, fact }) {
       hover:shadow-md hover:shadow-slate-900/40 hover:outline hover:outline-2 
       hover:outline-blue-500/70 active:outline active:outline-2 active:outline-blue-500/70"
     >
-      <div className="flex flex-col items-center justify-center py-4 px-2">
+      <div className="flex flex-col items-center justify-start py-4 px-2">
         <img src={image} alt="cartoon" className="aspect-square h-20 w-20" />
         <p className="text-lg font-bold text-blue-700">Myth</p>
         <p className="text-center font-semibold text-gray-600">{myth}</p>
