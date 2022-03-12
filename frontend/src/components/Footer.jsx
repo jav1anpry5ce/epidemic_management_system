@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 export default function Footer() {
   return (
     <div className="bg-navBlue-normal flex h-full w-full justify-center">
-      <div className="p-1">
+      <div className="p-3">
         {/* <h3 className="text-center text-base text-white">
           © 2021{" "}
           <Link className="cursor-pointer hover:underline" to="/accounts/login">
