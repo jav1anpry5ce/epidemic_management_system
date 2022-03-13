@@ -30,6 +30,7 @@ import { open } from "../utils/Notifications";
 import { setActiveKey } from "../store/navbarSlice";
 import Loading from "./Loading";
 import shortid from "shortid";
+import { titledata, parishData, genderData } from "../utils/micData";
 const moment = require("moment");
 
 const { Option } = Select;
@@ -41,37 +42,6 @@ export default function MakeAppointment() {
   const patient = useSelector((state) => state.patient);
   const navigate = useNavigate();
   const dateFns = require("date-fns");
-  const genderData = [
-    { label: "Male", value: "Male" },
-    { label: "Female", value: "Female" },
-    { label: "Other", value: "Other" },
-  ];
-  const titledata = [
-    { label: "Mr.", value: "Mr." },
-    { label: "Mrs.", value: "Mrs." },
-    { label: "Ms.", value: "Ms." },
-    { label: "Dr.", value: "Dr." },
-    { label: "Jr.", value: "Jr." },
-    { label: "Sr.", value: "Sr." },
-    { label: "Prof.", value: "Prof." },
-    { label: "Rev.", value: "Rev." },
-    { label: "Hon.", value: "Hon." },
-  ];
-  const parishData = [
-    { label: "St. Andrew", value: "St. Andrew" },
-    { label: "Portland ", value: "Portland " },
-    { label: "St. Thomas", value: "St. Thomas" },
-    { label: "St. Catherine", value: "St. Catherine" },
-    { label: "St. Mary", value: "St. Mary" },
-    { label: "St. Ann", value: "St. Ann" },
-    { label: "Manchester", value: "Manchester" },
-    { label: "Clarendon", value: "Clarendon" },
-    { label: "Hanover", value: "Hanover" },
-    { label: "Westmoreland", value: "Westmoreland" },
-    { label: "St. James", value: "St. James" },
-    { label: "Trelawny", value: "Trelawny" },
-    { label: "St. Elizabeth", value: "St. Elizabeth" },
-  ];
 
   const [taxNumber, setTaxNumber] = useState("");
   const [title, setTitle] = useState("");

@@ -100,7 +100,7 @@ export default function CreateBatch() {
                         Print
                       </Button>
                       <Button onClick={() => dispatch(updateSuccess())}>
-                        Create new batch
+                        Add new batch
                       </Button>
                     </div>
                   </Grid>
@@ -181,6 +181,12 @@ export default function CreateBatch() {
                     style={{ display: "flex", justifyContent: "space-between" }}
                   >
                     <Button
+                      appearance="primary"
+                      onClick={() => navigate("/moh/batches")}
+                    >
+                      Finish
+                    </Button>
+                    <Button
                       type="primary"
                       htmlType="submit"
                       appearance="primary"
@@ -189,12 +195,6 @@ export default function CreateBatch() {
                       className="rounded-sm bg-gray-700 text-white transition duration-300 hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white"
                     >
                       Submit
-                    </Button>
-                    <Button
-                      appearance="primary"
-                      onClick={() => navigate("/moh/batches")}
-                    >
-                      Back
                     </Button>
                   </div>
                 </Form.Item>

@@ -202,6 +202,12 @@ export default function AddLocation() {
           <Form.Item style={{ marginBottom: 2, marginTop: 12 }}>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <Button
+                onClick={() => navigate("/moh/locations")}
+                disabled={data.loading}
+              >
+                Cancel
+              </Button>
+              <Button
                 type="primary"
                 htmlType="submit"
                 appearance="primary"
@@ -210,12 +216,6 @@ export default function AddLocation() {
                 className="rounded-sm bg-gray-700 text-white transition duration-300 hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white"
               >
                 Submit
-              </Button>
-              <Button
-                onClick={() => navigate("/moh/locations")}
-                disabled={data.loading}
-              >
-                Back
               </Button>
             </div>
           </Form.Item>

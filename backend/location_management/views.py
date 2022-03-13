@@ -422,6 +422,7 @@ def get_breakdown(request):
             number_of_pfizer = Vaccine.objects.get(value='Pfizer').number_of_dose
             number_of_moderna = Vaccine.objects.get(value='Moderna').number_of_dose
             number_of_JJ = Vaccine.objects.get(value='Johnson & Johnson').number_of_dose
+            number_of_AZ = Vaccine.objects.get(value='AstraZeneca').number_of_dose
             positive_cases = PositiveCase.objects.exclude(status__in=excludes).count()
             hospitalized = PositiveCase.objects.filter(status='Hospitalized').count()
             death = PositiveCase.objects.filter(status='Dead').count()
@@ -432,25 +433,31 @@ def get_breakdown(request):
             pfizer_to_disb = Vaccine.objects.get(value='Pfizer').number_of_dose
             moderna_to_disb = Vaccine.objects.get(value='Moderna').number_of_dose
             JJ_to_disb = Vaccine.objects.get(value='Johnson & Johnson').number_of_dose
+            AZ_to_disb = Vaccine.objects.get(value='AstraZeneca').number_of_dose
             
             for location in locations:
                 pfizers = LocationVaccine.objects.filter(location=location, value='Pfizer')
                 modernas = LocationVaccine.objects.filter(location=location, value='Moderna')
                 JJs = LocationVaccine.objects.filter(location=location, value='Johnson & Johnson')
+                AZs = LocationVaccine.objects.filter(location=location, value='AstraZeneca')
                 for pfizer in pfizers:
                     number_of_pfizer += pfizer.number_of_dose
                 for moderna in modernas:
                     number_of_moderna += moderna.number_of_dose
                 for jj in JJs:
                     number_of_JJ += jj.number_of_dose
+                for az in AZs:
+                    number_of_AZ += az.number_of_dose
                 
             general_breakdown = {
                 'pfizer_to_disb': pfizer_to_disb,
                 'moderna_to_disb': moderna_to_disb,
                 'JJ_to_disb': JJ_to_disb,
+                'AZ_to_disb': AZ_to_disb,
                 'pfizer_in_stock':number_of_pfizer,
                 'moderna_in_stock':number_of_moderna,
                 'JJ_in_stock':number_of_JJ,
+                'AZ_in_stock': number_of_AZ,
                 'positive_cases':positive_cases,
                 'number_of_locations':number_of_locations,
                 'vaccines_administer': vaccines_administer,
@@ -471,6 +478,7 @@ def location_breakdown(request):
         pfizer_in_stock = None
         moderna_in_stock = None
         jj_in_stock = None
+        az_in_stock = None
         vaccines_administer = None
         location = request.user.location
         number_of_tests = Testing.objects.filter(location=location, status='Completed').count()
@@ -485,6 +493,8 @@ def location_breakdown(request):
                 moderna_in_stock = LocationVaccine.objects.get(location=location, value='Moderna').number_of_dose
             if LocationVaccine.objects.filter(location=location, value='Johnson & Johnson').exists():
                 jj_in_stock = LocationVaccine.objects.get(location=location, value='Johnson & Johnson').number_of_dose
+            if LocationVaccine.objects.filter(location=location, value='AstraZeneca').exists():
+                az_in_stock = LocationVaccine.objects.get(location=location, value='AstraZeneca').number_of_dose
         res = {
             'number_of_tests': number_of_tests,
             'vaccines_administer': vaccines_administer,
@@ -492,6 +502,7 @@ def location_breakdown(request):
             'pfizer_in_stock': pfizer_in_stock,
             'moderna_in_stock':moderna_in_stock,
             'jj_in_stock': jj_in_stock,
+            'az_in_stock': az_in_stock,
             'offer_testing': offer_testing,
             'offer_vaccines': offer_vaccines
         }

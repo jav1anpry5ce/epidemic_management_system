@@ -20,51 +20,57 @@ export default function LocationHome() {
       data.locationData.pfizer_in_stock !== null && {
         name: "Pfizer In Stock",
         data: data.locationData.pfizer_in_stock,
-        backgroundcolour: "#225955",
+        backgroundcolour: "#10496d",
         visible: data.locationData.pfizer_in_stock !== null ? true : false,
       },
       data.locationData.moderna_in_stock !== null && {
         name: "Moderna In Stock",
         data: data.locationData.moderna_in_stock,
-        backgroundcolour: "#437ab2",
+        backgroundcolour: "#4f8598",
         visible: data.locationData.moderna_in_stock !== null ? true : false,
       },
       data.locationData.jj_in_stock !== null && {
-        name: "Johnson&Johnson In Stock",
+        name: "Johnson & Johnson In Stock",
         data: data.locationData.jj_in_stock,
-        backgroundcolour: "#4f8598",
+        backgroundcolour: "#10496d",
         visible: data.locationData.jj_in_stock !== null ? true : false,
+      },
+      data.locationData.az_in_stock !== null && {
+        name: "AstraZeneca In Stock",
+        data: data.locationData.az_in_stock,
+        backgroundcolour: "#4f8598",
+        visible: data.locationData.az_in_stock !== null ? true : false,
       },
       {
         name: "Pending Appointments",
         data: data.locationData.pending_appointments,
-        backgroundcolour: "#4f8598",
+        backgroundcolour: "#10496d",
         visible: true,
       },
       data.locationData.offer_testing && {
         name: "Tests Administerd",
         data: data.locationData.number_of_tests,
-        backgroundcolour: "#437ab2",
+        backgroundcolour: "#4f8598",
         visible: true,
       },
       data.locationData.offer_vaccines &&
         data.locationData.vaccines_administer !== null && {
           name: "Vaccines Administerd",
           data: data.locationData.vaccines_administer,
-          backgroundcolour: "#225955",
+          backgroundcolour: "#10496d",
           visible:
             data.locationData.vaccines_administer !== null ? true : false,
         },
     ];
     return (
       <div className="container mx-auto flex min-h-[86vh] max-w-7xl">
-        <div className="grid flex-1 place-content-center gap-6 px-2 py-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="flex w-full flex-1 flex-wrap place-content-center gap-6 px-2 py-4 md:grid-cols-2 lg:grid-cols-3">
           {cardData.map(
             (data) =>
               data.visible && (
                 <div
                   key={data.name}
-                  className="h-44 space-y-10 rounded-lg px-4 py-3 text-white transition-all duration-300 hover:scale-105 hover:shadow-2xl"
+                  className="h-44 w-96 space-y-10 rounded-lg px-4 py-3 text-white transition-all duration-300 hover:scale-105 hover:shadow-2xl"
                   style={{ backgroundColor: data.backgroundcolour }}
                 >
                   <h3 className="text-center text-2xl font-semibold">

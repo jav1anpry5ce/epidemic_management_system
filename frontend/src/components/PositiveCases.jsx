@@ -31,26 +31,14 @@ import formatDate from "../utils/formatDate";
 import { open } from "../utils/Notifications";
 import axios from "axios";
 import moment from "moment";
+import {
+  parishData,
+  recoveringLocationData,
+  recoveringData,
+  statusType,
+} from "../utils/micData";
 const { Title } = Typography;
 const { Option } = Select;
-
-const recoveringLocationData = [
-  { label: "Home", value: "Home" },
-  { label: "Hospitalized", value: "Hospitalized" },
-];
-
-const recoveringData = [
-  { label: "Recovering", value: "Recovering" },
-  { label: "Hospitalized", value: "Hospitalized" },
-  { label: "Recovered", value: "Recovered" },
-  { label: "Dead", value: "Dead" },
-];
-
-const statusType = [
-  { label: "Death", value: "Death" },
-  { label: "Recovered", value: "Recovered" },
-  { label: "Positive Cases", value: "Positive Cases" },
-];
 
 function calculate_age(dob) {
   var diff_ms = Date.now() - dob.getTime();
@@ -80,6 +68,7 @@ export default function PositiveCases() {
   const [genShow, setGenShow] = useState(false);
   const [date, setDate] = useState(formatDate(new Date()));
   const [sType, setSType] = useState("Positive Cases");
+  const [parish, setParish] = useState("St. Andrew");
   const scroll = { y: 470 };
 
   useEffect(() => {
@@ -98,7 +87,7 @@ export default function PositiveCases() {
     };
     axios
       .get(
-        `/api/cases/${sType}?page=${page}&pageSize=${pageSize}${
+        `/api/cases/${sType}?parish=${parish}&page=${page}&pageSize=${pageSize}${
           q && `&search=${q}`
         }`,
         config
@@ -120,7 +109,7 @@ export default function PositiveCases() {
   useEffect(() => {
     fetch();
     // eslint-disable-next-line
-  }, [page, order, pageSize, sType]);
+  }, [page, order, pageSize, sType, parish]);
 
   useEffect(() => {
     if (moh.success) {
@@ -566,24 +555,37 @@ export default function PositiveCases() {
         headStyle={{ backgroundColor: "#1F2937", border: "none" }}
         title={
           <Title level={3} style={{ color: "white" }} align="center">
-            Positive Cases
+            Cases
           </Title>
         }
         bordered={false}
         style={{ width: "100%" }}
       >
         <div className="mb-4 flex justify-between">
-          <Select
-            className="w-80"
-            onChange={(e) => setSType(e)}
-            defaultValue={sType}
-          >
-            {statusType.map((item) => (
-              <Option key={shortid.generate()} value={item.value}>
-                {item.label}
-              </Option>
-            ))}
-          </Select>
+          <div className="flex items-center gap-2">
+            <Select
+              className="w-48"
+              onChange={(e) => setSType(e)}
+              defaultValue={sType}
+            >
+              {statusType.map((item) => (
+                <Option key={shortid.generate()} value={item.value}>
+                  {item.label}
+                </Option>
+              ))}
+            </Select>
+            <Select
+              className="w-48"
+              onChange={(e) => setParish(e)}
+              defaultValue={parish}
+            >
+              {parishData.map((item) => (
+                <Option key={shortid.generate()} value={item.value}>
+                  {item.label}
+                </Option>
+              ))}
+            </Select>
+          </div>
           <Input.Search
             className="w-2/5"
             onChange={(e) => setQ(e.target.value)}

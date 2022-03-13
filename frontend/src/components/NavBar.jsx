@@ -100,13 +100,10 @@ export default function NavBar({ hide, setHide }) {
                     Patients
                   </div>
                 </Nav.Item>
-                <Nav.Item
-                  eventKey="3"
-                  onClick={() => navigate("/moh/positive-cases")}
-                >
+                <Nav.Item eventKey="3" onClick={() => navigate("/moh/cases")}>
                   <div className="flex">
                     {<RiVirusLine className="mr-1 flex text-lg" />}
-                    Positive Cases
+                    Cases
                   </div>
                 </Nav.Item>
                 <Nav.Item eventKey="4" onClick={() => navigate("/moh/batches")}>

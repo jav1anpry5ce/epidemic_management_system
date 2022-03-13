@@ -20,7 +20,7 @@ export default function MOHHOME() {
       {
         name: "Pfizer To Distribute",
         value: data.breakdownData.pfizer_to_disb,
-        backgroundcolour: "#4f8598",
+        backgroundcolour: "#10496d",
       },
       {
         name: "Moderna To Distribute",
@@ -28,44 +28,54 @@ export default function MOHHOME() {
         backgroundcolour: "#10496d",
       },
       {
-        name: "Johnson&Johnson To Distribute",
+        name: "Johnson & Johnson To Distribute",
         value: data.breakdownData.JJ_to_disb,
-        backgroundcolour: "#437ab2",
+        backgroundcolour: "#10496d",
+      },
+      {
+        name: "AstraZeneca To Distribute",
+        value: data.breakdownData.AZ_to_disb,
+        backgroundcolour: "#10496d",
       },
       {
         name: "Pfizer In Stock",
         value: data.breakdownData.pfizer_in_stock,
-        backgroundcolour: "#225955",
+        backgroundcolour: "#164e61",
       },
       {
         name: "Moderna In Stock",
         value: data.breakdownData.moderna_in_stock,
-        backgroundcolour: "#437ab2",
+        backgroundcolour: "#164e61",
       },
       {
-        name: "Johnson&Johnson In Stock",
+        name: "Johnson & Johnson In Stock",
         value: data.breakdownData.JJ_in_stock,
-        backgroundcolour: "#4f8598",
+        backgroundcolour: "#164e61",
+      },
+      {
+        name: "AstraZeneca In Stock",
+        value: data.breakdownData.AZ_in_stock,
+        backgroundcolour: "#164e61",
       },
       {
         name: "Positive Cases",
         value: data.breakdownData.positive_cases,
-        backgroundcolour: "#10496d",
+        backgroundcolour: "#225955",
       },
       {
         name: "Hospitalized",
         value: data.breakdownData.hospitalized,
-        backgroundcolour: "#437ab2",
+        backgroundcolour: "#225955",
       },
       {
         name: "Death",
         value: data.breakdownData.death,
-        backgroundcolour: "#10496d",
+        backgroundcolour: "#225955",
       },
       {
         name: "Recovered",
         value: data.breakdownData.recovered,
-        backgroundcolour: "#4f8598",
+        backgroundcolour: "#225955",
       },
       {
         name: "Tests Administered",
@@ -75,16 +85,16 @@ export default function MOHHOME() {
       {
         name: "Vaccines Administered",
         value: data.breakdownData.vaccines_administer,
-        backgroundcolour: "#225955",
+        backgroundcolour: "#437ab2",
       },
     ];
     return (
       <div className="max-w-8xl container mx-auto flex min-h-[86vh]">
-        <div className="grid flex-1 place-content-center gap-4 px-2 py-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="flex w-full flex-1 flex-wrap place-content-center gap-4 px-2 py-4">
           {cardData.map((data) => (
             <div
               key={data.name}
-              className="h-44 space-y-10 rounded-lg px-4 py-3 text-white transition-all duration-300 hover:scale-105 hover:shadow-2xl"
+              className="h-44 w-72 space-y-10 rounded-lg px-4 py-3 text-white transition-all duration-300 hover:scale-105 hover:shadow-2xl"
               style={{ backgroundColor: data.backgroundcolour }}
             >
               <h3 className="text-center text-2xl font-semibold">

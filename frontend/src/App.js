@@ -70,13 +70,13 @@ function App() {
   }, [auth.is_auth]);
 
   return (
-    <Container className="min-h-screen bg-[url('./asset/images/background2.jpg')] bg-cover bg-fixed bg-no-repeat">
+    <Container className="min-h-screen bg-[url('https://wallpaperaccess.com/full/624111.jpg')] bg-cover bg-fixed bg-no-repeat object-cover">
       <Router>
         <Header>
           <NavBar hide={hide} setHide={setHide} />
         </Header>
 
-        <Content style={{ backgroundColor: "rgba(28, 37, 59, 0.3)" }}>
+        <Content style={{ backgroundColor: "rgba(0, 0, 0, 0.4)" }}>
           <BackTop />
           <Routes>
             <Route path="/" element={<Home />} />
@@ -181,7 +181,7 @@ function App() {
                 }
               />
               <Route
-                path="positive-cases"
+                path="cases"
                 element={
                   <PrivateRoutes accessUser="moh">
                     <PositiveCases />

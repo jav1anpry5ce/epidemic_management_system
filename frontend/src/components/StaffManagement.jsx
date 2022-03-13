@@ -142,10 +142,12 @@ export default function StaffManagement() {
       title: "Action",
       dataIndex: "email",
       render: (email) => (
-        <EyeOutlined
-          className="cursor-pointer hover:text-blue-400"
-          onClick={() => findStaff(email)}
-        />
+        <Tooltip placement="top" title="View">
+          <EyeOutlined
+            className="cursor-pointer hover:text-blue-400"
+            onClick={() => findStaff(email)}
+          />
+        </Tooltip>
       ),
       width: 120,
     },

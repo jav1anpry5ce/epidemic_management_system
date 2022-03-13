@@ -214,11 +214,11 @@ class GetCases(ListAPIView):
     def get_queryset(self):
         ex_list = ['Dead', 'Recovered']
         if self.kwargs.get('status') == 'Death':
-            return DeathCase.objects.all()
+            return DeathCase.objects.filter(patient__parish=self.request.GET.get('parish'))
         elif self.kwargs.get('status') == 'Recovered':
-            return RecoveredCase.objects.all()
+            return RecoveredCase.objects.filter(patient__parish=self.request.GET.get('parish'))
         else:
-            return PositiveCase.objects.all().exclude(status__in=ex_list)
+            return PositiveCase.objects.filter(patient__parish=self.request.GET.get('parish')).exclude(status__in=ex_list)
 
     def get_serializer_class(self):
         if self.kwargs.get('status') == 'Death':

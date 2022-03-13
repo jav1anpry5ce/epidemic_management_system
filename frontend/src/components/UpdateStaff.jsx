@@ -77,6 +77,13 @@ export default function UpdateStaff({ staff, show, setShow }) {
       title="Update Staff"
       footer={[
         <Button
+          onClick={() => setShow(false)}
+          appearance="subtle"
+          key={shortid.generate()}
+        >
+          Cancel
+        </Button>,
+        <Button
           key={shortid.generate()}
           loading={loading}
           onClick={update}
@@ -86,13 +93,6 @@ export default function UpdateStaff({ staff, show, setShow }) {
           className="rounded-sm bg-gray-700 text-white transition duration-300 hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white"
         >
           Update
-        </Button>,
-        <Button
-          onClick={() => setShow(false)}
-          appearance="subtle"
-          key={shortid.generate()}
-        >
-          Cancel
         </Button>,
       ]}
     >
