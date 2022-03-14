@@ -76,7 +76,7 @@ function App() {
           <NavBar hide={hide} setHide={setHide} />
         </Header>
 
-        <Content style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}>
+        <Content style={{ backgroundColor: "rgba(0, 0, 0, 0.6)" }}>
           <BackTop />
           <Routes>
             <Route path="/" element={<Home />} />
