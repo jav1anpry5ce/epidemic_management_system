@@ -14,7 +14,6 @@ export default function MOHHOME() {
     return () => dispatch(clearState());
     // eslint-disable-next-line
   }, []);
-
   if (data.breakdownData) {
     const cardData = [
       {
@@ -89,12 +88,12 @@ export default function MOHHOME() {
       },
     ];
     return (
-      <div className="max-w-8xl container mx-auto flex min-h-[86vh]">
-        <div className="flex w-full flex-1 flex-wrap place-content-center gap-4 px-2 py-4">
+      <div className="container mx-auto flex min-h-[calc(100vh-105px)] max-w-full">
+        <div className="flex w-full flex-1 flex-wrap place-content-center gap-3 px-2 py-4">
           {cardData.map((data) => (
             <div
               key={data.name}
-              className="h-44 w-72 space-y-10 rounded-lg px-4 py-3 text-white transition-all duration-300 hover:scale-105 hover:shadow-2xl"
+              className="flex h-44 w-80 flex-col justify-between rounded-lg px-4 py-3 pb-12 text-white transition-all duration-300 hover:scale-105 hover:shadow-2xl"
               style={{ backgroundColor: data.backgroundcolour }}
             >
               <h3 className="text-center text-2xl font-semibold">
@@ -112,10 +111,7 @@ export default function MOHHOME() {
   }
   if (!data.loading && !data.breakdownData)
     return (
-      <div
-        style={{ minHeight: "83.5vh" }}
-        className="flex items-center justify-center"
-      >
+      <div className="flex min-h-[calc(100vh-105px)] items-center justify-center">
         <h1 className="text-3xl font-semibold text-white">
           Something went wrong!
         </h1>

@@ -64,13 +64,13 @@ export default function LocationHome() {
     ];
     return (
       <div className="container mx-auto flex min-h-[86vh] max-w-7xl">
-        <div className="flex w-full flex-1 flex-wrap place-content-center gap-6 px-2 py-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="flex w-full flex-1 flex-wrap place-content-center gap-6 px-2 py-4">
           {cardData.map(
             (data) =>
               data.visible && (
                 <div
                   key={data.name}
-                  className="h-44 w-96 space-y-10 rounded-lg px-4 py-3 text-white transition-all duration-300 hover:scale-105 hover:shadow-2xl"
+                  className="flex h-44 w-96 flex-col justify-between rounded-lg px-4 py-3 pb-12 text-white transition-all duration-300 hover:scale-105 hover:shadow-2xl"
                   style={{ backgroundColor: data.backgroundcolour }}
                 >
                   <h3 className="text-center text-2xl font-semibold">
