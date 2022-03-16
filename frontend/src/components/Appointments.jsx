@@ -43,7 +43,7 @@ export default function Appointments() {
     // eslint-disable-next-line
   }, [appointments.success]);
   return (
-    <div className="min-h-[calc(100vh-104px)] px-2 py-2 sm:my-4 sm:mx-auto sm:max-w-4xl">
+    <div className="flex min-h-[calc(100vh-104px)] flex-col justify-center px-2 sm:mx-auto sm:max-w-4xl">
       <div>
         <Typography variant="h4" style={{ color: "white" }}>
           Learn the{" "}
