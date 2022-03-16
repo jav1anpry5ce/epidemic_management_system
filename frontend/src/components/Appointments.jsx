@@ -43,8 +43,8 @@ export default function Appointments() {
     // eslint-disable-next-line
   }, [appointments.success]);
   return (
-    <div className="flex min-h-[calc(100vh-104px)] flex-col justify-center px-2 sm:mx-auto sm:max-w-4xl">
-      <div>
+    <div className="flex min-h-[calc(100vh-104px)] flex-col px-2 sm:mx-auto sm:max-w-4xl">
+      <div className="mt-4">
         <Typography variant="h4" style={{ color: "white" }}>
           Learn the{" "}
           <Link to="/" className="hover:underline">
