@@ -74,6 +74,36 @@ export default function StaffManagement() {
     setShow(true);
   };
 
+  const updateActive = (email) => {
+    setLoading(true);
+    const staff = data.find((s) => s.email === email);
+    const d = {
+      email: staff.email,
+      is_active: !staff.is_active,
+      is_location_admin: staff.is_location_admin,
+      is_moh_admin: staff.is_moh_admin,
+      can_check_in: staff.can_check_in,
+      can_update_test: staff.can_update_test,
+      can_update_vaccine: staff.can_update_vaccine,
+      can_receive_location_batch: staff.can_receive_location_batch,
+    };
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Token " + sessionStorage.getItem("token"),
+      },
+    };
+    axios
+      .post("/auth/staff/update/", d, config)
+      .then(() => {
+        fetch();
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
+  };
+
   useEffect(() => {
     fetch();
     // eslint-disable-next-line
@@ -81,23 +111,13 @@ export default function StaffManagement() {
 
   const columns = [
     {
-      title: "First Name",
-      dataIndex: "first_name",
-      render: (first_name) => (
-        <Tooltip placement="topLeft" title={`${first_name}`}>
-          {first_name}
-        </Tooltip>
-      ),
-      ellipsis: {
-        showTitle: false,
-      },
-    },
-    {
-      title: "Last Name",
-      dataIndex: "last_name",
-      render: (last_name) => (
-        <Tooltip placement="topLeft" title={`${last_name}`}>
-          {last_name}
+      title: "Name",
+      render: (data) => (
+        <Tooltip
+          placement="topLeft"
+          title={`${data.first_name} ${data.last_name}`}
+        >
+          {data.first_name} {data.last_name}
         </Tooltip>
       ),
       ellipsis: {
@@ -115,10 +135,15 @@ export default function StaffManagement() {
     },
     {
       title: "Account Activate",
-      dataIndex: "is_active",
-      render: (is_active) => (
-        <Tooltip placement="topLeft" title={`${is_active}`}>
-          {is_active ? (
+      // dataIndex: ["is_active", "email"],
+      render: (data) => (
+        <Tooltip
+          placement="topLeft"
+          title={`${data.is_active ? "Active" : "Inactive"}`}
+          className="cursor-pointer"
+          onClick={() => updateActive(data.email)}
+        >
+          {data.is_active ? (
             <AiFillCheckCircle className="h-6 w-6 text-center text-emerald-400" />
           ) : (
             <AiFillCloseCircle className="h-6 w-6 text-center text-red-500" />
@@ -154,10 +179,7 @@ export default function StaffManagement() {
   ];
 
   return (
-    <div
-      style={{ minHeight: "80vh" }}
-      className="my-2 mx-auto flex max-w-5xl items-center justify-center justify-items-center py-2"
-    >
+    <div className="mx-auto flex min-h-[calc(100vh-104px)] max-w-5xl items-center justify-center justify-items-center py-2">
       <UpdateStaff staff={staff} show={show} setShow={setShow} />
       <Card
         headStyle={{ backgroundColor: "#1F2937", border: "none" }}

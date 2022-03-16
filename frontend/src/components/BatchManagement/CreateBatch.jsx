@@ -77,7 +77,7 @@ export default function CreateBatch() {
 
   if (data.batchInfo) {
     return (
-      <div className="my-2 mx-auto flex min-h-[80vh] w-full max-w-lg items-center justify-center justify-items-center py-2">
+      <div className="my-2 mx-auto flex min-h-[calc(100vh-104px)] w-full max-w-lg items-center justify-center justify-items-center py-2">
         {data.success ? (
           <div className="flex w-full items-center justify-center">
             <Paper elevation={1} style={{ width: 585 }}>

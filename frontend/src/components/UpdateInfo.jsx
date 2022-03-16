@@ -115,7 +115,7 @@ export default function UpdateInfo() {
   };
 
   return (
-    <div className="my-2 mx-auto flex min-h-[80vh] max-w-xl items-center justify-center justify-items-center py-2">
+    <div className="mx-auto flex min-h-[calc(100vh-104px)] max-w-xl items-center justify-center justify-items-center">
       {page === 1 && (
         <Card
           headStyle={{ backgroundColor: "#1F2937", border: "none" }}

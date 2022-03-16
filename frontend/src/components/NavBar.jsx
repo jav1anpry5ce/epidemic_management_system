@@ -11,6 +11,7 @@ import { GiCardboardBox } from "react-icons/gi";
 import { BsPersonFill, BsPersonPlusFill } from "react-icons/bs";
 import { RiVirusLine } from "react-icons/ri";
 import { AiFillHome, AiOutlineFileText } from "react-icons/ai";
+import { TiInfoLarge } from "react-icons/ti";
 import { MdEventAvailable } from "react-icons/md";
 import { Transition } from "@headlessui/react";
 
@@ -85,9 +86,9 @@ export default function NavBar({ hide, setHide }) {
             <Container maxWidth="xsl">
               <Nav onSelect={handelSelect} activeKey={nav.activeKey}>
                 <Nav.Item eventKey="1" onClick={() => navigate("/moh")}>
-                  <div className="flex">
-                    {<AiFillHome className="mr-1 flex text-lg" />}
-                    Home
+                  <div className="flex items-center space-x-1">
+                    {<AiFillHome className="text-lg" />}
+                    <span>Home</span>
                   </div>
                 </Nav.Item>
 
@@ -95,37 +96,37 @@ export default function NavBar({ hide, setHide }) {
                   eventKey="2"
                   onClick={() => navigate("/moh/patients")}
                 >
-                  <div className="flex">
-                    {<BsPersonFill className="mr-1 flex text-lg" />}
-                    Patients
+                  <div className="flex items-center space-x-1">
+                    {<BsPersonFill className="text-lg" />}
+                    <span>Patients</span>
                   </div>
                 </Nav.Item>
                 <Nav.Item eventKey="3" onClick={() => navigate("/moh/cases")}>
-                  <div className="flex">
-                    {<RiVirusLine className="mr-1 flex text-lg" />}
-                    Cases
+                  <div className="flex items-center space-x-1">
+                    {<RiVirusLine className="text-lg" />}
+                    <span>Cases</span>
                   </div>
                 </Nav.Item>
                 <Nav.Item eventKey="4" onClick={() => navigate("/moh/batches")}>
-                  <div className="flex">
-                    {<GiCardboardBox className="mr-1 flex text-lg" />}
-                    Batch
+                  <div className="flex items-center space-x-1">
+                    {<GiCardboardBox className="text-lg" />}
+                    <span>Batch</span>
                   </div>
                 </Nav.Item>
                 <Nav.Item
                   eventKey="5"
                   onClick={() => navigate("/moh/locations")}
                 >
-                  <div className="flex">
-                    {<BiCurrentLocation className="mr-1 flex text-lg" />}
-                    Sites
+                  <div className="flex items-center space-x-1">
+                    {<BiCurrentLocation className="text-lg" />}
+                    <span>Sites</span>
                   </div>
                 </Nav.Item>
                 {auth.is_moh_admin && (
                   <Nav.Item eventKey="6" onClick={() => navigate("/moh/staff")}>
-                    <div className="flex">
-                      {<BsPersonPlusFill className="mr-1 flex text-lg" />}
-                      Staff Management
+                    <div className="flex items-center space-x-1">
+                      {<BsPersonPlusFill className="text-lg" />}
+                      <span>Staff Management</span>
                     </div>
                   </Nav.Item>
                 )}
@@ -174,9 +175,9 @@ export default function NavBar({ hide, setHide }) {
                   eventKey="1"
                   onClick={() => navigate(`/${auth.location}`)}
                 >
-                  <div className="flex">
-                    {<AiFillHome className="mr-1 flex text-lg" />}
-                    Home
+                  <div className="flex items-center space-x-1">
+                    {<AiFillHome className="text-lg" />}
+                    <span>Home</span>
                   </div>
                 </Nav.Item>
                 <Nav.Item
@@ -186,23 +187,23 @@ export default function NavBar({ hide, setHide }) {
                     navigate(`/${auth.location}/test-vac/management`)
                   }
                 >
-                  Vaccination and Testing
+                  <span>Vaccination and Testing</span>
                 </Nav.Item>
                 <Nav.Item
                   eventKey="3"
                   icon={<Icon icon="calendar" />}
                   onClick={() => navigate(`/${auth.location}/appointments`)}
                 >
-                  Appointments{" "}
+                  <span>Appointments</span>
                 </Nav.Item>
                 {auth.is_location_admin && (
                   <Nav.Item
                     eventKey="4"
                     onClick={() => navigate(`/${auth.location}/staff`)}
                   >
-                    <div className="flex">
-                      {<BsPersonPlusFill className="mr-1 flex text-lg" />}
-                      Staff Management
+                    <div className="flex items-center space-x-1">
+                      {<BsPersonPlusFill className="text-lg" />}
+                      <span>Staff Management</span>
                     </div>
                   </Nav.Item>
                 )}
@@ -210,9 +211,9 @@ export default function NavBar({ hide, setHide }) {
                   eventKey="5"
                   onClick={() => navigate(`/${auth.location}/add/availability`)}
                 >
-                  <div className="flex">
-                    {<MdEventAvailable className="mr-1 flex text-lg" />}Add
-                    Availability
+                  <div className="flex items-center space-x-1">
+                    {<MdEventAvailable className="text-lg" />}
+                    <span>Add Availability</span>
                   </div>
                 </Nav.Item>
               </Nav>
@@ -269,9 +270,9 @@ export default function NavBar({ hide, setHide }) {
             <Container maxWidth="xsl">
               <Nav onSelect={handelSelect} activeKey={nav.activeKey}>
                 <Nav.Item eventKey="1" onClick={() => navigate(`/`)}>
-                  <div className="flex">
-                    {<AiFillHome className="mr-1 flex text-lg" />}
-                    Home
+                  <div className="flex items-center space-x-1">
+                    {<AiFillHome className="text-lg" />}
+                    <span>Home</span>
                   </div>
                 </Nav.Item>
                 <Nav.Item
@@ -279,29 +280,23 @@ export default function NavBar({ hide, setHide }) {
                   icon={<Icon icon="calendar" />}
                   onClick={() => navigate(`/appointments`)}
                 >
-                  Appoinment
+                  <span>Appointment</span>
                 </Nav.Item>
                 <Nav.Item eventKey="5" onClick={() => navigate(`/records`)}>
-                  <div className="flex">
-                    {<AiOutlineFileText className="mr-1 flex text-lg" />}
-                    Get my Records
+                  <div className="flex items-center space-x-1">
+                    {<AiOutlineFileText className="text-lg" />}
+                    <span>Get my Records</span>
                   </div>
                 </Nav.Item>
-              </Nav>
-              <Nav
-                pullRight
-                onSelect={handelSelect}
-                activeKey={nav.activeKey}
-                style={{ marginRight: 5 }}
-              >
-                <Dropdown title="Settings" icon={<Icon icon="cog" />}>
-                  <Dropdown.Item
-                    eventKey="6"
-                    onClick={() => navigate(`/update/patient/info`)}
-                  >
-                    Update Information
-                  </Dropdown.Item>
-                </Dropdown>
+                <Nav.Item
+                  eventKey="6"
+                  onClick={() => navigate(`/update/patient/info`)}
+                >
+                  <div className="flex items-center space-x-1">
+                    {<TiInfoLarge className="text-lg" />}
+                    <span>Update Information</span>
+                  </div>
+                </Nav.Item>
               </Nav>
             </Container>
           ) : (
@@ -351,9 +346,9 @@ export default function NavBar({ hide, setHide }) {
                         }}
                         eventKey="1"
                       >
-                        <div className="flex">
-                          {<AiFillHome className="mr-1 flex text-lg" />}
-                          Home
+                        <div className="flex items-center space-x-1">
+                          {<AiFillHome className="text-lg" />}
+                          <span>Home</span>
                         </div>
                       </Nav.Item>
                       <Nav.Item
@@ -364,7 +359,7 @@ export default function NavBar({ hide, setHide }) {
                         eventKey="4"
                         icon={<Icon icon="calendar" />}
                       >
-                        Appoinments
+                        <span>Appointments</span>
                       </Nav.Item>
                       <Nav.Item
                         onClick={() => {
@@ -373,22 +368,20 @@ export default function NavBar({ hide, setHide }) {
                         }}
                         eventKey="5"
                       >
-                        <div className="flex">
-                          {<AiOutlineFileText className="mr-1 flex text-lg" />}
-                          Get my Records
+                        <div className="flex items-center space-x-1">
+                          {<AiOutlineFileText className="text-lg" />}
+                          <span>Get my Records</span>
                         </div>
                       </Nav.Item>
-                      <Dropdown title="Settings" icon={<Icon icon="cog" />}>
-                        <Dropdown.Item
-                          eventKey="6"
-                          onClick={() => {
-                            navigate("/update/patient/info");
-                            setExpand(!expand);
-                          }}
-                        >
-                          Update Information
-                        </Dropdown.Item>
-                      </Dropdown>
+                      <Nav.Item
+                        eventKey="6"
+                        onClick={() => navigate(`/update/patient/info`)}
+                      >
+                        <div className="flex items-center space-x-1">
+                          {<TiInfoLarge className="text-lg" />}
+                          <span>Update Information</span>
+                        </div>
+                      </Nav.Item>
                     </div>
                   </Nav>
                 </div>

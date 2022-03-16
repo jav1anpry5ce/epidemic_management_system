@@ -171,7 +171,7 @@ export default function BatchManagement() {
   });
 
   return (
-    <div className="my-2 mx-auto flex min-h-[80vh] max-w-5xl items-center justify-center justify-items-center py-2">
+    <div className="mx-auto flex min-h-[calc(100vh-104px)] max-w-6xl items-center justify-center justify-items-center py-2">
       <Modal
         visible={show}
         onCancel={() => setShow(false)}
@@ -202,7 +202,7 @@ export default function BatchManagement() {
           </Title>
         }
         bordered={false}
-        style={{ width: "100%", marginBottom: "3%" }}
+        style={{ width: "100%" }}
       >
         <div className="mb-4 flex items-center justify-between justify-items-center">
           <Input.Search

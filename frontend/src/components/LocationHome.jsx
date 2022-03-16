@@ -63,7 +63,7 @@ export default function LocationHome() {
         },
     ];
     return (
-      <div className="container mx-auto flex min-h-[86vh] max-w-full">
+      <div className="container mx-auto flex min-h-[calc(100vh-104px)] max-w-full">
         <div className="flex w-full flex-1 flex-wrap place-content-center gap-6 px-2 py-4">
           {cardData.map(
             (data) =>
@@ -89,7 +89,7 @@ export default function LocationHome() {
   if (data.loading) return <Loading />;
   if (!data.loading && !data.locationData)
     return (
-      <div className="flex min-h-[83vh] items-center justify-center">
+      <div className="flex min-h-[calc(100vh-104px)] items-center justify-center">
         <h1 className="text-3xl font-semibold text-white">
           Something went wrong!
         </h1>

@@ -148,10 +148,7 @@ export default function AddAvailability() {
   ];
 
   return (
-    <div
-      style={{ minHeight: "80vh" }}
-      className="my-2 mx-auto flex max-w-4xl items-center justify-center justify-items-center py-2"
-    >
+    <div className="mx-auto flex min-h-[calc(100vh-104px)] max-w-4xl items-center justify-center justify-items-center">
       <Card
         headStyle={{ backgroundColor: "#1F2937", border: "none" }}
         title={
