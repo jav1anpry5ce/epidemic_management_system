@@ -3,30 +3,13 @@ import { addLocation, clearState } from "../store/mohSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setActiveKey } from "../store/navbarSlice";
-import Container from "@mui/material/Container";
 import { Card, Input, Form, Button, Typography, Select, Checkbox } from "antd";
 import { open } from "../utils/Notifications";
 import shortid from "shortid";
+import { parishData } from "../utils/micData";
 
 const { Title } = Typography;
 const { Option } = Select;
-
-const parishData = [
-  { label: "Kingston", value: "Kingston" },
-  { label: "St. Andrew", value: "St. Andrew" },
-  { label: "Portland ", value: "Portland " },
-  { label: "St. Thomas", value: "St. Thomas" },
-  { label: "St. Catherine", value: "St. Catherine" },
-  { label: "St. Mary", value: "St. Mary" },
-  { label: "St. Ann", value: "St. Ann" },
-  { label: "Manchester", value: "Manchester" },
-  { label: "Clarendon", value: "Clarendon" },
-  { label: "Hanover", value: "Hanover" },
-  { label: "Westmoreland", value: "Westmoreland" },
-  { label: "St. James", value: "St. James" },
-  { label: "Trelawny", value: "Trelawny" },
-  { label: "St. Elizabeth", value: "St. Elizabeth" },
-];
 
 export default function AddLocation() {
   const data = useSelector((state) => state.moh);
@@ -110,7 +93,7 @@ export default function AddLocation() {
   };
 
   return (
-    <Container maxWidth="sm" style={{ marginTop: "2%" }}>
+    <div className="mx-auto flex min-h-[calc(100vh-104px)] max-w-lg items-center justify-center justify-items-center py-2">
       <Card
         headStyle={{ backgroundColor: "#1F2937", border: "none" }}
         title={
@@ -221,6 +204,6 @@ export default function AddLocation() {
           </Form.Item>
         </Form>
       </Card>
-    </Container>
+    </div>
   );
 }

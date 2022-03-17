@@ -29,3 +29,4 @@ export { default as GetRecords } from "./GetRecords";
 export { default as PrivateRoutes } from "./PrivateRoutes";
 export { default as Home } from "./Home";
 export { default as StaffManagement } from "./StaffManagement";
+export { default as CasesChart } from "./CasesChart";

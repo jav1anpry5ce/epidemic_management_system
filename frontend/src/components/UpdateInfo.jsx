@@ -184,6 +184,13 @@ export default function UpdateInfo() {
                 }}
               >
                 <Button
+                  appearance="primary"
+                  disabled={patient.loading}
+                  onClick={() => setPage(2)}
+                >
+                  Already have a code?
+                </Button>
+                <Button
                   type="primary"
                   htmlType="submit"
                   appearance="primary"
@@ -192,13 +199,6 @@ export default function UpdateInfo() {
                   className="rounded-sm bg-gray-700 text-white transition duration-300 hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white"
                 >
                   Submit
-                </Button>
-                <Button
-                  appearance="primary"
-                  disabled={patient.loading}
-                  onClick={() => setPage(2)}
-                >
-                  Already have a code?
                 </Button>
               </div>
             </Form.Item>
@@ -239,6 +239,13 @@ export default function UpdateInfo() {
                 }}
               >
                 <Button
+                  appearance="primary"
+                  disabled={patient.loading}
+                  onClick={() => setPage(1)}
+                >
+                  Back
+                </Button>
+                <Button
                   type="primary"
                   htmlType="submit"
                   appearance="primary"
@@ -247,13 +254,6 @@ export default function UpdateInfo() {
                   className="rounded-sm bg-gray-700 text-white transition duration-300 hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white"
                 >
                   Submit
-                </Button>
-                <Button
-                  appearance="primary"
-                  disabled={patient.loading}
-                  onClick={() => setPage(1)}
-                >
-                  Back
                 </Button>
               </div>
             </Form.Item>

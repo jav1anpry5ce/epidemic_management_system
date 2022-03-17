@@ -22,4 +22,10 @@ urlpatterns = [
     path('add-availability/', views.add_availability),
     path('get-availability/', views.GetAvailability.as_view()),
     path('delete-availability/<id>', views.delete_availability),
+    path('cases/positive-cases', views.get_positive_cases),
+    path('cases/hospitalized-cases', views.get_hospitalized),
+    path('cases/death-cases', views.get_death),
+    path('cases/recovered-cases', views.get_recovered),
+    path('cases/test-administered', views.get_test_administered),
+    path('cases/vaccine-administered', views.get_vaccine_administered),
 ]

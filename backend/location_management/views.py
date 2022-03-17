@@ -13,7 +13,7 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework import filters
 from django_filters import rest_framework as filterss
 from django.utils import timezone
-import datetime
+import datetime, calendar
 
 from .models import Location, Offer, Test, Appointment
 from .serializers import LocationSerializer, OfferSerializer, TestSerializer, AppointmentSerializer, CreateAppointmentSerializer, AvailabilitySerializer
@@ -412,6 +412,132 @@ def add_location(request):
             return Response({}, status=status.HTTP_400_BAD_REQUEST)
     return Response({'Message': 'You are not authorized to create a location'}, status=status.HTTP_401_UNAUTHORIZED)
 
+def returnDate (year, month):
+    num_days = calendar.monthrange(year, month)[1]
+    days = [datetime.date(year, month, day) for day in range(1, num_days + 1)]
+    return days
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def get_positive_cases(request):
+    if request.user.is_moh_staff:
+        excludes = ['Dead', 'Recovered']
+        year = request.GET.get('year')
+        month = request.GET.get('month')
+        dates = returnDate(int(year), int(month))
+        total = 0
+        positive_cases_for_month = []
+        for date in dates:
+            positive_cases = PositiveCase.objects.filter(date_tested=date).exclude(status__in=excludes).count()
+            case_data = {
+                "date": date.strftime("%b-%d"),
+                "count": positive_cases
+            }
+            total += positive_cases
+            positive_cases_for_month.append(case_data)
+        return Response({'Data': positive_cases_for_month, 'total': total}, status=status.HTTP_200_OK)
+    return Response({'Message': 'You are not authorized to make this request.'}, status=status.HTTP_401_UNAUTHORIZED)
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def get_hospitalized(request):
+    if request.user.is_moh_staff:
+        year = request.GET.get('year')
+        month = request.GET.get('month')
+        dates = returnDate(int(year), int(month))
+        total = 0
+        hospitalized_cases_for_month = []
+        for date in dates:
+            hospitalized_cases = PositiveCase.objects.filter(date_tested=date, status='Hospitalized').count()
+            case_data = {
+                "date": date.strftime("%b-%d"),
+                "count": hospitalized_cases
+            }
+            total += hospitalized_cases
+            hospitalized_cases_for_month.append(case_data)
+        return Response({'Data': hospitalized_cases_for_month, 'total': total}, status=status.HTTP_200_OK)
+    return Response({'Message': 'You are not authorized to make this request.'}, status=status.HTTP_401_UNAUTHORIZED)
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def get_death(request):
+    if request.user.is_moh_staff:
+        year = request.GET.get('year')
+        month = request.GET.get('month')
+        dates = returnDate(int(year), int(month))
+        total = 0
+        death_cases_for_month = []
+        for date in dates:
+            death_cases = PositiveCase.objects.filter(date_tested=date, status='Dead').count()
+            case_data = {
+                "date": date.strftime("%b-%d"),
+                "count": death_cases
+            }
+            total += death_cases
+            death_cases_for_month.append(case_data)
+        return Response({'Data': death_cases_for_month, 'total': total}, status=status.HTTP_200_OK)
+    return Response({'Message': 'You are not authorized to make this request.'}, status=status.HTTP_401_UNAUTHORIZED)
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def get_recovered(request):
+    if request.user.is_moh_staff:
+        year = request.GET.get('year')
+        month = request.GET.get('month')
+        dates = returnDate(int(year), int(month))
+        total = 0
+        recovered_cases_for_month = []
+        for date in dates:
+            recovered_cases = PositiveCase.objects.filter(date_tested=date, status='Dead').count()
+            case_data = {
+                "date": date.strftime("%b-%d"),
+                "count": recovered_cases
+            }
+            total += recovered_cases
+            recovered_cases_for_month.append(case_data)
+        return Response({'Data': recovered_cases_for_month, 'total': total}, status=status.HTTP_200_OK)
+    return Response({'Message': 'You are not authorized to make this request.'}, status=status.HTTP_401_UNAUTHORIZED)
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def get_test_administered(request):
+    if request.user.is_moh_staff:
+        year = request.GET.get('year')
+        month = request.GET.get('month')
+        dates = returnDate(int(year), int(month))
+        total = 0
+        test_administered_for_month = []
+        for date in dates:
+            test_administered = Testing.objects.filter(status='Completed', date=date).count()
+            case_data = {
+                "date": date.strftime("%b-%d"),
+                "count": test_administered
+            }
+            total += test_administered
+            test_administered_for_month.append(case_data)
+        return Response({'Data': test_administered_for_month, 'total': total}, status=status.HTTP_200_OK)
+    return Response({'Message': 'You are not authorized to make this request.'}, status=status.HTTP_401_UNAUTHORIZED)
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def get_vaccine_administered(request):
+    if request.user.is_moh_staff:
+        year = request.GET.get('year')
+        month = request.GET.get('month')
+        dates = returnDate(int(year), int(month))
+        total = 0
+        vaccine_administered_for_month = []
+        for date in dates:
+            vaccine_administered = Vaccination.objects.filter(status='Completed', date_given=date).count()
+            case_data = {
+                "date": date.strftime("%b-%d"),
+                "count": vaccine_administered
+            }
+            total += vaccine_administered
+            vaccine_administered_for_month.append(case_data)
+        return Response({'Data': vaccine_administered_for_month, 'total': total}, status=status.HTTP_200_OK)
+    return Response({'Message': 'You are not authorized to make this request.'}, status=status.HTTP_401_UNAUTHORIZED)
+
 @api_view(['GET'])
 @permission_classes([permissions.IsAuthenticated])
 def get_breakdown(request):
@@ -470,6 +596,7 @@ def get_breakdown(request):
         except:
             return Response({'Message': 'Something went wrong.'}, status=status.HTTP_400_BAD_REQUEST)
     return Response({'Message': 'You are not authorized to make this request.'}, status=status.HTTP_401_UNAUTHORIZED)
+
         
 @api_view(['GET'])
 @permission_classes([permissions.IsAuthenticated])

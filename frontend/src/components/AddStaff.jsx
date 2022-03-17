@@ -161,6 +161,13 @@ export default function AddStaff() {
           </Form.Item>
           <Form.Item style={{ marginBottom: 2 }}>
             <div className="flex w-full items-center justify-between">
+              <Link
+                className="bg-gray-200/50 px-6 py-1 outline outline-1 
+                outline-gray-400 transition duration-300 hover:bg-white hover:text-sky-500 hover:no-underline hover:outline hover:outline-1 hover:outline-sky-500"
+                to={`/${auth.location}/staff`}
+              >
+                Back
+              </Link>
               <Button
                 type="primary"
                 htmlType="submit"
@@ -172,13 +179,6 @@ export default function AddStaff() {
               >
                 Submit
               </Button>
-              <Link
-                className="bg-gray-200/50 px-6 py-1 outline outline-1 
-                outline-gray-400 transition duration-300 hover:bg-white hover:text-sky-500 hover:no-underline hover:outline hover:outline-1 hover:outline-sky-500"
-                to={`/${auth.location}/staff`}
-              >
-                Back
-              </Link>
             </div>
           </Form.Item>
         </Form>
