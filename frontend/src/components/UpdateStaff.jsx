@@ -110,12 +110,6 @@ export default function UpdateStaff({ staff, show, setShow }) {
             auth.is_location_admin ? "grid-cols-3" : "grid-cols-2"
           }`}
         >
-          <Form.Item label="Is Active" id="isActive" className="w-full">
-            <Checkbox
-              checked={isActive}
-              onChange={() => setIsActive(!isActive)}
-            />
-          </Form.Item>
           <Form.Item label="Is Admin" id="isAdmin" className="w-full">
             <Checkbox checked={isAdmin} onChange={() => setIsAdmin(!isAdmin)} />
           </Form.Item>
