@@ -39,7 +39,7 @@ export default function MOHHOME() {
       {
         name: "AstraZeneca To Distribute",
         value: data.breakdownData.AZ_to_disb,
-        backgroundcolour: "#10496d",
+        backgroundcolour: "#24ad74",
         icon: false,
       },
       {
@@ -57,13 +57,13 @@ export default function MOHHOME() {
       {
         name: "Johnson & Johnson In Stock",
         value: data.breakdownData.JJ_in_stock,
-        backgroundcolour: "#24ad74",
+        backgroundcolour: "#8018d4",
         icon: true,
       },
       {
         name: "AstraZeneca In Stock",
         value: data.breakdownData.AZ_in_stock,
-        backgroundcolour: "#24ad74",
+        backgroundcolour: "#8018d4",
         icon: true,
       },
     ];
@@ -86,7 +86,7 @@ export default function MOHHOME() {
               </div>
               <div
                 style={{ backgroundColor: data.backgroundcolour }}
-                className="absolute left-0 top-0 h-full w-2"
+                className="absolute left-0 top-0 h-full w-1.5"
               />
             </div>
             // <div
