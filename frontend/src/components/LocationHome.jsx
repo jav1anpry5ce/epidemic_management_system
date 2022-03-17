@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { setActiveKey } from "../store/navbarSlice";
 import Loading from "./Loading";
 import { CasesChart } from "../components";
+import { motion } from "framer-motion";
 
 export default function LocationHome() {
   const data = useSelector((state) => state.location);
@@ -51,13 +52,19 @@ export default function LocationHome() {
     ];
     return (
       <div className="container mx-auto flex min-h-[calc(100vh-104px)] max-w-full flex-col">
-        <div className="grid w-full grid-cols-3 place-items-center gap-4 px-2 pt-4">
+        <motion.div
+          layout
+          initial={{ opacity: 0, x: -200 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1, ease: "easeInOut" }}
+          className="grid w-full grid-cols-3 place-items-center gap-4 px-2 pt-4"
+        >
           {cardData.map(
             (data) =>
               data.visible && (
                 <div
                   key={data.name}
-                  className="relative flex h-[4.625rem] w-[18rem] flex-col justify-center rounded bg-white px-2 drop-shadow-xl"
+                  className="relative flex h-[4.625rem] w-[18rem] transform flex-col justify-center rounded bg-white px-2 drop-shadow-xl duration-300 hover:translate-x-6"
                 >
                   <div className="flex items-center justify-between">
                     <div className="ml-1 flex items-center gap-2">
@@ -76,7 +83,7 @@ export default function LocationHome() {
                 </div>
               )
           )}
-        </div>
+        </motion.div>
         <div className="flex w-full flex-1 flex-wrap place-content-center gap-3 px-2 py-4">
           <CasesChart
             width="w-[40rem]"

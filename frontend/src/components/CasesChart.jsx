@@ -11,6 +11,7 @@ import {
 } from "recharts";
 import axios from "axios";
 import { DatePicker } from "antd";
+import { motion } from "framer-motion";
 
 export default function PositiveCasesChart({ name, api, width }) {
   const [cases, setCases] = useState([]);
@@ -37,7 +38,11 @@ export default function PositiveCasesChart({ name, api, width }) {
     setMonth(new Date(e._d).getMonth() + 1);
   };
   return (
-    <div
+    <motion.div
+      layout
+      initial={{ opacity: 0, y: 200 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 1, ease: "easeInOut" }}
       className={`h-[20rem] ${
         width ? width : "w-[28rem]"
       }  overflow-hidden rounded bg-white`}
@@ -89,6 +94,6 @@ export default function PositiveCasesChart({ name, api, width }) {
           </ResponsiveContainer>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 }
