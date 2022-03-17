@@ -37,7 +37,7 @@ export default function PositiveCasesChart({ name, api }) {
     setMonth(new Date(e._d).getMonth() + 1);
   };
   return (
-    <div className="h-[20rem] w-[25rem] overflow-hidden rounded bg-white">
+    <div className="h-[20rem] w-[28rem] overflow-hidden rounded bg-white">
       <h3 className="rounded-t bg-[#10496d] py-1 text-center text-lg font-medium text-white">
         {name}
       </h3>
