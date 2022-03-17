@@ -12,7 +12,7 @@ import {
 import axios from "axios";
 import { DatePicker } from "antd";
 
-export default function PositiveCasesChart({ name, api }) {
+export default function PositiveCasesChart({ name, api, width }) {
   const [cases, setCases] = useState([]);
   const [year, setYear] = useState(new Date().getFullYear());
   const [month, setMonth] = useState(new Date().getMonth() + 1);
@@ -37,7 +37,11 @@ export default function PositiveCasesChart({ name, api }) {
     setMonth(new Date(e._d).getMonth() + 1);
   };
   return (
-    <div className="h-[20rem] w-[28rem] overflow-hidden rounded bg-white">
+    <div
+      className={`h-[20rem] ${
+        width ? width : "w-[28rem]"
+      }  overflow-hidden rounded bg-white`}
+    >
       <h3 className="rounded-t bg-[#10496d] py-1 text-center text-lg font-medium text-white">
         {name}
       </h3>

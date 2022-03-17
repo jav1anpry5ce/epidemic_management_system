@@ -501,14 +501,16 @@ def get_recovered(request):
 @api_view(['GET'])
 @permission_classes([permissions.IsAuthenticated])
 def get_test_administered(request):
-    if request.user.is_moh_staff:
+    if request.user.is_moh_staff or request.user.is_staff:
         year = request.GET.get('year')
         month = request.GET.get('month')
         dates = returnDate(int(year), int(month))
         total = 0
         test_administered_for_month = []
         for date in dates:
-            test_administered = Testing.objects.filter(status='Completed', date=date).count()
+            if request.user.is_moh_staff:
+                test_administered = Testing.objects.filter(status='Completed', date=date).count()
+            else: test_administered = Testing.objects.filter(status='Completed', date=date, location=request.user.location).count()
             case_data = {
                 "date": date.strftime("%b-%d"),
                 "count": test_administered
@@ -521,14 +523,16 @@ def get_test_administered(request):
 @api_view(['GET'])
 @permission_classes([permissions.IsAuthenticated])
 def get_vaccine_administered(request):
-    if request.user.is_moh_staff:
+    if request.user.is_moh_staff or request.user.is_staff:
         year = request.GET.get('year')
         month = request.GET.get('month')
         dates = returnDate(int(year), int(month))
         total = 0
         vaccine_administered_for_month = []
         for date in dates:
-            vaccine_administered = Vaccination.objects.filter(status='Completed', date_given=date).count()
+            if request.user.is_moh_staff:
+                vaccine_administered = Vaccination.objects.filter(status='Completed', date_given=date).count()
+            else: vaccine_administered = Vaccination.objects.filter(status='Completed', date_given=date, location=request.user.location).count()
             case_data = {
                 "date": date.strftime("%b-%d"),
                 "count": vaccine_administered

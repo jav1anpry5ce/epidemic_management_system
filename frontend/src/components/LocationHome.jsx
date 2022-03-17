@@ -3,6 +3,7 @@ import { locationBreakdown, clearState } from "../store/locationSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { setActiveKey } from "../store/navbarSlice";
 import Loading from "./Loading";
+import { CasesChart } from "../components";
 
 export default function LocationHome() {
   const data = useSelector((state) => state.location);
@@ -38,7 +39,7 @@ export default function LocationHome() {
       data.locationData.az_in_stock !== null && {
         name: "AstraZeneca In Stock",
         data: data.locationData.az_in_stock,
-        backgroundcolour: "#10496d",
+        backgroundcolour: "#4f8598",
         visible: data.locationData.az_in_stock !== null ? true : false,
       },
       {
@@ -47,41 +48,58 @@ export default function LocationHome() {
         backgroundcolour: "#4f8598",
         visible: true,
       },
-      data.locationData.offer_testing && {
-        name: "Tests Administerd",
-        data: data.locationData.number_of_tests,
-        backgroundcolour: "#4f8598",
-        visible: true,
-      },
-      data.locationData.offer_vaccines &&
-        data.locationData.vaccines_administer !== null && {
-          name: "Vaccines Administerd",
-          data: data.locationData.vaccines_administer,
-          backgroundcolour: "#4f8598",
-          visible:
-            data.locationData.vaccines_administer !== null ? true : false,
-        },
     ];
     return (
-      <div className="container mx-auto flex min-h-[calc(100vh-104px)] max-w-full">
-        <div className="flex w-full flex-1 flex-wrap place-content-center gap-6 px-2 py-4">
+      <div className="container mx-auto flex min-h-[calc(100vh-104px)] max-w-full flex-col">
+        <div className="grid w-full grid-cols-3 place-items-center gap-4 px-2 pt-4">
           {cardData.map(
             (data) =>
               data.visible && (
                 <div
                   key={data.name}
-                  className="flex h-44 w-80 flex-col justify-between rounded-lg px-4 py-3 pb-12 text-white transition-all duration-300 hover:scale-105 hover:shadow-2xl"
-                  style={{ backgroundColor: data.backgroundcolour }}
+                  className="relative flex h-[4.625rem] w-[18rem] flex-col justify-center rounded bg-white px-2 drop-shadow-xl"
                 >
-                  <h3 className="text-center text-2xl font-semibold">
-                    {data.name}
-                  </h3>
-                  <p className="text-center text-xl font-semibold">
-                    {data.data}
-                  </p>
+                  <div className="flex items-center justify-between">
+                    <div className="ml-1 flex items-center gap-2">
+                      <p className="max-w-[9rem] font-semibold text-black">
+                        {data.name}
+                      </p>
+                    </div>
+                    <p className="text-lg font-semibold text-black">
+                      {data.data}
+                    </p>
+                  </div>
+                  <div
+                    style={{ backgroundColor: data.backgroundcolour }}
+                    className="absolute left-0 top-0 h-full w-1.5"
+                  />
                 </div>
+                // <div
+                //   key={data.name}
+                //   className="flex h-44 w-80 flex-col justify-between rounded-lg px-4 py-3 pb-12 text-white transition-all duration-300 hover:scale-105 hover:shadow-2xl"
+                //   style={{ backgroundColor: data.backgroundcolour }}
+                // >
+                //   <h3 className="text-center text-2xl font-semibold">
+                //     {data.name}
+                //   </h3>
+                //   <p className="text-center text-xl font-semibold">
+                //     {data.data}
+                //   </p>
+                // </div>
               )
           )}
+        </div>
+        <div className="flex w-full flex-1 flex-wrap place-content-center gap-3 px-2 py-4">
+          <CasesChart
+            width="w-[40rem]"
+            name="Test Administered"
+            api="api/cases/test-administered"
+          />
+          <CasesChart
+            width="w-[40rem]"
+            name="Vaccine Administered"
+            api="api/cases/vaccine-administered"
+          />
         </div>
       </div>
     );

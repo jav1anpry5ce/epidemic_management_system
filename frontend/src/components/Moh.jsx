@@ -123,7 +123,7 @@ export default function MOHHOME() {
           />
           <CasesChart
             name="Vaccine Administered"
-            api="api/cases/test-administered"
+            api="api/cases/vaccine-administered"
           />
         </div>
       </div>
