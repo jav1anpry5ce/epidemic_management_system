@@ -74,18 +74,6 @@ export default function LocationHome() {
                     className="absolute left-0 top-0 h-full w-1.5"
                   />
                 </div>
-                // <div
-                //   key={data.name}
-                //   className="flex h-44 w-80 flex-col justify-between rounded-lg px-4 py-3 pb-12 text-white transition-all duration-300 hover:scale-105 hover:shadow-2xl"
-                //   style={{ backgroundColor: data.backgroundcolour }}
-                // >
-                //   <h3 className="text-center text-2xl font-semibold">
-                //     {data.name}
-                //   </h3>
-                //   <p className="text-center text-xl font-semibold">
-                //     {data.data}
-                //   </p>
-                // </div>
               )
           )}
         </div>
