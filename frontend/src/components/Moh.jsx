@@ -5,6 +5,7 @@ import { setActiveKey } from "../store/navbarSlice";
 import { CasesChart } from "../components";
 import Loading from "./Loading";
 import { GiDrippingTube } from "react-icons/gi";
+import { GoLocation } from "react-icons/go";
 
 export default function MOHHOME() {
   const data = useSelector((state) => state.moh);
@@ -66,6 +67,12 @@ export default function MOHHOME() {
         backgroundcolour: "#8018d4",
         icon: true,
       },
+      {
+        name: "Total Sites",
+        value: data.breakdownData.number_of_locations,
+        backgroundcolour: "#8018d4",
+        icon: false,
+      },
     ];
     return (
       <div className="container mx-auto flex min-h-[calc(100vh-105px)] max-w-full flex-col">
@@ -77,6 +84,7 @@ export default function MOHHOME() {
             >
               <div className="flex items-center justify-between">
                 <div className="ml-1 flex items-center gap-2">
+                  {data.name === "Total Sites" && <GoLocation fontSize={25} />}
                   {data.icon && <GiDrippingTube fontSize={25} />}
                   <p className="max-w-[9rem] font-semibold text-black">
                     {data.name}

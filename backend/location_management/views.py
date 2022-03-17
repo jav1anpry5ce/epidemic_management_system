@@ -543,19 +543,12 @@ def get_vaccine_administered(request):
 def get_breakdown(request):
     if request.user.is_moh_staff:
         try:
-            excludes = ['Dead', 'Recovered']
             locations = Location.objects.all()
             number_of_pfizer = Vaccine.objects.get(value='Pfizer').number_of_dose
             number_of_moderna = Vaccine.objects.get(value='Moderna').number_of_dose
             number_of_JJ = Vaccine.objects.get(value='Johnson & Johnson').number_of_dose
             number_of_AZ = Vaccine.objects.get(value='AstraZeneca').number_of_dose
-            positive_cases = PositiveCase.objects.exclude(status__in=excludes).count()
-            hospitalized = PositiveCase.objects.filter(status='Hospitalized').count()
-            death = PositiveCase.objects.filter(status='Dead').count()
-            recovered = PositiveCase.objects.filter(status='Recovered').count()
             number_of_locations = locations.count()
-            test_count = Testing.objects.filter(status='Completed').count()
-            vaccines_administer = Vaccination.objects.filter(status='Completed').count()
             pfizer_to_disb = Vaccine.objects.get(value='Pfizer').number_of_dose
             moderna_to_disb = Vaccine.objects.get(value='Moderna').number_of_dose
             JJ_to_disb = Vaccine.objects.get(value='Johnson & Johnson').number_of_dose
@@ -584,13 +577,7 @@ def get_breakdown(request):
                 'moderna_in_stock':number_of_moderna,
                 'JJ_in_stock':number_of_JJ,
                 'AZ_in_stock': number_of_AZ,
-                'positive_cases':positive_cases,
                 'number_of_locations':number_of_locations,
-                'vaccines_administer': vaccines_administer,
-                'test_count':test_count,
-                'hospitalized': hospitalized,
-                'recovered': recovered,
-                'death': death,
             }
             return Response(general_breakdown ,status=status.HTTP_200_OK)
         except:
