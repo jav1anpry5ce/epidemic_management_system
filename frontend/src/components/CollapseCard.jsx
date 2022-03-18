@@ -72,12 +72,12 @@ export default function CollapseCard({ Title, Data, expand, setExpand }) {
                           </Grid>
                           <Grid item xs={6}>
                             <Typography variant="body2">
-                              Date Given: {toLocalDate(record.date_given)}
+                              Vaccination Date: {toLocalDate(record.date_given)}
                             </Typography>
                           </Grid>
                           <Grid item xs={6}>
                             <Typography variant="body2">
-                              Administer Person: {record.admister_person}
+                              Administering Site: {record.location.value}
                             </Typography>
                           </Grid>
                           <Grid item xs={6}>
@@ -87,7 +87,7 @@ export default function CollapseCard({ Title, Data, expand, setExpand }) {
                           </Grid>
                           <Grid item xs={6}>
                             <Typography variant="body2">
-                              Dose: {record.dose_number}
+                              Dosage: {record.dose_number}
                             </Typography>
                           </Grid>
                         </Grid>

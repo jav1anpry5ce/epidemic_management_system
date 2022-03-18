@@ -3,9 +3,10 @@ from rest_framework import serializers
 
 from .models import Vaccination
 from patient_management.serializers import PatientSerializer
+from location_management.serializers import LocationSerializer
 
 class VaccinationSerializer(serializers.ModelSerializer):
-    # patient = PatientSerializer()
+    location = LocationSerializer()
     class Meta:
         model = Vaccination
         fields = (

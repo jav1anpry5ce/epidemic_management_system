@@ -256,7 +256,6 @@ export default function MakeAppointment() {
     dispatch(cs());
     navigate("/appointments");
   };
-
   return (
     <div className="sm:mx-auto sm:mt-4 sm:max-w-4xl">
       <Modal
@@ -937,6 +936,17 @@ export default function MakeAppointment() {
             <Grid item xs={6}>
               <Form.Item style={{ marginBottom: 2 }}>
                 <Button
+                  appearance="default"
+                  onClick={cancel}
+                  disabled={location.loading}
+                >
+                  Cancel
+                </Button>
+              </Form.Item>
+            </Grid>
+            <Grid item xs={6} align="right">
+              <Form.Item style={{ marginBottom: 2 }}>
+                <Button
                   type="primary"
                   htmlType="submit"
                   appearance="primary"
@@ -945,17 +955,6 @@ export default function MakeAppointment() {
                   className="rounded-sm bg-gray-700 text-white transition duration-300 hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white"
                 >
                   Submit
-                </Button>
-              </Form.Item>
-            </Grid>
-            <Grid item xs={6} align="right">
-              <Form.Item style={{ marginBottom: 2 }}>
-                <Button
-                  appearance="default"
-                  onClick={cancel}
-                  disabled={location.loading}
-                >
-                  Cancel
                 </Button>
               </Form.Item>
             </Grid>

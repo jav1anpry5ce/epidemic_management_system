@@ -445,7 +445,7 @@ export default function VaccinationAndTesting() {
                 </Grid>
                 <Grid item xs={6}>
                   <Form.Item
-                    label="Dose"
+                    label="Dosage"
                     name="dose"
                     style={{ marginBottom: 0 }}
                   >
