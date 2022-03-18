@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setActiveKey } from "../store/navbarSlice";
 import MythFacts from "./MythFacts";
 import vaccine from "../asset/images/Vaccine.png";
 import hand from "../asset/images/hand.png";
-import second from "../asset/images/second.png";
-import safe from "../asset/images/safe.png";
-import { AiOutlinePlayCircle } from "react-icons/ai";
+// import second from "../asset/images/second.png";
+// import safe from "../asset/images/safe.png";
+// import { AiOutlinePlayCircle } from "react-icons/ai";
 import VaxImage from "../asset/images/VaxImage.jpg";
 import PregnantImage from "../asset/images/PregnantImage.jpg";
 import JabImage from "../asset/images/JabImage.jpg";
@@ -21,8 +21,8 @@ import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function HomeV2() {
-  const [secondPlay, setSecondPlay] = useState(false);
-  const [safePlay, setSafePlay] = useState(false);
+  // const [secondPlay, setSecondPlay] = useState(false);
+  // const [safePlay, setSafePlay] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -214,7 +214,7 @@ export default function HomeV2() {
           </div>
         </div>
       </div>
-      <div className="bg-slate-800 py-2 px-2 text-white">
+      {/* <div className="bg-slate-800 py-2 px-2 text-white">
         <div className="mx-auto lg:max-w-6xl">
           <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2">
             <div className="flex flex-col items-center justify-center space-y-3">
@@ -284,8 +284,8 @@ export default function HomeV2() {
             </div>
           </div>
         </div>
-      </div>
-      <div className="bg-slate-500">
+      </div> */}
+      <div className="bg-slate-800">
         <div className="mx-auto max-w-7xl px-2 py-3">
           <p className="text-center text-3xl font-bold text-white">COVID-19</p>
           <p className="pb-4 text-center text-4xl text-white">
