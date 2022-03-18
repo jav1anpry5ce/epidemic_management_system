@@ -22,7 +22,7 @@ export default function MythFacts({ image, myth, fact }) {
     >
       <motion.div
         layout
-        className="flex w-full flex-col items-center gap-1 p-3"
+        className="flex h-full w-full flex-col items-center justify-between gap-1 p-3"
       >
         <img src={image} alt="cartoon" className="aspect-square h-20 w-20" />
         <p className="text-lg font-bold text-blue-700">Myth</p>

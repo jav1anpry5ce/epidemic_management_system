@@ -41,11 +41,7 @@ export default function HomeV2() {
       myth: "The COVID-19 vaccine causes infertility in women.",
       fact: "No vaccine suspected of impacting a person’s ability to conceive, has ever been or will ever be approved.",
     },
-    {
-      image: JabImage,
-      myth: "You can get COVID-19 from the vaccine.",
-      fact: "YOU CANNOT get COVID-19 from the vaccine because it does not contain the live virus.",
-    },
+
     {
       image: JabImage,
       myth: "Once I receive the vaccine, I will test positive for COVID-19.",
@@ -55,12 +51,6 @@ export default function HomeV2() {
       image: VaxImage,
       myth: "I have already been diagnosed with COVID-19, so I do not need to get the vaccine.",
       fact: "If you have already had COVID-19, you will still need to take the vaccine as it is not known for how long natural immunity will last. Since COVID-19 can have severe health risks and the possibility of re-infection, the recommendation is to take the vaccine.",
-    },
-
-    {
-      image: ShieldImage,
-      myth: "Natural Immunity is better.",
-      fact: "Allowing the disease to spread until herd immunity is reached will cause millions of deaths and even more people living with the long term effects of the virus.",
     },
 
     {
@@ -78,6 +68,16 @@ export default function HomeV2() {
     {
       image: SeniorImage,
       myth: "Only the elderly need to take the vaccine.",
+      fact: "Allowing the disease to spread until herd immunity is reached will cause millions of deaths and even more people living with the long term effects of the virus.",
+    },
+    {
+      image: JabImage,
+      myth: "You can get COVID-19 from the vaccine.",
+      fact: "YOU CANNOT get COVID-19 from the vaccine because it does not contain the live virus.",
+    },
+    {
+      image: ShieldImage,
+      myth: "Natural Immunity is better.",
       fact: "Allowing the disease to spread until herd immunity is reached will cause millions of deaths and even more people living with the long term effects of the virus.",
     },
   ];
