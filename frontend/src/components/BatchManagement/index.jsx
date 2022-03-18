@@ -212,7 +212,7 @@ export default function BatchManagement() {
               setPage(1);
               fetch();
             }}
-            placeholder="Search using location name or batch id"
+            placeholder="Search using site name or batch id"
           />
           <Link
             type="primary"

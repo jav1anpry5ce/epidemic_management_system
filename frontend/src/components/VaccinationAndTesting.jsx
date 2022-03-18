@@ -230,7 +230,7 @@ export default function VaccinationAndTesting() {
   ];
 
   return (
-    <div className="mx-auto flex min-h-[calc(100vh-104px)] max-w-6xl items-center justify-center justify-items-center">
+    <div className="mx-auto flex min-h-[calc(100vh-104px)] max-w-6xl items-center justify-center justify-items-center py-2">
       <Card
         headStyle={{ backgroundColor: "#1F2937", border: "none" }}
         title={
