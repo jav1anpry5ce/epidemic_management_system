@@ -136,14 +136,22 @@ export default function GetRecords() {
         </Card>
       )}
       {page === 3 && (
-        <div className="w-full rounded bg-white p-3 shadow">
-          <p className="text-center text-2xl">
+        <div className="w-full space-y-4 rounded bg-white p-3 shadow">
+          <p className="text-center text-2xl text-black">
             A link to view your record has been sent to you!
           </p>
-          <p className="text-center text-2xl">
+          <div className="flex w-full items-center justify-center">
+            <Link
+              to={`/${link}`}
+              className="rounded bg-slate-700 px-6 py-2 text-white hover:text-white hover:no-underline hover:shadow-lg hover:shadow-slate-700/40"
+            >
+              View
+            </Link>
+          </div>
+          {/* <p className="text-center text-2xl">
             You can access your record now by clicking{" "}
             <Link to={`/${link}`}>here</Link>
-          </p>
+          </p> */}
         </div>
       )}
     </div>
