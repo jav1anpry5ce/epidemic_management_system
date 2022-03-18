@@ -231,13 +231,15 @@ export default function LocationAppointments() {
       title: "Action",
       dataIndex: "id",
       render: (dataIndex) => (
-        <EyeOutlined
-          className="cursor-pointer hover:text-blue-400"
-          onClick={() => {
-            setShow(true);
-            dispatch(getAppointment(dataIndex));
-          }}
-        />
+        <Tooltip placement="top" title="View">
+          <EyeOutlined
+            className="cursor-pointer hover:text-blue-400"
+            onClick={() => {
+              setShow(true);
+              dispatch(getAppointment(dataIndex));
+            }}
+          />
+        </Tooltip>
       ),
     },
   ];

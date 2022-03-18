@@ -236,14 +236,16 @@ export default function PositiveCases() {
       title: "Action",
       dataIndex: "id",
       render: (dataIndex) => (
-        <EyeOutlined
-          className="cursor-pointer hover:text-blue-400"
-          onClick={() => {
-            setShow(true);
-            setCaseId(dataIndex);
-            dispatch(getCase({ type: sType, id: dataIndex }));
-          }}
-        />
+        <Tooltip placement="top" title="View">
+          <EyeOutlined
+            className="cursor-pointer hover:text-blue-400"
+            onClick={() => {
+              setShow(true);
+              setCaseId(dataIndex);
+              dispatch(getCase({ type: sType, id: dataIndex }));
+            }}
+          />
+        </Tooltip>
       ),
     },
   ];

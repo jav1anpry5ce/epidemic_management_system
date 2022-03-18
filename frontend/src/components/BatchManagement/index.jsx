@@ -143,13 +143,15 @@ export default function BatchManagement() {
       title: "Action",
       dataIndex: "batch_id",
       render: (dataIndex) => (
-        <EyeOutlined
-          className="cursor-pointer hover:text-blue-400"
-          onClick={() => {
-            setShow(true);
-            dispatch(getBatch(dataIndex));
-          }}
-        />
+        <Tooltip placement="topLeft" title="View">
+          <EyeOutlined
+            className="cursor-pointer hover:text-blue-400"
+            onClick={() => {
+              setShow(true);
+              dispatch(getBatch(dataIndex));
+            }}
+          />
+        </Tooltip>
       ),
       width: 100,
     },

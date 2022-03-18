@@ -138,10 +138,12 @@ export default function AddAvailability() {
       title: "Action",
       dataIndex: "id",
       render: (dataIndex) => (
-        <MdDeleteForever
-          className="cursor-pointer text-2xl hover:text-red-600"
-          onClick={() => dispatch(deleteAvailability(dataIndex))}
-        />
+        <Tooltip placement="top" title="View">
+          <MdDeleteForever
+            className="cursor-pointer text-2xl hover:text-red-600"
+            onClick={() => dispatch(deleteAvailability(dataIndex))}
+          />
+        </Tooltip>
       ),
       width: 120,
     },

@@ -205,13 +205,15 @@ export default function Patients() {
       title: "Action",
       dataIndex: "tax_number",
       render: (dataIndex) => (
-        <EyeOutlined
-          className="cursor-pointer hover:text-blue-400"
-          onClick={() => {
-            setShow(true);
-            dispatch(getPatient(dataIndex));
-          }}
-        />
+        <Tooltip placement="top" title="View">
+          <EyeOutlined
+            className="cursor-pointer hover:text-blue-400"
+            onClick={() => {
+              setShow(true);
+              dispatch(getPatient(dataIndex));
+            }}
+          />
+        </Tooltip>
       ),
     },
   ];
