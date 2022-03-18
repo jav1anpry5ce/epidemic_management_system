@@ -107,12 +107,21 @@ export default function MOHHOME() {
           ))}
         </motion.div>
         <div className="flex w-full flex-1 flex-wrap place-content-center gap-3 px-2 py-4">
-          <CasesChart name="Positive Cases" api="api/cases/positive-cases" />
+          <CasesChart
+            name="Positive Cases"
+            api="api/cases/positive-cases"
+            chartType="Bar"
+          />
           <CasesChart
             name="Hospitalized Cases"
             api="api/cases/hospitalized-cases"
+            chartType="Bar"
           />
-          <CasesChart name="Death Cases" api="api/cases/death-cases" />
+          <CasesChart
+            name="Death Cases"
+            api="api/cases/death-cases"
+            chartType="Bar"
+          />
           <CasesChart name="Recovered Cases" api="api/cases/recovered-cases" />
           <CasesChart
             name="Test Administered"

@@ -211,6 +211,7 @@ export default function AddAvailability() {
           </Form.Item>
           <Form.Item style={{ marginBottom: 2 }}>
             <Button
+              loading={location.loading}
               type="primary"
               htmlType="submit"
               style={{ border: "none" }}
