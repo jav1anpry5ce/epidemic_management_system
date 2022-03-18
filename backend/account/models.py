@@ -51,7 +51,7 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
     can_check_in = models.BooleanField(default=False)
     can_receive_location_batch = models.BooleanField(default=False)
     date_joined = models.DateTimeField(auto_now_add=True)
-    last_login = models.DateTimeField(auto_now=True, blank=True, null=True)
+    last_login = models.DateTimeField(blank=True, null=True)
     login_attempt = models.IntegerField(blank=True, null=True, default=0)
 
     class Meta:
