@@ -85,7 +85,7 @@ export default function HomeV2() {
   return (
     <div layout className="overflow-x-hidden">
       <div className="w-full bg-slate-700 text-white">
-        <div className="flex w-full flex-col items-center px-2 py-4 lg:flex-row lg:justify-evenly lg:space-x-3">
+        <div className="mx-auto flex w-full max-w-7xl flex-col items-center px-2 py-4 lg:flex-row lg:justify-between lg:space-x-3">
           <div className="max-w-lg space-y-4">
             <h3 className="text-4xl font-bold">
               What you need to know about COVID-19 Vaccines
@@ -157,7 +157,7 @@ export default function HomeV2() {
       </div> */}
       <div className=" bg-slate-500 ">
         <div className="mx-auto flex max-w-7xl flex-col space-y-3 px-2 py-4">
-          <div className="flex w-full flex-col items-center justify-between text-left text-white md:ml-8 md:items-start">
+          <div className="flex w-full flex-col items-center justify-between text-left text-white md:items-start">
             <p className="text-center text-4xl font-bold">What is a vaccine?</p>
             <p className="max-w-xl text-xl">
               A vaccine is a type of medicine that stimulates a person’s immune
