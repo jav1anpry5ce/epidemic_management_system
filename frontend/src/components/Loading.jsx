@@ -3,10 +3,7 @@ import { SpinnerCircular } from "spinners-react";
 
 function Loading() {
   return (
-    <div
-      className="flex h-[calc(100vh-125px)] flex-1 items-center justify-center"
-      style={{ margin: "10px" }}
-    >
+    <div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]">
       <SpinnerCircular
         size={90}
         thickness={67}
