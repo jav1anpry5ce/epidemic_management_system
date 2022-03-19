@@ -591,7 +591,7 @@ export default function MakeAppointment() {
                 style={{ marginBottom: 2 }}
                 rules={[
                   {
-                    required: patient.detailedinfo === null ? true : false,
+                    required: false,
                     message: "Please select your ID!",
                   },
                 ]}
