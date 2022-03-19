@@ -717,7 +717,7 @@ export default function MakeAppointment() {
                 rules={[
                   {
                     required: true,
-                    message: "Please select your appointment type!",
+                    message: "Please select an appointment type!",
                   },
                 ]}
               >
@@ -743,7 +743,7 @@ export default function MakeAppointment() {
                 rules={[
                   {
                     required: true,
-                    message: "Please enter your appointment date!",
+                    message: "Please select an appointment date!",
                   },
                 ]}
               >
@@ -775,7 +775,7 @@ export default function MakeAppointment() {
                 rules={[
                   {
                     required: true,
-                    message: "Please enter your appointment time!",
+                    message: "Please select an appointment time!",
                   },
                 ]}
               >
