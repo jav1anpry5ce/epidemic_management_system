@@ -34,11 +34,7 @@ export default function AddLocation() {
   useEffect(() => {
     if (data.success) {
       form.resetFields();
-      open(
-        "success",
-        "Location Added!",
-        "A new location has been successfully added."
-      );
+      open("success", "Site Added!", "A new site has been successfully added.");
       dispatch(clearState());
       setTesting(false);
       setVaccination(false);
@@ -69,9 +65,9 @@ export default function AddLocation() {
       },
     };
     if (!vaccination && !testing) {
-      open("error", "Error", "Please provide an offer for this location");
+      open("error", "Error", "Please provide what this site offers.");
     } else if (testing && !antigen && !pcr) {
-      open("error", "Error", "Please selecte the tests offered here.");
+      open("error", "Error", "Please select the tests offered here.");
     } else {
       dispatch(addLocation(data));
     }
