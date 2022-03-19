@@ -115,7 +115,7 @@ export default function HomeV2() {
               hover:bg-slate-700/95 hover:text-white hover:no-underline hover:shadow-md"
                 to="/appointments/create"
               >
-                Make Appointment
+                Make an Appointment
               </Link>
             </div>
           </div>
