@@ -207,7 +207,7 @@ class StaffDetails(ListAPIView):
         elif self.kwargs.get('user') == 'SITEADMIN':
             if self.request.user.is_authenticated and self.request.user.is_location_admin:
                 location = self.request.user.location
-                return UserAccount.objects.filter(location=location)
+                return UserAccount.objects.filter(location=location).exclude(email=self.request.user.email)
             return []
         else:
             return []

@@ -156,8 +156,8 @@ export default function HomeV2() {
         </motion.div>
       </div> */}
       <div className=" bg-slate-500 ">
-        <div className="mx-auto flex max-w-6xl flex-col space-y-3 px-2 py-4">
-          <div className="flex w-full flex-col items-center justify-between text-left text-white md:flex-row">
+        <div className="mx-auto flex max-w-7xl flex-col space-y-3 px-2 py-4">
+          <div className="flex w-full flex-col items-center justify-between text-left text-white md:ml-8 md:items-start">
             <p className="text-center text-4xl font-bold">What is a vaccine?</p>
             <p className="max-w-xl text-xl">
               A vaccine is a type of medicine that stimulates a person’s immune
