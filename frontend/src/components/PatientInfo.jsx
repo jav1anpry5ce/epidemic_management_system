@@ -54,7 +54,7 @@ function PatientInfo() {
     !patient.testingRecord
   ) {
     return <Loading />;
-  } else if (!patient.info || !patient.loading) {
+  } else if (!patient.info && !patient.loading) {
     return (
       <Title
         level={2}
