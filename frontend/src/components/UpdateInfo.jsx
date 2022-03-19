@@ -130,13 +130,13 @@ export default function UpdateInfo() {
           {patient.message && <Alert type="error" message={patient.message} />}
           <Form layout="vertical" onFinish={() => handelSubmit("verify-info")}>
             <Form.Item
-              label="Tax Number"
+              label="TRN"
               name="tax_number"
               style={{ marginBottom: 2 }}
               rules={[
                 {
                   required: true,
-                  message: "Please enter your tax number!",
+                  message: "Please enter your TRN!",
                 },
               ]}
             >

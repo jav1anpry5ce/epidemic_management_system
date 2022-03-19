@@ -350,7 +350,7 @@ export default function MakeAppointment() {
                 rules={[
                   {
                     required: true,
-                    message: "Please enter your Tax Number!",
+                    message: "Please enter your TRN!",
                   },
                 ]}
               >
