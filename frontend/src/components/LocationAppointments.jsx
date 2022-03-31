@@ -253,8 +253,8 @@ export default function LocationAppointments() {
         onCancel={() => setShow(false)}
         title={<Title level={4}>Appointment Information</Title>}
         footer={[
-          appointments.appointment &&
-            ((
+          appointments.appointment && (
+            <>
               <Button
                 onClick={() => setShow(false)}
                 appearance="subtle"
@@ -262,8 +262,7 @@ export default function LocationAppointments() {
               >
                 Cancel
               </Button>
-            ),
-            (
+
               <Button
                 key={shortid.generate()}
                 loading={appointments.aLoading}
@@ -275,7 +274,8 @@ export default function LocationAppointments() {
               >
                 Check Patient In
               </Button>
-            )),
+            </>
+          ),
         ]}
       >
         {appointments.appointment ? (
