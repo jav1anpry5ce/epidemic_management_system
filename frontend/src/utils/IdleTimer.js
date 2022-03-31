@@ -1,4 +1,4 @@
-class IdelTimer {
+class IdleTimer {
   constructor({ timeout, onTimeout, onExpired }) {
     this.timeout = timeout;
     this.onTimeout = onTimeout;
@@ -47,4 +47,4 @@ class IdelTimer {
   }
 }
 
-export default IdelTimer;
+export default IdleTimer;

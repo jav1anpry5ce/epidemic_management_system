@@ -48,7 +48,7 @@ export default function MohAdd() {
 
   const handelSubmit = () => {
     let data;
-    if (accountType === "Location Admin") {
+    if (accountType === "Site Admin") {
       data = {
         email,
         first_name: firstName.trim(),
@@ -100,7 +100,7 @@ export default function MohAdd() {
             style={{ marginBottom: 2 }}
           >
             <Select onChange={(e) => setAccountType(e)}>
-              <Option value="Location Admin">Location Admin</Option>
+              <Option value="Site Admin">Site Admin</Option>
               <Option value="MOH Staff">MOH Staff</Option>
             </Select>
           </Form.Item>

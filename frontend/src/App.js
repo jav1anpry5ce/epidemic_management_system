@@ -56,14 +56,12 @@ function App() {
       timeout: 180,
       onTimeout: () => {
         if (auth.is_auth) {
-          dispatch(logout()).then(() => (window.location = "/accounts/login"));
-          alert("Your session was inactive for too long!");
+          dispatch(logout());
         }
       },
       onExpired: () => {
         if (auth.is_auth) {
-          dispatch(logout()).then(() => (window.location = "/accounts/login"));
-          alert("You session is expired!");
+          dispatch(logout());
         }
       },
     });
