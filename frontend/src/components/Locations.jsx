@@ -20,7 +20,7 @@ export default function Locations() {
   const [pageSize, setPageSize] = useState(60);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
-  const scroll = { y: 430 };
+  const scroll = { y: 400 };
 
   useEffect(() => {
     dispatch(setActiveKey("5"));

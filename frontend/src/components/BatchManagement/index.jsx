@@ -25,7 +25,7 @@ export default function BatchManagement() {
   const [loading, setLoading] = useState(false);
   const [q, setQ] = useState("");
   const [show, setShow] = useState(false);
-  const scroll = { y: 430 };
+  const scroll = { y: 400 };
   const componenetRef = useRef();
 
   useEffect(() => {
