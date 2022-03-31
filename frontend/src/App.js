@@ -38,6 +38,8 @@ import {
   PrivateRoutes,
   Home,
   StaffManagement,
+  Inventory,
+  UpdateInventory,
 } from "./components";
 
 import IdleTimer from "./utils/IdleTimer";
@@ -238,6 +240,24 @@ function App() {
                   element={
                     <PrivateRoutes accessUser="mohAdmin">
                       <MohAdd />
+                    </PrivateRoutes>
+                  }
+                />
+              </Route>
+              <Route path="inventory">
+                <Route
+                  index
+                  element={
+                    <PrivateRoutes accessUser="mohAdmin">
+                      <Inventory />
+                    </PrivateRoutes>
+                  }
+                />
+                <Route
+                  path="update"
+                  element={
+                    <PrivateRoutes accessUser="mohAdmin">
+                      <UpdateInventory />
                     </PrivateRoutes>
                   }
                 />

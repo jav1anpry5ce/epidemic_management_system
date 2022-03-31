@@ -11,7 +11,7 @@ from django.utils import timezone
 class Patient(models.Model):
     unique_id = models.UUIDField(default=uuid.uuid4, editable=False)
     image = models.ImageField(upload_to='uploads/', blank=True, null=True, default='default.png')
-    identification = models.ImageField(upload_to='uploads/identification/', null=True, blank=True)
+    identification = models.FileField(upload_to='uploads/identification/', null=True, blank=True)
     tax_number = models.CharField(max_length=12, null=True, unique=True)
     title = models.CharField(max_length=15, null=True)
     first_name = models.CharField(max_length=50, null=True)

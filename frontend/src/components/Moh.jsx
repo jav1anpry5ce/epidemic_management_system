@@ -142,7 +142,7 @@ export default function MOHHOME() {
     return (
       <div className="flex min-h-[calc(100vh-105px)] items-center justify-center">
         <h1 className="text-3xl font-semibold text-white">
-          Something went wrong!
+          No data was returned.
         </h1>
       </div>
     );

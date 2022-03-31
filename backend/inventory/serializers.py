@@ -6,8 +6,8 @@ class VaccineSerializer(serializers.ModelSerializer):
     class Meta:
         model = Vaccine
         fields = (
-            'label',
             'value',
+            'number_of_dose',
         )
 
 

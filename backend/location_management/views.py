@@ -18,11 +18,11 @@ import datetime, calendar
 from .models import Location, Offer, Test, Appointment
 from .serializers import LocationSerializer, OfferSerializer, TestSerializer, AppointmentSerializer, CreateAppointmentSerializer, AvailabilitySerializer
 from patient_management.serializers import CreatePatientSerializer, NextOfKinSerializer, RepresentativeSerializer
-from patient_management.models import Patient, PositiveCase
+from patient_management.models import Patient, PositiveCase, DeathCase, RecoveredCase, HospitalizedCase
 from testing.models import Testing
 from vaccination.models import Vaccination
 from inventory.models import LocationVaccine, Vaccine
-from inventory.serializers import LocationVaccineSerializer
+from inventory.serializers import LocationVaccineSerializer, VaccineSerializer
 from testing.serializers import getTestSerializer
 
 site = Site.objects.get_current()
@@ -335,7 +335,7 @@ def patient_vaccine(request):
             next_dose = 4
         elif vaccine[0].manufacture == "Pfizer":
             next_dose = 3
-        elif vaccine[0].manufacture == "Astra Zeneca":
+        elif vaccine[0].manufacture == "AstraZeneca":
             next_dose = 8
         res = [{
             'value': vaccine[0].manufacture, 
@@ -448,7 +448,7 @@ def get_hospitalized(request):
         total = 0
         hospitalized_cases_for_month = []
         for date in dates:
-            hospitalized_cases = PositiveCase.objects.filter(date_tested=date, status='Hospitalized').count()
+            hospitalized_cases = HospitalizedCase.objects.filter(hospitalized_date=date).count()
             case_data = {
                 "date": date.strftime("%b-%d"),
                 "count": hospitalized_cases
@@ -468,7 +468,7 @@ def get_death(request):
         total = 0
         death_cases_for_month = []
         for date in dates:
-            death_cases = PositiveCase.objects.filter(date_tested=date, status='Dead').count()
+            death_cases = DeathCase.objects.filter(death_date=date).count()
             case_data = {
                 "date": date.strftime("%b-%d"),
                 "count": death_cases
@@ -488,7 +488,7 @@ def get_recovered(request):
         total = 0
         recovered_cases_for_month = []
         for date in dates:
-            recovered_cases = PositiveCase.objects.filter(date_tested=date, status='Dead').count()
+            recovered_cases = RecoveredCase.objects.filter(recovery_date=date).count()
             case_data = {
                 "date": date.strftime("%b-%d"),
                 "count": recovered_cases
@@ -585,9 +585,56 @@ def get_breakdown(request):
             }
             return Response(general_breakdown ,status=status.HTTP_200_OK)
         except:
-            return Response({'Message': 'Something went wrong.'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'Message': 'No data was returned.'}, status=status.HTTP_400_BAD_REQUEST)
     return Response({'Message': 'You are not authorized to make this request.'}, status=status.HTTP_401_UNAUTHORIZED)
 
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def get_inventory(request):
+    if request.user.is_moh_staff:
+        try:
+            locations = Location.objects.all()
+            pfizer_stock = Vaccine.objects.get(value='Pfizer').number_of_dose
+            moderna_stock = Vaccine.objects.get(value='Moderna').number_of_dose
+            JJ_stock = Vaccine.objects.get(value='Johnson & Johnson').number_of_dose
+            AZ_stock = Vaccine.objects.get(value='AstraZeneca').number_of_dose
+
+            for location in locations:
+                pfizers = LocationVaccine.objects.filter(location=location, value='Pfizer')
+                modernas = LocationVaccine.objects.filter(location=location, value='Moderna')
+                JJs = LocationVaccine.objects.filter(location=location, value='Johnson & Johnson')
+                AZs = LocationVaccine.objects.filter(location=location, value='AstraZeneca')
+                for pfizer in pfizers:
+                    pfizer_stock += pfizer.number_of_dose
+                for moderna in modernas:
+                    moderna_stock += moderna.number_of_dose
+                for jj in JJs:
+                    JJ_stock += jj.number_of_dose
+                for az in AZs:
+                    AZ_stock += az.number_of_dose
+            data = [
+                {
+                'vaccine': 'Pfizer',
+                'number_of_dose':pfizer_stock,
+                },
+                {
+                'vaccine': 'Moderna',
+                'number_of_dose':moderna_stock,
+                },
+                {
+                'vaccine': 'Johnson & Johnson',
+                'number_of_dose':JJ_stock,
+                },
+                {
+                'vaccine': 'AstraZeneca',
+                'number_of_dose':AZ_stock,
+                },
+            ]
+            return Response(data ,status=status.HTTP_200_OK)
+        except:
+            return Response({'Message': 'Something went wrong'}, status=status.HTTP_400_BAD_REQUEST)
+    return Response({'Message': 'You are not authorized to make this request.'}, status=status.HTTP_401_UNAUTHORIZED)
         
 @api_view(['GET'])
 @permission_classes([permissions.IsAuthenticated])

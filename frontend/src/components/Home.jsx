@@ -293,7 +293,7 @@ export default function HomeV2() {
           </p>
           <AnimatePresence>
             <motion.div
-              layout
+              layout="position"
               className="flex flex-wrap justify-center gap-1.5 overflow-hidden lg:px-8 lg:pb-2 lg:pt-2"
             >
               {data.map((item, index) => (

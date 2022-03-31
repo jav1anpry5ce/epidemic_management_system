@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { Transition } from "@headlessui/react";
 
 export default function MythFacts({ image, myth, fact }) {
   const [show, setShow] = useState(false);
@@ -21,7 +20,8 @@ export default function MythFacts({ image, myth, fact }) {
       hover:outline-2 hover:outline-blue-500/70 active:outline active:outline-2 active:outline-blue-500/70"
     >
       <motion.div
-        layout
+        layout="position"
+        transition={{ layout: { duration: 1, type: "spring" } }}
         className="flex h-full w-full flex-col items-center justify-between gap-1 p-3"
       >
         <img src={image} alt="cartoon" className="aspect-square h-20 w-20" />
@@ -34,18 +34,15 @@ export default function MythFacts({ image, myth, fact }) {
         >
           View Fact
         </button>
-        {/* <p className="text-xl font-bold text-blue-700">FACT</p> */}
-        <Transition
-          show={show}
-          enter="transition-all duration-300"
-          enterFrom="opacity-0 translate-y-[-100%]"
-          enterTo="opacity-100 translate-y-[0%]"
-          leave="transition-all duration-300"
-          leaveFrom="opacity-100 translate-y-[0%]"
-          leaveTo="opacity-0 translate-y-[-100%]"
-        >
-          <p className="text-center font-[900] text-blue-700">{fact}</p>
-        </Transition>
+        {show && (
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-center font-[900] text-blue-700"
+          >
+            {fact}
+          </motion.p>
+        )}
       </motion.div>
     </motion.div>
   );

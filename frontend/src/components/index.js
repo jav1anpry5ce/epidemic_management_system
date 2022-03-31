@@ -30,3 +30,5 @@ export { default as PrivateRoutes } from "./PrivateRoutes";
 export { default as Home } from "./Home";
 export { default as StaffManagement } from "./StaffManagement";
 export { default as CasesChart } from "./CasesChart";
+export { default as Inventory } from "./Inventory";
+export { default as UpdateInventory } from "./UpdateInventory";

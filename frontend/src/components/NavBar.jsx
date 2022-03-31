@@ -12,7 +12,7 @@ import { BsPersonFill, BsPersonPlusFill } from "react-icons/bs";
 import { RiVirusLine } from "react-icons/ri";
 import { AiFillHome, AiOutlineFileText } from "react-icons/ai";
 import { TiInfoLarge } from "react-icons/ti";
-import { MdEventAvailable } from "react-icons/md";
+import { MdEventAvailable, MdInsertInvitation } from "react-icons/md";
 import { Transition } from "@headlessui/react";
 
 export default function NavBar({ hide, setHide }) {
@@ -130,6 +130,15 @@ export default function NavBar({ hide, setHide }) {
                     </div>
                   </Nav.Item>
                 )}
+                <Nav.Item
+                  eventKey="7"
+                  onClick={() => navigate("/moh/inventory")}
+                >
+                  <div className="flex items-center space-x-1">
+                    {<MdInsertInvitation className="text-lg" />}
+                    <span>Inventory Management</span>
+                  </div>
+                </Nav.Item>
               </Nav>
               <Nav pullRight>
                 <Nav.Item
