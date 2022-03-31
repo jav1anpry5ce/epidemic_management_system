@@ -69,7 +69,7 @@ export default function PositiveCases() {
   const [date, setDate] = useState(formatDate(new Date()));
   const [sType, setSType] = useState("Positive Cases");
   const [parish, setParish] = useState("St. Andrew");
-  const scroll = { y: 450 };
+  const scroll = { y: 430 };
 
   useEffect(() => {
     dispatch(setActiveKey("3"));
