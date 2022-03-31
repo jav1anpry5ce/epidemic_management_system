@@ -55,12 +55,16 @@ function App() {
       timeout: 180,
       onTimeout: () => {
         if (auth.is_auth) {
-          dispatch(logout());
+          dispatch(logout()).then(() => {
+            window.location = "/login";
+          });
         }
       },
       onExpired: () => {
         if (auth.is_auth) {
-          dispatch(logout());
+          dispatch(logout()).then(() => {
+            window.location = "/login";
+          });
         }
       },
     });
