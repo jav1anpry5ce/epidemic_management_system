@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout } from "./store/authSlice";
 import { Container, Header, Content, Footer as Foot } from "rsuite";
 import { BackTop } from "antd";
-import "./App.css";
 import {
   ActivateAccount,
   AddLocation,
