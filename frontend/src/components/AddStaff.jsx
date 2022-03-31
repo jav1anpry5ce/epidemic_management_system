@@ -76,7 +76,7 @@ export default function AddStaff() {
     dispatch(register(data));
   };
   return (
-    <div className="my-2 mx-auto flex min-h-[calc(100vh-104px)] max-w-lg items-center justify-center justify-items-center py-2">
+    <div className="content-layout max-w-lg">
       <Card
         headStyle={{ backgroundColor: "#1F2937", border: "none" }}
         title={

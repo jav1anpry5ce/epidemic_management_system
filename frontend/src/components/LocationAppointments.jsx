@@ -245,7 +245,7 @@ export default function LocationAppointments() {
   ];
 
   return (
-    <div className="mx-auto flex min-h-[calc(100vh-104px)] max-w-7xl items-center justify-center justify-items-center py-2 px-4">
+    <div className="content-layout max-w-7xl">
       <Modal
         size="lg"
         width={720}

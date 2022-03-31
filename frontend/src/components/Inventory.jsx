@@ -66,7 +66,7 @@ export default function Inventory() {
   ];
 
   return (
-    <div className="mx-auto flex min-h-[calc(100vh-104px)] max-w-3xl items-center justify-center justify-items-center">
+    <div className="content-layout max-w-3xl">
       <Card
         headStyle={{ backgroundColor: "#1F2937", border: "none" }}
         title={

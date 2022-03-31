@@ -51,7 +51,7 @@ export default function LocationHome() {
       },
     ];
     return (
-      <div className="container mx-auto flex min-h-[calc(100vh-104px)] max-w-full flex-col">
+      <div className="content-layout container max-w-full flex-col">
         <motion.div
           layout
           initial={{ opacity: 0, x: -200 }}

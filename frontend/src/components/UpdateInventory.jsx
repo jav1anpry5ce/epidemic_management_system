@@ -71,7 +71,7 @@ export default function UpdateInventory() {
   };
   if (data)
     return (
-      <div className="mx-auto flex min-h-[calc(100vh-104px)] w-full max-w-lg items-center justify-center justify-items-center py-2">
+      <div className="content-layout w-full max-w-lg">
         <div className="flex w-full items-center justify-center">
           <Card
             headStyle={{ backgroundColor: "#1F2937", border: "none" }}

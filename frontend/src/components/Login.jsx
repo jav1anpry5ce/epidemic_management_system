@@ -34,7 +34,7 @@ export default function Login() {
     // eslint-disable-next-line
   }, [auth.is_auth]);
   return (
-    <div className="mx-auto flex min-h-[calc(100vh-104px)] max-w-xl items-center justify-center justify-items-center">
+    <div className="content-layout max-w-xl">
       <Card
         headStyle={{ backgroundColor: "#1F2937", border: "none" }}
         title={
