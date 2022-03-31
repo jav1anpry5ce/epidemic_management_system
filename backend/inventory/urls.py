@@ -11,4 +11,5 @@ urlpatterns = [
     path('get-all-locations/', views.get_locations),
     path('get-batch/<batch_id>', views.get_batch),
     path('update-inventory/', views.update_inventory),
+    path('get-vaccine', views.get_vaccine),
 ]

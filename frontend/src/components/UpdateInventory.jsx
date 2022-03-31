@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Card, Input, Form, Button, Typography, Select } from "antd";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setActiveKey } from "../store/navbarSlice";
-import { clearState, getBatchInfo } from "../store/mohSlice";
 import Loading from "./Loading";
 import axios from "axios";
 import { open } from "../utils/Notifications";
@@ -12,9 +11,9 @@ const { Title } = Typography;
 const { Option } = Select;
 
 export default function UpdateInventory() {
-  const data = useSelector((state) => state.moh);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [data, setData] = useState();
   const [vaccine, setVaccine] = useState();
   const [dose, setDose] = useState("");
   const [loading, setLoading] = useState(false);
@@ -22,10 +21,28 @@ export default function UpdateInventory() {
 
   useEffect(() => {
     dispatch(setActiveKey("7"));
-    dispatch(getBatchInfo());
-    return () => dispatch(clearState());
+    fetch();
     // eslint-disable-next-line
   }, []);
+
+  const fetch = () => {
+    setLoading(true);
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Token " + sessionStorage.getItem("token"),
+      },
+    };
+    axios
+      .get("/api/get-vaccine", config)
+      .then((res) => {
+        setData(res.data);
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
+  };
 
   const handelSubmit = () => {
     const config = {
@@ -52,7 +69,7 @@ export default function UpdateInventory() {
         setLoading(false);
       });
   };
-  if (data.batchInfo)
+  if (data)
     return (
       <div className="mx-auto flex min-h-[calc(100vh-104px)] w-full max-w-lg items-center justify-center justify-items-center py-2">
         <div className="flex w-full items-center justify-center">
@@ -79,7 +96,7 @@ export default function UpdateInventory() {
                 ]}
               >
                 <Select onChange={(e) => setVaccine(e)}>
-                  {data.batchInfo.vaccines.map((item, index) => (
+                  {data.map((item, index) => (
                     <Option key={index} value={item.value}>
                       {item.value}
                     </Option>

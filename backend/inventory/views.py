@@ -165,6 +165,18 @@ def get_batch(request, batch_id):
     except:
         return Response({'Message': 'Something went wrong!'}, status =status.HTTP_400_BAD_REQUEST)
 
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def get_vaccine(request):
+    if request.user.is_moh_staff:
+        try:
+            vaccines = Vaccine.objects.all()
+            serializer = VaccineSerializer(vaccines, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+    return Response({'Message': 'You are not authorized to make this request.'}, status=status.HTTP_401_UNAUTHORIZED)
+
 @api_view(['POST'])
 @permission_classes([permissions.IsAuthenticated])
 def update_inventory(request):
