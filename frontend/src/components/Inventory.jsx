@@ -52,7 +52,7 @@ export default function Inventory() {
       },
     },
     {
-      title: "Number of Dose",
+      title: "In Stock",
       dataIndex: "number_of_dose",
       render: (number_of_dose) => (
         <Tooltip placement="topLeft" title={number_of_dose}>
