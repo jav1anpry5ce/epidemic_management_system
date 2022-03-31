@@ -215,7 +215,7 @@ export default function AddAvailability() {
               type="primary"
               htmlType="submit"
               style={{ border: "none" }}
-              className="rounded-sm bg-gray-700 text-white transition duration-300 hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white"
+              className="btn-primary"
             >
               Add
             </Button>

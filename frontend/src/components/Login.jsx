@@ -78,7 +78,7 @@ export default function Login() {
               htmlType="submit"
               loading={auth.loading}
               style={{ border: "none" }}
-              className="rounded-sm bg-gray-700 text-white transition duration-300 hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white"
+              className="btn-primary"
             >
               Login
             </Button>

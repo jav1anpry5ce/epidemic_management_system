@@ -157,7 +157,7 @@ export default function Locations() {
           type="primary"
           onClick={() => navigate("/moh/locations/create")}
           style={{ marginBottom: 2, marginTop: -8, border: "none" }}
-          className="rounded-sm bg-gray-700 text-white transition duration-300 hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white"
+          className="btn-primary"
         >
           Add Site
         </Button>

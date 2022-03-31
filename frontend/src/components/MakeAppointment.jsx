@@ -273,7 +273,7 @@ export default function MakeAppointment() {
             loading={patient.loading}
             onClick={handelSubmit}
             style={{ border: "none" }}
-            className="rounded-sm bg-gray-700 text-white transition duration-300 hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white"
+            className="btn-primary"
           >
             Submit
           </Button>,
@@ -952,7 +952,7 @@ export default function MakeAppointment() {
                   appearance="primary"
                   disabled={location.loading}
                   style={{ border: "none" }}
-                  className="rounded-sm bg-gray-700 text-white transition duration-300 hover:bg-gray-800 hover:text-white focus:bg-gray-800 focus:text-white"
+                  className="btn-primary"
                 >
                   Submit
                 </Button>
