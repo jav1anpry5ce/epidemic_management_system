@@ -173,7 +173,7 @@ export default function BatchManagement() {
   });
 
   return (
-    <div className="mx-auto flex min-h-[calc(100vh-104px)] max-w-6xl items-center justify-center justify-items-center py-2">
+    <div className="content-layout max-w-6xl">
       <Modal
         visible={show}
         onCancel={() => setShow(false)}
