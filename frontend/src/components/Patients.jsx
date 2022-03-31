@@ -39,7 +39,7 @@ export default function Patients() {
   const [vaccinedExpaned, setVaccinedExpanded] = useState(false);
   const [testingExpaned, setTestingExpanded] = useState(false);
   const [form] = Form.useForm();
-  const scroll = { y: 470 };
+  const scroll = { y: 450 };
 
   useEffect(() => {
     dispatch(setActiveKey("2"));

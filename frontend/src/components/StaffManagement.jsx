@@ -26,7 +26,7 @@ export default function StaffManagement() {
   const [q, setQ] = useState("");
   const [show, setShow] = useState(false);
   const [staff, setStaff] = useState();
-  const scroll = { y: 470 };
+  const scroll = { y: 450 };
 
   useEffect(() => {
     if (auth.is_location_admin) dispatch(setActiveKey("4"));

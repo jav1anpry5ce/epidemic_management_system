@@ -12,7 +12,7 @@ export default function Inventory() {
   const dispatch = useDispatch();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const scroll = { y: 470 };
+  const scroll = { y: 450 };
   useEffect(() => {
     dispatch(setActiveKey("7"));
     fetch();
