@@ -262,7 +262,6 @@ export default function LocationAppointments() {
               >
                 Cancel
               </Button>
-
               <Button
                 key={shortid.generate()}
                 loading={appointments.aLoading}
