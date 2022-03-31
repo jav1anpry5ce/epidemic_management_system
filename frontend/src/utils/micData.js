@@ -1,6 +1,6 @@
 const parishData = [
   { label: "St. Andrew", value: "St. Andrew" },
-  { label: "Portland ", value: "Portland " },
+  { label: "Portland ", value: "Portland" },
   { label: "St. Thomas", value: "St. Thomas" },
   { label: "St. Catherine", value: "St. Catherine" },
   { label: "St. Mary", value: "St. Mary" },
