@@ -56,14 +56,14 @@ function App() {
       onTimeout: () => {
         if (auth.is_auth) {
           dispatch(logout()).then(() => {
-            window.location = "/login";
+            window.location = "/accounts/login";
           });
         }
       },
       onExpired: () => {
         if (auth.is_auth) {
           dispatch(logout()).then(() => {
-            window.location = "/login";
+            window.location = "/accounts/login";
           });
         }
       },
