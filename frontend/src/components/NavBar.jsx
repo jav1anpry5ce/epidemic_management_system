@@ -113,10 +113,7 @@ export default function NavBar({ hide, setHide }) {
                     <span>Batch</span>
                   </div>
                 </Nav.Item>
-                <Nav.Item
-                  eventKey="5"
-                  onClick={() => navigate("/moh/locations")}
-                >
+                <Nav.Item eventKey="5" onClick={() => navigate("/moh/sites")}>
                   <div className="flex items-center space-x-1">
                     {<BiCurrentLocation className="text-lg" />}
                     <span>Sites</span>

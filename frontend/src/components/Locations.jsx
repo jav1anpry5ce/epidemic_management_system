@@ -155,7 +155,7 @@ export default function Locations() {
       >
         <Button
           type="primary"
-          onClick={() => navigate("/moh/locations/create")}
+          onClick={() => navigate("/moh/sites/create")}
           style={{ marginBottom: 2, marginTop: -8, border: "none" }}
           className="btn-primary"
         >

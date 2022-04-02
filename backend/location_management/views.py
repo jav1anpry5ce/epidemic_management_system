@@ -409,7 +409,7 @@ def add_location(request):
                 return Response({'Message': 'Please provide a street address'}, status=status.HTTP_400_BAD_REQUEST)
             return Response({'Message': 'Please provide a location name'}, status=status.HTTP_400_BAD_REQUEST)
         except:
-            return Response({}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
     return Response({'Message': 'You are not authorized to create a location'}, status=status.HTTP_401_UNAUTHORIZED)
 
 def returnDate (year, month):

@@ -209,7 +209,7 @@ function App() {
                   }
                 />
               </Route>
-              <Route path="locations">
+              <Route path="sites">
                 <Route
                   index
                   element={
