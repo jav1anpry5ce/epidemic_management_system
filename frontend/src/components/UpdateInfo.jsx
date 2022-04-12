@@ -210,7 +210,7 @@ export default function UpdateInfo() {
           headStyle={{ backgroundColor: "#1F2937", border: "none" }}
           title={
             <Title level={3} style={{ color: "white" }} align="center">
-              Code
+              Code Entry
             </Title>
           }
           bordered={false}
@@ -219,7 +219,7 @@ export default function UpdateInfo() {
           {patient.message && <Alert type="error" message={patient.message} />}
           <Form layout="vertical" onFinish={() => handelSubmit("code-verify")}>
             <Form.Item
-              label="Enter your code"
+              label="Please enter the code you received in your email."
               name="code"
               rules={[
                 {
@@ -228,7 +228,10 @@ export default function UpdateInfo() {
                 },
               ]}
             >
-              <Input onChange={(e) => setCode(e.target.value)} />
+              <Input
+                onChange={(e) => setCode(e.target.value)}
+                placeholder="Enter code here"
+              />
             </Form.Item>
             <Form.Item style={{ marginBottom: 0 }}>
               <div

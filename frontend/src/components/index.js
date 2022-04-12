@@ -32,3 +32,4 @@ export { default as StaffManagement } from "./StaffManagement";
 export { default as CasesChart } from "./CasesChart";
 export { default as Inventory } from "./Inventory";
 export { default as UpdateInventory } from "./UpdateInventory";
+export { default as EpidemicSummary } from "./EpidemicSummary";

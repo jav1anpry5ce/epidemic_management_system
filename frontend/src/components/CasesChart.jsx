@@ -15,7 +15,13 @@ import axios from "axios";
 import { DatePicker } from "antd";
 import { motion } from "framer-motion";
 
-export default function PositiveCasesChart({ name, api, width, chartType }) {
+export default function PositiveCasesChart({
+  name,
+  api,
+  width,
+  height,
+  chartType,
+}) {
   const [cases, setCases] = useState([]);
   const [year, setYear] = useState(new Date().getFullYear());
   const [month, setMonth] = useState(new Date().getMonth() + 1);
@@ -46,8 +52,8 @@ export default function PositiveCasesChart({ name, api, width, chartType }) {
         initial={{ opacity: 0, y: 200 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1, ease: "easeInOut" }}
-        className={`h-[20rem] ${
-          width ? width : "w-[28rem]"
+        className={`${width ? width : "w-[28rem]"} ${
+          height ? height : "h-[20rem]"
         }  overflow-hidden rounded bg-white`}
       >
         <h3 className="rounded-t bg-[#10496d] py-1 text-center text-lg font-medium text-white">
@@ -57,7 +63,7 @@ export default function PositiveCasesChart({ name, api, width, chartType }) {
           <div className="flex w-full items-center justify-between gap-2">
             <DatePicker
               picker="month"
-              className="w-[50%]"
+              className="w-[20%]"
               onChange={(e) => getYearMonth(e)}
             />
             <p className="font-semibold">
@@ -82,7 +88,7 @@ export default function PositiveCasesChart({ name, api, width, chartType }) {
                 }}
               >
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" interval="preserveStart" />
+                <XAxis dataKey="date" interval={1} />
                 <YAxis interval="preserveStart" />
                 <Tooltip />
                 <Legend />
@@ -100,9 +106,9 @@ export default function PositiveCasesChart({ name, api, width, chartType }) {
         initial={{ opacity: 0, y: 200 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1, ease: "easeInOut" }}
-        className={`h-[20rem] ${
-          width ? width : "w-[28rem]"
-        }  overflow-hidden rounded bg-white`}
+        className={`h-[20rem] ${width ? width : "w-[28rem]"} ${
+          height ? height : "h-[20rem]"
+        } overflow-hidden rounded bg-white`}
       >
         <h3 className="rounded-t bg-[#10496d] py-1 text-center text-lg font-medium text-white">
           {name}
@@ -112,7 +118,7 @@ export default function PositiveCasesChart({ name, api, width, chartType }) {
           <div className="flex w-full items-center justify-between gap-2">
             <DatePicker
               picker="month"
-              className="w-[50%]"
+              className="w-[20%]"
               onChange={(e) => getYearMonth(e)}
             />
             <p className="font-semibold">

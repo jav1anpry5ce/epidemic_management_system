@@ -39,6 +39,7 @@ import {
   StaffManagement,
   Inventory,
   UpdateInventory,
+  EpidemicSummary,
 } from "./components";
 
 import IdleTimer from "./utils/IdleTimer";
@@ -52,7 +53,7 @@ function App() {
 
   useEffect(() => {
     const timer = new IdleTimer({
-      timeout: 180,
+      timeout: 1800,
       onTimeout: () => {
         if (auth.is_auth) {
           dispatch(logout()).then(() => {
@@ -172,6 +173,14 @@ function App() {
                 element={
                   <PrivateRoutes accessUser="moh">
                     <Moh />
+                  </PrivateRoutes>
+                }
+              />
+              <Route
+                path="summary"
+                element={
+                  <PrivateRoutes accessUser="moh">
+                    <EpidemicSummary />
                   </PrivateRoutes>
                 }
               />

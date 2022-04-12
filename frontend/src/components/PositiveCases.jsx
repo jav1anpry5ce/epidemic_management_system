@@ -7,7 +7,6 @@ import {
   updateCase,
   updateSuccess,
   resetLink,
-  generateCsv,
 } from "../store/mohSlice";
 import { setActiveKey } from "../store/navbarSlice";
 import { EyeOutlined } from "@ant-design/icons";
@@ -54,6 +53,7 @@ export default function PositiveCases() {
   const [status, setStatus] = useState("");
   const [location, setLocation] = useState("");
   const [loading, setLoading] = useState(false);
+  const [genLoad, setGenLoad] = useState(false);
   const [caseId, setCaseId] = useState("");
   const [data, setData] = useState();
   const [order, setOrder] = useState("");
@@ -68,6 +68,7 @@ export default function PositiveCases() {
   const [genShow, setGenShow] = useState(false);
   const [date, setDate] = useState(formatDate(new Date()));
   const [sType, setSType] = useState("Positive Cases");
+  const [genType, setGenType] = useState();
   const [parish, setParish] = useState("St. Andrew");
   const scroll = { y: 400 };
 
@@ -171,12 +172,35 @@ export default function PositiveCases() {
     }
   };
 
-  const handelGenerate = () => {
+  const handelGenerate = async () => {
+    setGenLoad(true);
     const data = {
-      type: sType,
+      type: genType,
       date,
     };
-    dispatch(generateCsv(data));
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Token " + sessionStorage.getItem("token"),
+      },
+    };
+    const response = await axios.get(
+      `api/generate-csv/${data.date}/${data.type}`,
+      config
+    );
+    if (response.status === 200) {
+      const data = response.data;
+      const file = data.link;
+      const link = document.createElement("a");
+      link.href = file;
+      link.setAttribute("download", "report.csv");
+      document.body.appendChild(link);
+      link.click();
+      open("success", "Success", "Report Generated");
+    } else {
+      open("error", "Error", "Report Generation Failed");
+    }
+    setGenLoad(false);
   };
 
   const handleTableChange = (pagination, a, sorter) => {
@@ -533,25 +557,31 @@ export default function PositiveCases() {
             style={{ border: "none" }}
             className="btn-primary"
             onClick={handelGenerate}
+            loading={genLoad}
           >
-            Generate
+            Download
           </Button>,
         ]}
       >
-        <h3 className="mb-2 text-base">Cases date</h3>
-        <DatePicker
-          className="w-full"
-          format="DD/MM/yyyy"
-          defaultValue={moment(new Date())}
-          onChange={(e) => setDate(formatDate(e._d))}
-        />
-        {moh.link && (
-          <p className="mt-2 text-base">
-            <a href={moh.link} download>
-              {moh.link}
-            </a>
-          </p>
-        )}
+        <h3 className="my-2 pt-1 text-base">
+          Please select the date and case type you would like to generate the
+          report for.
+        </h3>
+        <div className="flex flex-col gap-3">
+          <Select className="w-full" onChange={(e) => setGenType(e)}>
+            {statusType.map((item) => (
+              <Option key={shortid.generate()} value={item.value}>
+                {item.label}
+              </Option>
+            ))}
+          </Select>
+          <DatePicker
+            className="w-full"
+            format="DD/MM/yyyy"
+            defaultValue={moment(new Date())}
+            onChange={(e) => setDate(formatDate(e._d))}
+          />
+        </div>
       </Modal>
       <Card
         headStyle={{ backgroundColor: "#1F2937", border: "none" }}

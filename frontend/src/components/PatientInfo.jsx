@@ -83,13 +83,13 @@ function PatientInfo() {
             </Grid>
             <Grid item xs={12} sm={6}>
               <CollapseCard
-                Title="Testing Record"
+                Title="Testing Result(s)"
                 expand={testingExpaned}
                 setExpand={expandTesting}
                 Data={patient.testingRecord}
               />
               <CollapseCard
-                Title="Vaccination Record"
+                Title="Vaccination Result(s)"
                 expand={vaccinedExpaned}
                 setExpand={expandVaccine}
                 Data={patient.vaccineRecord}

@@ -339,13 +339,18 @@ def generate_cvs(request, date, type):
         if request.user.is_moh_staff:
             with open (f'media/csv/{type}-report-{date}-for-{str(request.user)}.csv', 'w', newline='') as f:
                 writer = csv.writer(f)
-                writer.writerow(['First Name', 'Last Name', 'Phone', 'Street Address', 'City', 'Parish', 'Date',])
                 if type == 'Positive Cases':
-                    cases = PositiveCase.objects.filter(date_tested=date).values_list('patient__first_name', 'patient__last_name', 'patient__phone', 'patient__street_address', 'patient__city', 'patient__parish', 'date_tested')
+                    writer.writerow(['First Name', 'Last Name', 'Gender', 'Date Of Birth', 'Phone', 'City', 'Parish', 'Date',])
+                    cases = PositiveCase.objects.filter(date_tested=date).values_list('patient__first_name', 'patient__last_name', 'patient__gender', 'patient__date_of_birth', 'patient__phone', 'patient__city', 'patient__parish', 'date_tested')
                 if type == 'Death':
-                    cases = DeathCase.objects.filter(death_date=date).values_list('patient__first_name', 'patient__last_name', 'patient__phone', 'patient__street_address', 'patient__city', 'patient__parish', 'death_date')
+                    writer.writerow(['First Name', 'Last Name', 'Gender', 'Date Of Birth', 'City', 'Parish', 'Date',])
+                    cases = DeathCase.objects.filter(death_date=date).values_list('patient__first_name', 'patient__last_name', 'patient__gender', 'patient__date_of_birth', 'patient__city', 'patient__parish', 'death_date')
                 if type == 'Recovered':
-                    cases = RecoveredCase.objects.filter(recovery_date=date).values_list('patient__first_name', 'patient__last_name', 'patient__phone', 'patient__street_address', 'patient__city', 'patient__parish', 'recovery_date')
+                    writer.writerow(['First Name', 'Last Name', 'Gender', 'Date Of Birth', 'City', 'Parish', 'Date',])
+                    cases = RecoveredCase.objects.filter(recovery_date=date).values_list('patient__first_name', 'patient__last_name', 'patient__gender', 'patient__date_of_birth', 'patient__city', 'patient__parish', 'recovery_date')
+                if type == 'Hospitalized':
+                    writer.writerow(['First Name', 'Last Name', 'Gender', 'Date Of Birth', 'City', 'Parish', 'Date',])
+                    cases = HospitalizedCase.objects.filter(hospitalized_date=date).values_list('patient__first_name', 'patient__last_name', 'patient__gender', 'patient__date_of_birth', 'patient__city', 'patient__parish', 'hospitalized_date')
                 for case in cases:
                     writer.writerow(case)
             return Response({'link': f'https://javaughnpryce.live:8001/media/csv/{type}-report-{date}-for-{str(request.user)}.csv'})

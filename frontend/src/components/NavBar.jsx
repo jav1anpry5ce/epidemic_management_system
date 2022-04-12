@@ -10,9 +10,12 @@ import { BiCurrentLocation } from "react-icons/bi";
 import { GiCardboardBox } from "react-icons/gi";
 import { BsPersonFill, BsPersonPlusFill } from "react-icons/bs";
 import { RiVirusLine } from "react-icons/ri";
-import { AiFillHome, AiOutlineFileText } from "react-icons/ai";
-import { TiInfoLarge } from "react-icons/ti";
-import { MdEventAvailable, MdInsertInvitation } from "react-icons/md";
+import { AiFillEdit, AiFillHome, AiOutlineFileText } from "react-icons/ai";
+import {
+  MdDataUsage,
+  MdEventAvailable,
+  MdInsertInvitation,
+} from "react-icons/md";
 import { Transition } from "@headlessui/react";
 
 export default function NavBar({ hide, setHide }) {
@@ -134,6 +137,15 @@ export default function NavBar({ hide, setHide }) {
                   <div className="flex items-center space-x-1">
                     {<MdInsertInvitation className="text-lg" />}
                     <span>Inventory Management</span>
+                  </div>
+                </Nav.Item>
+                <Nav.Item
+                  eventKey="10"
+                  onClick={() => navigate("/moh/summary")}
+                >
+                  <div className="flex items-center space-x-1">
+                    {<MdDataUsage className="text-lg" />}
+                    <span>Epidemic Summary</span>
                   </div>
                 </Nav.Item>
               </Nav>
@@ -291,7 +303,7 @@ export default function NavBar({ hide, setHide }) {
                 <Nav.Item eventKey="5" onClick={() => navigate(`/records`)}>
                   <div className="flex items-center space-x-1">
                     {<AiOutlineFileText className="text-lg" />}
-                    <span>Get my Records</span>
+                    <span>Get My Records</span>
                   </div>
                 </Nav.Item>
                 <Nav.Item
@@ -299,7 +311,7 @@ export default function NavBar({ hide, setHide }) {
                   onClick={() => navigate(`/update/patient/info`)}
                 >
                   <div className="flex items-center space-x-1">
-                    {<TiInfoLarge className="text-lg" />}
+                    {<AiFillEdit className="text-lg" />}
                     <span>Update Information</span>
                   </div>
                 </Nav.Item>
@@ -376,7 +388,7 @@ export default function NavBar({ hide, setHide }) {
                       >
                         <div className="flex items-center space-x-1">
                           {<AiOutlineFileText className="text-lg" />}
-                          <span>Get my Records</span>
+                          <span>Get My Records</span>
                         </div>
                       </Nav.Item>
                       <Nav.Item
@@ -384,7 +396,7 @@ export default function NavBar({ hide, setHide }) {
                         onClick={() => navigate(`/update/patient/info`)}
                       >
                         <div className="flex items-center space-x-1">
-                          {<TiInfoLarge className="text-lg" />}
+                          {<AiFillEdit className="text-lg" />}
                           <span>Update Information</span>
                         </div>
                       </Nav.Item>

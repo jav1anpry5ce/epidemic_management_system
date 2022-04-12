@@ -28,6 +28,7 @@ const recoveringData = [
 
 const statusType = [
   { label: "Death", value: "Death" },
+  { label: "Hospitalized", value: "Hospitalized" },
   { label: "Recovered", value: "Recovered" },
   { label: "Positive Cases", value: "Positive Cases" },
 ];

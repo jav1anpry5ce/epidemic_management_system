@@ -10,7 +10,7 @@ export default function GetRecords() {
   const dispatch = useDispatch();
   const [trn, setTrn] = useState();
   const [code, setCode] = useState();
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState();
   const [link, setLink] = useState();
   const [message, setMessage] = useState();
   const [loading, setLoading] = useState(false);
@@ -98,7 +98,7 @@ export default function GetRecords() {
           headStyle={{ backgroundColor: "#1F2937", border: "none" }}
           title={
             <p className="text-center text-2xl font-semibold text-white">
-              Verify Identity
+              Code Entry
             </p>
           }
           bordered={false}
@@ -107,7 +107,7 @@ export default function GetRecords() {
           {message && <Alert type="error" message={message} />}
           <Form layout="vertical" onFinish={handelSubmit}>
             <Form.Item
-              label="Code"
+              label="Please enter the code you received in your email."
               name="code"
               rules={[
                 {
@@ -118,7 +118,7 @@ export default function GetRecords() {
             >
               <Input
                 onChange={(e) => setCode(e.target.value)}
-                placeholder="Please enter the code you received"
+                placeholder="Enter code here"
               />
             </Form.Item>
             <Form.Item style={{ marginBottom: 2 }}>
