@@ -88,7 +88,7 @@ export default function PositiveCasesChart({
                 }}
               >
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" interval={1} />
+                <XAxis dataKey="date" interval="preserveStart" />
                 <YAxis interval="preserveStart" />
                 <Tooltip />
                 <Legend />

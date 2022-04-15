@@ -93,7 +93,7 @@ export default function MOHHOME() {
           className="flex flex-col gap-12"
         >
           <div>
-            <h3 className="mb-6 text-center text-3xl text-white">
+            <h3 className="mb-6 text-center text-3xl font-bold text-white">
               Vaccine to Distribute
             </h3>
             <div className="grid w-full grid-cols-4 place-items-center gap-4 px-2 pt-4">
@@ -128,7 +128,7 @@ export default function MOHHOME() {
             </div>
           </div>
           <div>
-            <h3 className="mb-6 text-center text-3xl text-white">
+            <h3 className="mb-6 text-center text-3xl font-bold text-white">
               Vaccine in Stock
             </h3>
             <div className="grid w-full grid-cols-4 place-items-center gap-4 px-2 pt-4">
