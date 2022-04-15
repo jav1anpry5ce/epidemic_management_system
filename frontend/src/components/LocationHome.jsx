@@ -89,11 +89,13 @@ export default function LocationHome() {
             width="w-[40rem]"
             name="Test Administered"
             api="api/cases/test-administered"
+            color="#10496d"
           />
           <CasesChart
             width="w-[40rem]"
             name="Vaccine Administered"
             api="api/cases/vaccine-administered"
+            color="#4f8598"
           />
         </div>
       </div>
