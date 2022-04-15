@@ -143,7 +143,7 @@ export default function MohAdd() {
           >
             <Input onChange={(e) => setLastName(e.target.value)} />
           </Form.Item>
-          {accountType === "Location Admin" ? (
+          {accountType === "Site Admin" ? (
             <Form.Item
               label="Location"
               name="location"
