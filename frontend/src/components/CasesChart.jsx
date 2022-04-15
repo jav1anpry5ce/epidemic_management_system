@@ -15,13 +15,7 @@ import axios from "axios";
 import { DatePicker } from "antd";
 import { motion } from "framer-motion";
 
-export default function PositiveCasesChart({
-  name,
-  api,
-  width,
-  height,
-  chartType,
-}) {
+export default function PositiveCasesChart({ name, api, width, height, chartType, color }) {
   const [cases, setCases] = useState([]);
   const [year, setYear] = useState(new Date().getFullYear());
   const [month, setMonth] = useState(new Date().getMonth() + 1);
@@ -56,14 +50,17 @@ export default function PositiveCasesChart({
           height ? height : "h-[20rem]"
         }  overflow-hidden rounded bg-white`}
       >
-        <h3 className="rounded-t bg-[#10496d] py-1 text-center text-lg font-medium text-white">
+        <h3
+          style={{ background: color }}
+          className={`rounded-t py-1 text-center text-lg font-semibold text-white`}
+        >
           {name}
         </h3>
         <div className="flex h-full w-full flex-col items-center p-2">
           <div className="flex w-full items-center justify-between gap-2">
             <DatePicker
               picker="month"
-              className="w-[20%]"
+              className="w-[40%]"
               onChange={(e) => getYearMonth(e)}
             />
             <p className="font-semibold">
@@ -92,7 +89,7 @@ export default function PositiveCasesChart({
                 <YAxis interval="preserveStart" />
                 <Tooltip />
                 <Legend />
-                <Bar dataKey="count" fill="#437ab2" />
+                <Bar dataKey="count" fill={color} />
               </BarChart>
             </ResponsiveContainer>
           )}
@@ -110,7 +107,10 @@ export default function PositiveCasesChart({
           height ? height : "h-[20rem]"
         } overflow-hidden rounded bg-white`}
       >
-        <h3 className="rounded-t bg-[#10496d] py-1 text-center text-lg font-medium text-white">
+        <h3
+          style={{ background: color }}
+          className="rounded-t py-1 text-center text-lg font-semibold text-white"
+        >
           {name}
         </h3>
 
@@ -118,7 +118,7 @@ export default function PositiveCasesChart({
           <div className="flex w-full items-center justify-between gap-2">
             <DatePicker
               picker="month"
-              className="w-[20%]"
+              className="w-[40%]"
               onChange={(e) => getYearMonth(e)}
             />
             <p className="font-semibold">
@@ -150,7 +150,7 @@ export default function PositiveCasesChart({
                 <Line
                   type="monotone"
                   dataKey="count"
-                  stroke="#437ab2"
+                  stroke={color}
                   activeDot={{ r: 8 }}
                 />
               </LineChart>

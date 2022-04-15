@@ -10,7 +10,7 @@ export default function GetRecords() {
   const dispatch = useDispatch();
   const [trn, setTrn] = useState();
   const [code, setCode] = useState();
-  const [page, setPage] = useState();
+  const [page, setPage] = useState(1);
   const [link, setLink] = useState();
   const [message, setMessage] = useState();
   const [loading, setLoading] = useState(false);

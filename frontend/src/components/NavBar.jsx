@@ -165,7 +165,7 @@ export default function NavBar({ hide, setHide }) {
                 activeKey={nav.activeKey}
                 style={{ marginRight: 5 }}
               >
-                <Nav.Item disabled>Hello, {auth.username}</Nav.Item>
+                {/* <Nav.Item disabled>Hello, {auth.username}</Nav.Item> */}
                 <Dropdown title="Settings" icon={<Icon icon="cog" />}>
                   <Dropdown.Item
                     eventKey="8"
