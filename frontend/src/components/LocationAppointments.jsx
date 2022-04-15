@@ -163,7 +163,7 @@ export default function LocationAppointments() {
       },
     },
     {
-      title: "Name",
+      title: "Patient Name",
       dataIndex: "patient",
       render: (patient) => (
         <Tooltip

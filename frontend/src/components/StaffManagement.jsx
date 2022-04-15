@@ -111,7 +111,7 @@ export default function StaffManagement() {
 
   const columns = [
     {
-      title: "Name",
+      title: "Staff Name",
       render: (data) => (
         <Tooltip
           placement="topLeft"

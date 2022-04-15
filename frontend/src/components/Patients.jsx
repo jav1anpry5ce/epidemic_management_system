@@ -138,7 +138,7 @@ export default function Patients() {
       },
     },
     {
-      title: "Name",
+      title: "Patient Name",
       dataIndex: ["first_name", "last_name"],
       render: (text, row) => (
         <Tooltip

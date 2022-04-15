@@ -198,7 +198,7 @@ export default function VaccinationAndTesting() {
       },
     },
     {
-      title: "Name",
+      title: "Patient Name",
       dataIndex: "patient",
       render: (patient) => (
         <Tooltip

@@ -213,7 +213,7 @@ export default function PositiveCases() {
 
   const columns = [
     {
-      title: "Name",
+      title: "Patient Name",
       dataIndex: "patient",
       render: (patient) => (
         <Tooltip
