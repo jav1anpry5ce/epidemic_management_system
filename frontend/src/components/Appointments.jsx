@@ -47,7 +47,7 @@ export default function Appointments() {
       <div className="mt-4">
         <Typography variant="h4" style={{ color: "white" }}>
           Learn the{" "}
-          <Link to="/" className="text-blue-500 hover:underline">
+          <Link to="/" className="font-semibold text-blue-500 underline">
             facts
           </Link>{" "}
           about COVID-19! Get vaccinated!
