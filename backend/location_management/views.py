@@ -431,7 +431,7 @@ def get_positive_cases(request):
             positive_cases = PositiveCase.objects.filter(date_tested=date).exclude(status__in=excludes).count()
             case_data = {
                 "date": date.strftime("%b-%d"),
-                "count": positive_cases
+                "Cases": positive_cases
             }
             total += positive_cases
             positive_cases_for_month.append(case_data)
@@ -451,7 +451,7 @@ def get_hospitalized(request):
             hospitalized_cases = HospitalizedCase.objects.filter(hospitalized_date=date).count()
             case_data = {
                 "date": date.strftime("%b-%d"),
-                "count": hospitalized_cases
+                "Cases": hospitalized_cases
             }
             total += hospitalized_cases
             hospitalized_cases_for_month.append(case_data)
@@ -471,7 +471,7 @@ def get_death(request):
             death_cases = DeathCase.objects.filter(death_date=date).count()
             case_data = {
                 "date": date.strftime("%b-%d"),
-                "count": death_cases
+                "Cases": death_cases
             }
             total += death_cases
             death_cases_for_month.append(case_data)
@@ -491,7 +491,7 @@ def get_recovered(request):
             recovered_cases = RecoveredCase.objects.filter(recovery_date=date).count()
             case_data = {
                 "date": date.strftime("%b-%d"),
-                "count": recovered_cases
+                "Cases": recovered_cases
             }
             total += recovered_cases
             recovered_cases_for_month.append(case_data)
@@ -513,7 +513,7 @@ def get_test_administered(request):
             else: test_administered = Testing.objects.filter(status='Completed', date=date, location=request.user.location).count()
             case_data = {
                 "date": date.strftime("%b-%d"),
-                "count": test_administered
+                "Administered": test_administered
             }
             total += test_administered
             test_administered_for_month.append(case_data)
@@ -535,7 +535,7 @@ def get_vaccine_administered(request):
             else: vaccine_administered = Vaccination.objects.filter(status='Completed', date_given=date, location=request.user.location).count()
             case_data = {
                 "date": date.strftime("%b-%d"),
-                "count": vaccine_administered
+                "Administered": vaccine_administered
             }
             total += vaccine_administered
             vaccine_administered_for_month.append(case_data)
