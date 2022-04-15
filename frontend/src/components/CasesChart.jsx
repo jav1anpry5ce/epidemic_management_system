@@ -94,7 +94,6 @@ export default function PositiveCasesChart({ name, api, width, height, chartType
                 ) : (
                   <Bar dataKey="Cases" fill={color} />
                 )}
-                {/* <Bar dataKey={"cases" || "Administered"} fill={color} /> */}
               </BarChart>
             </ResponsiveContainer>
           )}
@@ -152,7 +151,6 @@ export default function PositiveCasesChart({ name, api, width, height, chartType
                 <YAxis interval="preserveStart" />
                 <Tooltip />
                 <Legend />
-                {console.log(cases?.Data && cases?.Data[0]?.Administered)}
                 {cases?.Data && cases?.Data[0]?.Administered >= 0 ? (
                   <Line
                     type="monotone"
@@ -168,12 +166,6 @@ export default function PositiveCasesChart({ name, api, width, height, chartType
                     activeDot={{ r: 8 }}
                   />
                 )}
-                {/* <Line
-                  type="monotone"
-                  dataKey="cases"
-                  stroke={color}
-                  activeDot={{ r: 8 }}
-                /> */}
               </LineChart>
             </ResponsiveContainer>
           )}
