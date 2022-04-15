@@ -20,25 +20,29 @@ export default function LocationHome() {
   if (data.locationData) {
     const cardData = [
       data.locationData.pfizer_in_stock !== null && {
-        name: "Pfizer In Stock",
+        name: "Pfizer",
+        type: "Stock",
         data: data.locationData.pfizer_in_stock,
         backgroundcolour: "#10496d",
         visible: data.locationData.pfizer_in_stock !== null ? true : false,
       },
       data.locationData.moderna_in_stock !== null && {
-        name: "Moderna In Stock",
+        name: "Moderna",
+        type: "Stock",
         data: data.locationData.moderna_in_stock,
         backgroundcolour: "#10496d",
         visible: data.locationData.moderna_in_stock !== null ? true : false,
       },
       data.locationData.jj_in_stock !== null && {
-        name: "Johnson & Johnson In Stock",
+        name: "Johnson & Johnson",
+        type: "Stock",
         data: data.locationData.jj_in_stock,
         backgroundcolour: "#10496d",
         visible: data.locationData.jj_in_stock !== null ? true : false,
       },
       data.locationData.az_in_stock !== null && {
-        name: "AstraZeneca In Stock",
+        name: "AstraZeneca",
+        type: "Stock",
         data: data.locationData.az_in_stock,
         backgroundcolour: "#4f8598",
         visible: data.locationData.az_in_stock !== null ? true : false,
@@ -57,32 +61,38 @@ export default function LocationHome() {
           initial={{ opacity: 0, x: -200 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 1, ease: "easeInOut" }}
-          className="grid w-full grid-cols-3 place-items-center gap-4 px-2 pt-4"
+          className="pt-4"
         >
-          {cardData.map(
-            (data) =>
-              data.visible && (
-                <div
-                  key={data.name}
-                  className="relative flex h-[4.625rem] w-[18rem] transform flex-col justify-center rounded bg-white px-2 drop-shadow-xl duration-300 hover:translate-x-6"
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="ml-1 flex items-center gap-2">
-                      <p className="max-w-[9rem] font-semibold text-black">
-                        {data.name}
+          <h3 className="mb-6 text-center text-3xl font-bold text-white">
+            Vaccine in Stock
+          </h3>
+          <div className="grid w-full grid-cols-4 place-items-center gap-4 px-2 pt-4">
+            {cardData.map(
+              (data) =>
+                data.visible &&
+                data.type === "Stock" && (
+                  <div
+                    key={data.name}
+                    className="relative flex h-[4.625rem] w-[18rem] transform flex-col justify-center rounded bg-white px-2 drop-shadow-xl duration-300 hover:translate-y-6"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="ml-1 flex items-center gap-2">
+                        <p className="max-w-[9rem] font-semibold text-black">
+                          {data.name}
+                        </p>
+                      </div>
+                      <p className="text-lg font-semibold text-black">
+                        {data.data}
                       </p>
                     </div>
-                    <p className="text-lg font-semibold text-black">
-                      {data.data}
-                    </p>
+                    <div
+                      style={{ backgroundColor: data.backgroundcolour }}
+                      className="absolute left-0 top-0 h-full w-1.5"
+                    />
                   </div>
-                  <div
-                    style={{ backgroundColor: data.backgroundcolour }}
-                    className="absolute left-0 top-0 h-full w-1.5"
-                  />
-                </div>
-              )
-          )}
+                )
+            )}
+          </div>
         </motion.div>
         <div className="flex w-full flex-1 flex-wrap place-content-center gap-3 px-2 py-4">
           <CasesChart
