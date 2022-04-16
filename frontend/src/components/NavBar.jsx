@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Icon, Navbar, Nav, Dropdown } from "rsuite";
-import { FaBars } from "react-icons/fa";
+import { FaBars, FaBox } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../store/authSlice";
@@ -11,11 +11,7 @@ import { GiCardboardBox } from "react-icons/gi";
 import { BsPersonFill, BsPersonPlusFill } from "react-icons/bs";
 import { RiVirusLine } from "react-icons/ri";
 import { AiFillEdit, AiFillHome, AiOutlineFileText } from "react-icons/ai";
-import {
-  MdDataUsage,
-  MdEventAvailable,
-  MdInsertInvitation,
-} from "react-icons/md";
+import { MdDataUsage, MdEventAvailable } from "react-icons/md";
 import { Transition } from "@headlessui/react";
 
 export default function NavBar({ hide, setHide }) {
@@ -135,7 +131,7 @@ export default function NavBar({ hide, setHide }) {
                   onClick={() => navigate("/moh/inventory")}
                 >
                   <div className="flex items-center space-x-1">
-                    {<MdInsertInvitation className="text-lg" />}
+                    {<FaBox className="text-lg" />}
                     <span>Inventory Management</span>
                   </div>
                 </Nav.Item>
