@@ -115,7 +115,7 @@ class ActivateAccount(models.Model):
 @receiver(post_save, sender=ActivateAccount)
 def account_post_save(sender, instance, created, *args, **kwargs):
     if created:
-        subject, from_email, to = 'Account Activation!', 'donotreply@localhost', instance.user.email
+        subject, from_email, to = 'Account Activation!', 'jav1anpry5ce@javaughnpryce.live', instance.user.email
         html_content = f'''
         <html>
             <body>
@@ -133,7 +133,7 @@ def account_post_save(sender, instance, created, *args, **kwargs):
 
 @receiver(post_delete, sender=ActivateAccount)
 def account_activated(sender, instance, *args, **kwargs):
-    subject, from_email, to = 'Account Activated!', 'donotreply@localhost', instance.user.email
+    subject, from_email, to = 'Account Activated!', 'jav1anpry5ce@javaughnpryce.live', instance.user.email
     html_content = f'''
     <html>
         <body>
@@ -151,7 +151,7 @@ def account_activated(sender, instance, *args, **kwargs):
 @receiver(post_save, sender=ResetAccount)
 def reset_token_post_save(sender, instance, created, *args, **kwargs):
     if created:
-        subject, from_email, to = 'Reset Request', 'donotreply@localhost', instance.user.email
+        subject, from_email, to = 'Reset Request', 'jav1anpry5ce@javaughnpryce.live', instance.user.email
         text_content = 'This is an important message.'
         html_content = f'''
         <html>

@@ -13,7 +13,7 @@ class LocationSerializer(serializers.ModelSerializer):
         fields = (
         'id',
         'label', 
-        'value', 
+        'slug', 
         )
 
 class OfferSerializer(serializers.ModelSerializer):

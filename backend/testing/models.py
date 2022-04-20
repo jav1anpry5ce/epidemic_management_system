@@ -33,7 +33,7 @@ class Testing(models.Model):
 @receiver(post_save, sender=Testing)
 def testing_post_save(sender, instance, created, *args, **kwargs):
     if created:
-        subject, from_email, to = 'Appointment for COVID-19 Test', 'donotreply@localhost', instance.patient.email
+        subject, from_email, to = 'Appointment for COVID-19 Test', 'jav1anpry5ce@javaughnpryce.live', instance.patient.email
         html_content = f'''
         <html>
             <body>
@@ -67,7 +67,7 @@ def testing_pre_save(sender, instance, *args, **kwargs):
             qr = pyqrcode.create(f'{site}patient-info/{instance.patient.unique_id}')
             qr.png(f'qr_codes/{instance.patient.unique_id}.png', scale = 8)
             src = f'qr_codes/{instance.patient.unique_id}.png'
-            subject, from_email, to = '💅', 'donotreply@localhost', instance.patient.email
+            subject, from_email, to = '💅', 'jav1anpry5ce@javaughnpryce.live', instance.patient.email
             if instance.result == 'Positive':
                 PositiveCase.objects.create(patient=instance.patient, recovering_location='Home', date_tested=instance.date)
             html_content = f'''

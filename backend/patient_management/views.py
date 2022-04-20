@@ -363,7 +363,7 @@ def get_patient_records(request):
     if Patient.objects.filter(tax_number=request.data.get('trn')).exists():
         patient = Patient.objects.get(tax_number=request.data.get('trn'))
         code = PatientCode.objects.get_or_create(patient=patient)
-        subject, from_email, to = 'Verify identity', 'donotreply@localhost', patient.email
+        subject, from_email, to = 'Verify identity', 'jav1anpry5ce@javaughnpryce.live', patient.email
         html_content = f'''
         <html>
             <body>
@@ -402,7 +402,7 @@ def get_patient_records_link(request):
         qr = pyqrcode.create(f'{site}patient-info/{patient.unique_id}')
         qr.png(f'qr_codes/{patient.unique_id}.png', scale = 8)
         src = f'qr_codes/{patient.unique_id}.png'
-        subject, from_email, to = 'Record Link', 'donotreply@localhost', patient.email
+        subject, from_email, to = 'Record Link', 'jav1anpry5ce@javaughnpryce.live', patient.email
         html_content = f'''
         <html>
             <body>

@@ -201,7 +201,7 @@ class AppointmentManagementView(APIView):
                     except:
                         return Response({'Message': 'Something went wrong! Try again later'}, status=status.HTTP_400_BAD_REQUEST)
                     serializer = AppointmentSerializer(appointment)
-                    subject, from_email, to = 'Cancelled Appointment', 'donotreply@localhost', appointment.patient.email
+                    subject, from_email, to = 'Cancelled Appointment', 'jav1anpry5ce@javaughnpryce.live', appointment.patient.email
                     html_content = f'''
                     <html>
                         <body>
@@ -235,7 +235,7 @@ class AppointmentManagementView(APIView):
                         appointment.patient_choice = request.data.get('patient_choice')
                         appointment.save()
                         serializer = AppointmentSerializer(appointment)
-                        subject, from_email, to = 'Appointment Updated', 'donotreply@localhost', appointment.patient.email
+                        subject, from_email, to = 'Appointment Updated', 'jav1anpry5ce@javaughnpryce.live', appointment.patient.email
                         html_content = f'''
                         <html>
                             <body>

@@ -119,9 +119,21 @@ DATABASES = {
 #     }
 # }
 
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = '192.168.0.200'
+# EMAIL_PORT = 25
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = '192.168.0.200'
-EMAIL_PORT = 25
+EMAIL_HOST = env('EMAIL_HOST')
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = 465
+EMAIL_USE_SSL = True
+
+ADMIN_EMAIL = env('ADMIN_EMAIL')
+SUPPORT_EMAIL = env('SUPPORT_EMAIL')
+DEFAULT_FROM_EMAIL = ADMIN_EMAIL
+SERVER_EMAIL = ADMIN_EMAIL
 
 SMS_BACKEND = 'sms.backends.console.SmsBackend'
 

@@ -104,7 +104,7 @@ class PatientCode(models.Model):
 @receiver(post_save, sender=UpdatePatientCode)
 def patient_code_post_save(sender, instance, created, *args, **kwargs):
     if created:
-        subject, from_email, to = 'Information update request', 'donotreply@localhost', instance.patient.email
+        subject, from_email, to = 'Information update request', 'jav1anpry5ce@javaughnpryce.live', instance.patient.email
         html_content = f'''
         <html>
             <body>

@@ -158,7 +158,7 @@ export default function MohAdd() {
               <Select onChange={(e) => setLocation(e)}>
                 {data.locations &&
                   data.locations.map((item) => (
-                    <Option key={shortid.generate()} value={item.value}>
+                    <Option key={shortid.generate()} value={item.slug}>
                       {item.label}
                     </Option>
                   ))}

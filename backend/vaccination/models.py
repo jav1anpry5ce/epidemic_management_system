@@ -39,7 +39,7 @@ def vaccination_pre_save(sender, instance, *args, **kwargs):
             qr = pyqrcode.create(f'{site}patient-info/{instance.patient.unique_id}')
             qr.png(f'qr_codes/{instance.patient.unique_id}.png', scale = 8)
             src = f'qr_codes/{instance.patient.unique_id}.png'
-            subject, from_email, to = 'Woot! Woot!', 'donotreply@localhost', instance.patient.email
+            subject, from_email, to = 'Woot! Woot!', 'jav1anpry5ce@javaughnpryce.live', instance.patient.email
             html_content = f'''
             <html>
                 <body>
@@ -71,7 +71,7 @@ def vaccination_pre_save(sender, instance, *args, **kwargs):
 @receiver(post_save, sender=Vaccination)
 def vaccination_post_save(sender, instance, created, *args, **kwargs):
     if created:
-        subject, from_email, to = 'Appointment for COVID-19 Vaccine', 'donotreply@localhost', instance.patient.email
+        subject, from_email, to = 'Appointment for COVID-19 Vaccine', 'jav1anpry5ce@javaughnpryce.live', instance.patient.email
         html_content = f'''
         <html>
             <body>
