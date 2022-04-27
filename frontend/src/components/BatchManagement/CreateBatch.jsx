@@ -134,7 +134,7 @@ export default function CreateBatch() {
                 >
                   <Select onChange={(e) => setLocation(e)}>
                     {data.batchInfo.locations.map((item) => (
-                      <Option key={shortid.generate()} value={item.value}>
+                      <Option key={shortid.generate()} value={item.slug}>
                         {item.label}
                       </Option>
                     ))}

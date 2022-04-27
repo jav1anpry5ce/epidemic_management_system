@@ -1,9 +1,9 @@
+from django.conf import settings
 from django.db import models
 import uuid
 from django.dispatch import receiver
 from django.core.mail import EmailMultiAlternatives
 from sms import send_sms
-from django.contrib.sites.models import Site
 from django.db.models.signals import post_save, pre_save
 from patient_management.models import Patient
 from location_management.models import Location, Appointment
@@ -12,7 +12,7 @@ from patient_management.models import PositiveCase
 import pyqrcode
 from functions import removeFile
 
-site = Site.objects.get_current()
+site = settings.DJANGO_SITE
 
 
 

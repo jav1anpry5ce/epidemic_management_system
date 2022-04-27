@@ -1,8 +1,8 @@
+from django.conf import settings
 from django.db import models
 from django.dispatch import receiver
 from django.core.mail import EmailMultiAlternatives
 from sms import send_sms
-from django.contrib.sites.models import Site
 from django.db.models.signals import post_save, pre_save
 from patient_management.models import Patient
 import uuid
@@ -10,7 +10,7 @@ from location_management.models import Location, Appointment
 from functions import convertTime
 import pyqrcode
 from functions import removeFile
-site = Site.objects.get_current()
+site = settings.DJANGO_SITE
 
 class Vaccination(models.Model):
     id = models.UUIDField(default=uuid.uuid4, primary_key=True)

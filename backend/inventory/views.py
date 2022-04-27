@@ -1,3 +1,4 @@
+from django.conf import settings
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
@@ -8,7 +9,6 @@ from rest_framework.generics import ListAPIView
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import filters
 from django_filters import rest_framework as filterss
-from django.contrib.sites.models import Site
 from .models import LocationBatch, LocationVaccine, Vaccine
 from .serializers import LocationBatchSerializer, VaccineSerializer
 from location_management.models import Location, Offer
@@ -17,7 +17,7 @@ from django.core.files import File
 import pyqrcode
 from functions import removeFile
 
-site = Site.objects.get_current()
+site = settings.DJANGO_SITE
 
 class IsMohStaff(permissions.BasePermission):
     def has_permission(self, request, view):
@@ -43,7 +43,7 @@ class BatchView(APIView):
             if request.data.get('location'):
                 if request.data.get('vaccine'):
                     if request.data.get('number_of_dose'):
-                        location = Location.objects.get(value=request.data.get('location'))
+                        location = Location.objects.get(slug=request.data.get('location'))
                         try:
                             vaccine = Vaccine.objects.get(value=request.data.get('vaccine'))
                             if not vaccine.number_of_dose < int(request.data.get('number_of_dose')):

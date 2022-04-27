@@ -29,7 +29,9 @@ with open(os.path.join(BASE_DIR, 'key.txt')) as key:
     SECRET_KEY = key.read()
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = str(os.environ.get('DEBUG')) == "1"
+DEBUG = str(os.environ.get('DEBUG')) == "0"
+
+DJANGO_SITE = "https://epidemic-management-system.vercel.app/"
 
 
 ALLOWED_HOSTS = ['localhost','javaughnpryce.live', '*']
@@ -43,7 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.sites',
+    # 'django.contrib.sites',
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     "django_extensions",
@@ -98,26 +100,26 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': env('DB_NAME'),
-        'USER': env('DB_USER'),
-        'PASSWORD': env('DB_PASSWORD'),
-        'HOST': env('DB_HOST'),
-        'PORT': '3306',
-        'OPTIONS': {
-            'sql_mode': 'STRICT_TRANS_TABLES',
-        },
-    }
-}
-
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': env('DB_NAME'),
+#         'USER': env('DB_USER'),
+#         'PASSWORD': env('DB_PASSWORD'),
+#         'HOST': env('DB_HOST'),
+#         'PORT': '3306',
+#         'OPTIONS': {
+#             'sql_mode': 'STRICT_TRANS_TABLES',
+#         },
 #     }
 # }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
 
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # EMAIL_HOST = '192.168.0.200'
@@ -203,9 +205,15 @@ REST_FRAMEWORK = {
 
 }
 
-# SESSION_COOKIE_SECURE = True
-# CSRF_COOKIE_SECURE = True
-# SECURE_SSL_REDIRECT = True
+# Production
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SECURE_SSL_REDIRECT = True
+SECURE_HSTS_SECONDS = 3600
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_BROWSER_XSS_FILTER = True
 
 
 CORS_ORIGIN_ALLOW_ALL = True
@@ -217,7 +225,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'account.UserAccount'
 
-SITE_ID = 1
+# SITE_ID = 1
 
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration

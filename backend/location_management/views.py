@@ -1,3 +1,4 @@
+from django.conf import settings
 from rest_framework import status, permissions
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView
@@ -5,7 +6,6 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, FormParser
 from django.core.mail import EmailMultiAlternatives
-from django.contrib.sites.models import Site
 from django.db.models import Case, When
 from functions import convertTime
 from sms import send_sms
@@ -25,7 +25,7 @@ from inventory.models import LocationVaccine, Vaccine
 from inventory.serializers import LocationVaccineSerializer, VaccineSerializer
 from testing.serializers import getTestSerializer
 
-site = Site.objects.get_current()
+site = settings.DJANGO_SITE
 
 
 class LocationView(APIView):

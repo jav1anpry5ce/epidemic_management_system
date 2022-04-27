@@ -1,6 +1,7 @@
 import calendar
 import datetime
 import csv
+from django.conf import settings
 from rest_framework import status, permissions
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView
@@ -11,7 +12,6 @@ from rest_framework.decorators import api_view
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import filters
 from django_filters import rest_framework as filterss
-from django.contrib.sites.models import Site
 from sms import send_sms
 from django.core.mail import EmailMultiAlternatives
 
@@ -34,7 +34,7 @@ from vaccination.serializers import VaccinationSerializer
 import pyqrcode
 from functions import removeFile
 
-site = Site.objects.get_current()
+site = settings.DJANGO_SITE
 
 class PatientView(APIView):
     def post(self, request):
