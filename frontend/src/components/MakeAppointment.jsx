@@ -702,7 +702,7 @@ export default function MakeAppointment() {
                 >
                   {location.locations &&
                     location.locations.map((item) => (
-                      <Option value={item.value} key={shortid.generate()}>
+                      <Option value={item.slug} key={shortid.generate()}>
                         {item.label}
                       </Option>
                     ))}
