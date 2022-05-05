@@ -55,7 +55,7 @@ export default function VaccinationAndTesting() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
   const [q, setQ] = useState("");
-  const scroll = { y: 400 };
+  const scroll = { y: 380 };
 
   const armData = [
     { label: "Left", value: "Left" },

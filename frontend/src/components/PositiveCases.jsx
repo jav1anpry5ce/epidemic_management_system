@@ -70,7 +70,7 @@ export default function PositiveCases() {
   const [sType, setSType] = useState("Positive Cases");
   const [genType, setGenType] = useState();
   const [parish, setParish] = useState("St. Andrew");
-  const scroll = { y: 400 };
+  const scroll = { y: 380 };
 
   useEffect(() => {
     dispatch(setActiveKey("3"));

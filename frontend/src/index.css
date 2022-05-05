@@ -18,8 +18,8 @@
     }
 
     ::-webkit-scrollbar-thumb {
-        border: 3.5px solid transparent;
-        background: #000829;
+        border: 4px solid transparent;
+        background: #a8a8a8;
         border-radius: 99999px;
         background-clip: padding-box;
     }
