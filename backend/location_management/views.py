@@ -39,7 +39,7 @@ class LocationView(APIView):
 
     def post(self, request):
         try:
-            location = Location.objects.get(value=request.data.get('value'))
+            location = Location.objects.get(slug=request.data.get('value'))
             offer = Offer.objects.filter(location=location)
             test = Test.objects.filter(location=location)
             vaccine = LocationVaccine.objects.filter(location=location, number_of_dose__gte=Case(When(value='Johnson & Johnson', then=1), default=2))
@@ -87,7 +87,7 @@ class AppointmentView(APIView):
                     if Patient.objects.filter(tax_number=request.data.get('tax_number')).exists():
                         patient = Patient.objects.get(tax_number=request.data.get('tax_number'))
                         rep_serializer.save(patient=patient)
-                location = Location.objects.get(value=request.data.get('location'))
+                location = Location.objects.get(slug=request.data.get('location'))
                 if request.data.get('type') == "Testing":
                     try:
                         appointment = serializer.save(patient=patient, location=location)
@@ -358,7 +358,7 @@ def breakdown(request):
                 vaccines = LocationVaccine.objects.filter(location=location)
                 number_of_tests = Testing.objects.filter(location=location, status='Completed').count()
                 vaccines_administer = Vaccination.objects.filter(location=location, status='Completed').count()
-                pending_appointments = Appointment.objects.filter(location=location, status='pending').count()
+                pending_appointments = Appointment.objects.filter(location=location, status='Pending').count()
                 number_of_vaccine = 0
                 for vaccine in vaccines:
                     number_of_vaccine += vaccine.number_of_dose

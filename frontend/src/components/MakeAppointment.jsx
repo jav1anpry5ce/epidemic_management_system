@@ -56,7 +56,7 @@ export default function MakeAppointment() {
   const [parish, setParish] = useState("");
   const [country, setCountry] = useState("Jamaica");
   const [image, setImage] = useState(null);
-  const [id, setId] = useState();
+  const [id, setId] = useState(null);
   const [kinFirstName, setKinFirstName] = useState("");
   const [kinLastName, setKinLastName] = useState("");
   const [kinEmail, setKinEmail] = useState("");

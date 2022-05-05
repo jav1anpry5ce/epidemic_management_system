@@ -29,7 +29,7 @@
     "react-input-mask": "^2.0.4",
     "react-redux": "^7.2.4",
     "react-router-dom": "^6.2.1",
-    "react-scripts": "^5.0.0-next.60",
+    "react-scripts": "^5.0.1",
     "react-text-mask": "^5.4.3",
     "react-to-print": "^2.13.0",
     "recharts": "^2.1.9",
