@@ -39,7 +39,7 @@ export default function AddAvailability() {
   });
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
-  const scroll = { y: 270 };
+  const scroll = { y: 250 };
 
   useEffect(() => {
     dispatch(setActiveKey("5"));
