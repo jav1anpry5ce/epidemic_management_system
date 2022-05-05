@@ -27,6 +27,7 @@ export default function PrintView({ componenetRef, data }) {
           </Grid>
           <Grid item xs={8}>
             <div className="space-y-3">
+              <h3 className="text-sm">Vaccine: {data.vaccine}</h3>
               <h3 className="text-sm">Site Name: {data.location_name}</h3>
               <h3 className="text-sm">Street Address: {data.street_address}</h3>
               <h3 className="text-sm">City: {data.city}</h3>

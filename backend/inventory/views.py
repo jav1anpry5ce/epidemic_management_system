@@ -61,6 +61,7 @@ class BatchView(APIView):
                         batch.save()
                         removeFile(src)
                         res = {
+                            'vaccine': vaccine.label,
                             'location_name': location.value,
                             'street_address': location.street_address, 
                             'city': location.city, 
