@@ -94,7 +94,7 @@ export default function AppointmentManagement() {
     if (appointment.appointments)
       form.setFieldsValue({
         id: appointment.appointments.id,
-        location: appointment.appointments.location.value,
+        location: appointment.appointments.location.label,
         date: moment(moment(appointment.appointments.date)),
         time: new Date(
           `2020/12/12 ${appointment.appointments.time}`
