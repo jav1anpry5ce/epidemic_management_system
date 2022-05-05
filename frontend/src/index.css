@@ -10,20 +10,18 @@
         font-family: "Open Sans", sans-serif;
     }
     ::-webkit-scrollbar {
-        width: 5px;
+        width: 14px;
     }
 
     ::-webkit-scrollbar-track {
-        display: none;
+        background: transparent;
     }
 
     ::-webkit-scrollbar-thumb {
+        border: 2.5px solid transparent;
         background: #fff;
         border-radius: 99999px;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-        background: #555;
+        background-clip: padding-box;
     }
 }
 

@@ -197,7 +197,7 @@ class StaffDetails(ListAPIView):
             if self.request.user.is_authenticated and self.request.user.is_moh_admin:
                 staffs = []
                 moh_staff = UserAccount.objects.filter(is_moh_staff=True).exclude(email=self.request.user.email)
-                site_admin = UserAccount.objects.filter(is_location_admin=True)
+                site_admin = UserAccount.objects.filter(is_location_admin=True).exclude(email=self.request.user.email)
                 for staff in moh_staff:
                     staffs.append(staff)
                 for staff in site_admin:
