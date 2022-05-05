@@ -32,6 +32,7 @@ with open(os.path.join(BASE_DIR, 'key.txt')) as key:
 DEBUG = str(os.environ.get('DEBUG')) == "0"
 
 DJANGO_SITE = "https://epidemic-management-system.vercel.app/"
+BACKEND_FILE = "https://backend.javaughnpryce.live:8001/"
 
 
 ALLOWED_HOSTS = ['localhost','javaughnpryce.live', '*']
@@ -178,11 +179,10 @@ DATE_FORMAT = '%d-%m-%y'
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'build/static'),
-    os.path.join(BASE_DIR, 'build'),
+    os.path.join(BASE_DIR, 'static'),
 ]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

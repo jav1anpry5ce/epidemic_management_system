@@ -70,7 +70,7 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
 
     def get_image(self):
         if self.profile_picture:
-            return 'https://javaughnpryce.live:8001' + self.profile_picture.url
+            return settings.BACKEND_FILES + self.profile_picture.url
         return ''
 
     def __str__(self):

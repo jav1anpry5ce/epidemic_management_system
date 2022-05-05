@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 import uuid
 import string    
@@ -30,7 +31,7 @@ class Patient(models.Model):
 
     def image_url(self):
         if self.image:
-            return 'https://javaughnpryce.live:8001' + self.image.url
+            return settings.BACKEND_FILES + self.image.url
         return ''
 
 class NextOfKin(models.Model):

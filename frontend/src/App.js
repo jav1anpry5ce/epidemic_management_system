@@ -44,7 +44,7 @@ import {
 
 import IdleTimer from "./utils/IdleTimer";
 
-axios.defaults.baseURL = "https://javaughnpryce.live:8001/";
+axios.defaults.baseURL = "https://backend.javaughnpryce.live:/";
 
 function App() {
   const auth = useSelector((state) => state.auth);
