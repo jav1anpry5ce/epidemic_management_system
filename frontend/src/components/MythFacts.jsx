@@ -11,12 +11,8 @@ export default function MythFacts({ image, myth, fact }) {
   return (
     <motion.div
       layout
-      initial={{ opacity: 0.3, scale: 0.75 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      viewport={{ once: true }}
-      transition={{ ease: "easeInOut" }}
-      className="flex w-[22rem] overflow-hidden rounded-xl bg-white
-      hover:scale-105 hover:shadow-md hover:shadow-slate-900/40 hover:outline
+      className="flex min-h-[263px] w-[22rem] overflow-hidden rounded-xl bg-white
+       hover:shadow-md hover:shadow-slate-900/40 hover:outline
       hover:outline-2 hover:outline-blue-500/70 active:outline active:outline-2 active:outline-blue-500/70"
     >
       <motion.div
