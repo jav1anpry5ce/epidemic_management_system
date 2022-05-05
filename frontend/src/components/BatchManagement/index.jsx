@@ -93,8 +93,8 @@ export default function BatchManagement() {
       title: "Site",
       dataIndex: "location",
       render: (location) => (
-        <Tooltip placement="topLeft" title={location.value}>
-          {location.value}
+        <Tooltip placement="topLeft" title={location.label}>
+          {location.label}
         </Tooltip>
       ),
       ellipsis: {
