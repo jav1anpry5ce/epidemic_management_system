@@ -154,6 +154,7 @@ def get_batch(request, batch_id):
         if request.user.is_moh_staff:
             batch = LocationBatch.objects.get(batch_id=batch_id)
             data = {
+                'vaccine': batch.vaccine.label,
                 'location_name': batch.location.value,
                 'street_address': batch.location.street_address,
                 'city': batch.location.city,
