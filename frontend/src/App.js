@@ -53,7 +53,7 @@ function App() {
 
   useEffect(() => {
     const timer = new IdleTimer({
-      timeout: 180,
+      timeout: 300,
       onTimeout: () => {
         if (auth.is_auth) {
           dispatch(logout()).then(() => {
