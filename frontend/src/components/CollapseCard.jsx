@@ -60,32 +60,37 @@ export default function CollapseCard({ Title, Data, expand, setExpand }) {
                         </Grid>
                       ) : (
                         <Grid container spacing={2}>
-                          <Grid item xs={6}>
+                          <Grid item sm={6} xs={12}>
                             <Typography variant="body2">
                               Manufacturer: {record.manufacture}
                             </Typography>
                           </Grid>
-                          <Grid item xs={6}>
+                          <Grid item sm={6} xs={12}>
                             <Typography variant="body2">
                               Vile Number: {record.vile_number}
                             </Typography>
                           </Grid>
-                          <Grid item xs={6}>
+                          <Grid item sm={6} xs={12}>
                             <Typography variant="body2">
                               Vaccination Date: {toLocalDate(record.date_given)}
                             </Typography>
                           </Grid>
-                          <Grid item xs={6}>
+                          <Grid item sm={6} xs={12}>
                             <Typography variant="body2">
-                              Administering Site: {record.location.value}
+                              Administering Site: {record.location.label}
                             </Typography>
                           </Grid>
-                          <Grid item xs={6}>
+                          <Grid item sm={6} xs={12}>
+                            <Typography variant="body2">
+                              Administering Person: {record.admister_person}
+                            </Typography>
+                          </Grid>
+                          <Grid item sm={6} xs={12}>
                             <Typography variant="body2">
                               Arm: {record.arm}
                             </Typography>
                           </Grid>
-                          <Grid item xs={6}>
+                          <Grid item sm={6} xs={12}>
                             <Typography variant="body2">
                               Dosage: {record.dose_number}
                             </Typography>
