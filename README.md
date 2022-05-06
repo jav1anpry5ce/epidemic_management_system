@@ -8,7 +8,7 @@ Run the following command: `pip install -r requirements.txt` this will install t
 
 Next run the following command: `python manage.py makemigrations` 
 
-Then `python manage.py migrate` to set up the data base.
+Then `python manage.py migrate` to set up the database.
 
 Next use the command `python manage.py runserver` to start the server locally.
 
