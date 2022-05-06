@@ -3,7 +3,7 @@
 # Build backend
 
 To build and run the backend go into its directory.
-Run the following command: ### `pip install -r requirements.txt` this will install the required files.
+Run the following command: `pip install -r requirements.txt` this will install the required files.
 Next run the following command: `python manage.py makemigrations` 
 Then `python manage.py migrate` to set up the data base.
 Next use the command `python manage.py runserver` to start the server locally.
