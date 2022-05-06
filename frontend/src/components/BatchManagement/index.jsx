@@ -92,6 +92,7 @@ export default function BatchManagement() {
     {
       title: "Site",
       dataIndex: "location",
+      sorter: (a, b) => a.location.label.length - b.location.label.length,
       render: (location) => (
         <Tooltip placement="topLeft" title={location.label}>
           {location.label}
@@ -130,6 +131,7 @@ export default function BatchManagement() {
     {
       title: "Status",
       dataIndex: "status",
+      sorter: (a, b) => a.status.length - b.status.length,
       render: (status) => (
         <Tooltip placement="topLeft" title={status}>
           {status}
