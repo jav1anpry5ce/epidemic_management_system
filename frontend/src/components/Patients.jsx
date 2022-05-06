@@ -167,7 +167,7 @@ export default function Patients() {
     {
       title: "Gender",
       dataIndex: "gender",
-      sorter: (a, b) => a.patient.gender.length - b.patient.gender.length,
+      sorter: (a, b) => a.gender.length - b.gender.length,
       render: (gender) => (
         <Tooltip placement="topLeft" title={gender}>
           {gender}

@@ -140,7 +140,7 @@ export default function PositiveCases() {
         rep_email: moh.caseData.rep && moh.caseData.rep.rep_email,
         rep_phone: moh.caseData.rep && moh.caseData.rep.rep_phone,
         tested:
-          sType === "Positive Cases"
+          sType === "Positive Cases" || sType === "Hospitalized"
             ? toLocaldate(moh.caseData.case.date_tested)
             : sType === "Death"
             ? toLocaldate(moh.caseData.case.death_date)
@@ -287,6 +287,13 @@ export default function PositiveCases() {
         onOk={() => setShow(false)}
         footer={[
           <Button
+            onClick={onHide}
+            disabled={moh.updating}
+            key={shortid.generate()}
+          >
+            Cancel
+          </Button>,
+          <Button
             key={shortid.generate()}
             type="primary"
             onClick={onSubmit}
@@ -295,13 +302,6 @@ export default function PositiveCases() {
             className="btn-primary"
           >
             Submit
-          </Button>,
-          <Button
-            onClick={onHide}
-            disabled={moh.updating}
-            key={shortid.generate()}
-          >
-            Cancel
           </Button>,
         ]}
       >
@@ -475,10 +475,11 @@ export default function PositiveCases() {
               <Grid item xs={12}>
                 <Title level={4}>Case Information</Title>
               </Grid>
+
               <Grid item xs={6}>
                 <Form.Item
                   label={
-                    sType === "Positive Cases"
+                    sType === "Positive Cases" || sType === "Hospitalized"
                       ? "Date Tested"
                       : sType === "Death"
                       ? "Death Date"
@@ -490,7 +491,7 @@ export default function PositiveCases() {
                   <Input readOnly />
                 </Form.Item>
               </Grid>
-              {sType === "Positive Cases" && (
+              {(sType === "Positive Cases" || sType === "Hospitalized") && (
                 <Grid
                   container
                   spacing={2}
